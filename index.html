@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Sevcan, Ahmet ve Murathan'ın kişisel ana sayfası. Sihirli spark ve gece modu.">
+<meta name="description" content="Sevcan, Ahmet ve Murathan'ın kişisel ana sayfası. Axy Crystal ve 2048 Jewelry oyunlarına hızlı erişim.">
 <meta name="author" content="Ahmet">
 
 <link rel="icon" type="image/png" href="https://github.githubassets.com/favicons/favicon.png"> 
 
-<title>Aile & Oyun Sayfası - Uzay Teması ve Spark</title>
+<title>Aile & Oyun Sayfası - Uzay ve Peri Tozu</title>
 <style>
   /* Genel sıfırlama */
   * {
@@ -19,19 +19,18 @@
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Koyu Uzay Teması */
     background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Üstten başla */
+    justify-content: flex-start; 
     padding: 30px 20px; 
-    overflow: hidden; /* Yıldızların taşmaması için */
-    color: #ffffff; /* Varsayılan metin rengi beyaz */
+    overflow: hidden; 
+    color: #ffffff; 
   }
 
-  /* --- Kayan Yıldızlar CSS (Öncekiyle aynı) --- */
+  /* Kayan Yıldızlar CSS */
   .stars-container {
     position: fixed;
     top: 0;
@@ -51,13 +50,12 @@
     opacity: 0;
   }
 
-  /* Yıldızların rastgele konumları ve gecikmeleri (Kısaltılmış) */
   .shooting-star:nth-child(1) { top: 10%; left: 80%; animation-delay: 0s; }
   .shooting-star:nth-child(2) { top: 25%; left: 95%; animation-delay: 1.5s; animation-duration: 2.5s; }
   .shooting-star:nth-child(3) { top: 40%; left: 70%; animation-delay: 2s; animation-duration: 3.5s; }
-  /* ... Diğer 6 yıldız için benzer tanımlamalar ... */
+  .shooting-star:nth-child(4) { top: 5%; left: 50%; animation-delay: 4.2s; }
+  .shooting-star:nth-child(5) { top: 15%; left: 20%; animation-delay: 5s; animation-duration: 3s; }
 
-  /* Yıldız kuyruk ve kayma animasyonları */
   @keyframes tail {
     0% { width: 0; }
     30% { width: 100px; }
@@ -65,31 +63,19 @@
   }
 
   @keyframes shooting {
-    0% {
-      opacity: 0;
-      transform: translateX(0) translateY(0) rotate(-45deg);
-    }
-    10% {
-      opacity: 1;
-    }
-    30% {
-      opacity: 1;
-      transform: translateX(-200px) translateY(200px) rotate(-45deg);
-    }
-    100% {
-      opacity: 0;
-      transform: translateX(-400px) translateY(400px) rotate(-45deg);
-    }
+    0% { opacity: 0; transform: translateX(0) translateY(0) rotate(-45deg); }
+    10% { opacity: 1; }
+    30% { opacity: 1; transform: translateX(-200px) translateY(200px) rotate(-45deg); }
+    100% { opacity: 0; transform: translateX(-400px) translateY(400px) rotate(-45deg); }
   }
 
-  /* --- YENİ EKLENEN: İsim Alanı ve Sihirli Spark Konteyneri --- */
+  /* İsim Alanı */
   .hero-container {
     position: relative;
     width: 100%;
     max-width: 800px;
-    /* GÜNCELLEME: İsimleri yukarıda tut */
     margin-top: 50px; 
-    margin-bottom: 70px; /* Butonlarla boşluk */
+    margin-bottom: 70px; 
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -97,60 +83,26 @@
     flex-wrap: wrap;
   }
 
-  /* --- YENİ EKLENEN: Sihirli Spark --- */
-  .magic-spark {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(#fff, rgba(100, 150, 255, 0)); /* Beyaz parlayan merkez */
-    border-radius: 50%;
-    filter: drop-shadow(0 0 8px rgba(100, 150, 255, 1)); /* Parlaklık */
-    opacity: 0.9;
-    z-index: 15; /* İsimlerin önünde */
-    pointer-events: none; /* Metinlerin tıklanmasını engelleme */
-    animation: snake-weave 12s linear infinite; /* Yılan gibi kıvrılma */
-  }
-
-  /* --- YENİ EKLENEN: Kıvrılma Animasyonu Path'i --- */
-  @keyframes snake-weave {
-    0% { left: 10%; top: 10%; opacity: 0; }
-    2% { opacity: 0.9; }
-    10% { left: 15%; top: 5%; } /* Sevcan'ın üstünden geç */
-    20% { left: 25%; top: 20%; } /* Aradan aşağı in */
-    30% { left: 35%; top: 5%; } /* Ahmet'in üstünden geç */
-    40% { left: 45%; top: 20%; } /* Aradan aşağı in */
-    50% { left: 55%; top: 5%; } /* Murathan'ın üstünden geç */
-    60% { left: 65%; top: 15%; } /* Aradan aşağı in */
-    70% { left: 75%; top: 5%; } /* Geri dön */
-    80% { left: 85%; top: 10%; } /* Yüksel */
-    90% { left: 95%; top: 5%; opacity: 0.9; }
-    100% { left: 10%; top: 10%; opacity: 0; } /* Döngüyü tamamla */
-  }
-
-  /* Animasyonlu İsim Alanı */
   .name-badge {
     position: relative;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.25);
-    
     padding: 14px 30px; 
     border-radius: 50px;
     font-size: 19px;
     font-weight: 700;
     letter-spacing: 1px;
     box-shadow: 0 8px 32px 0 rgba(100, 150, 255, 0.15);
-    
     animation: float 4s ease-in-out infinite;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     cursor: default;
   }
 
-  /* İsim renkleri */
-  .name-badge:nth-child(2) { animation-delay: 0s; color: #ff5e91; } /* Sevcan - Parlak Pembe */
-  .name-badge:nth-child(3) { animation-delay: 0.2s; color: #5dade2; } /* Ahmet - Parlak Mavi */
-  .name-badge:nth-child(4) { animation-delay: 0.4s; color: #f4d03f; } /* Murathan - Parlak Altın */
+  .name-badge:nth-child(1) { animation-delay: 0s; color: #ff5e91; } 
+  .name-badge:nth-child(2) { animation-delay: 0.2s; color: #5dade2; } 
+  .name-badge:nth-child(3) { animation-delay: 0.4s; color: #f4d03f; } 
 
   .name-badge:hover {
     transform: scale(1.05) translateY(-5px);
@@ -165,7 +117,7 @@
     100% { transform: translateY(0px); }
   }
 
-  /* Butonlar Alanı (Alt Alta) */
+  /* Butonlar Alanı */
   .button-wrapper {
     display: flex;
     flex-direction: column; 
@@ -194,75 +146,157 @@
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
   }
 
-  /* Parlayan kristal butonu */
-  .crystal-btn {
-    background: linear-gradient(135deg, #3a6b8a 0%, #6d5da1 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+  .crystal-btn { background: linear-gradient(135deg, #3a6b8a 0%, #6d5da1 100%); border: 1px solid rgba(255, 255, 255, 0.2); }
+  .crystal-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(100, 150, 255, 0.5); background: linear-gradient(135deg, #4b89af 0%, #7d6ab6 100%); }
+
+  .jewelry-btn { background: linear-gradient(135deg, #d4a017 0%, #a37609 100%); border: 1px solid rgba(255, 255, 255, 0.2); }
+  .jewelry-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4); background: linear-gradient(135deg, #e7b328 0%, #b4850d 100%); }
+
+  /* Peri Tozu Efekti CSS Sınıfları */
+  #fairy-engine {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15; /* İsimlerin üstünde süzülmesi için */
+    overflow: hidden;
   }
 
-  .crystal-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(100, 150, 255, 0.5);
-    background: linear-gradient(135deg, #4b89af 0%, #7d6ab6 100%);
+  .fairy-spark {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+    border-radius: 50%;
+    box-shadow: 0 0 15px 5px rgba(100, 200, 255, 0.8);
+    will-change: transform;
   }
 
-  /* Parlayan mücevher butonu */
-  .jewelry-btn {
-    background: linear-gradient(135deg, #d4a017 0%, #a37609 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+  .dust-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
   }
 
-  .jewelry-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(135deg, #e7b328 0%, #b4850d 100%);
-  }
-
-  /* Mobil Cihazlar İçin Özel Kural */
   @media (max-width: 480px) {
-    .name-badge {
-      font-size: 16px;
-      padding: 10px 24px;
-    }
-    .magic-spark { width: 8px; height: 8px; filter: drop-shadow(0 0 6px rgba(100, 150, 255, 1)); } /* Ufal */
-    .hero-container { margin-bottom: 50px; gap: 10px; } /* Mobilde sıkış */
-    .custom-btn {
-      width: 100%;
-      max-width: 280px;
-    }
+    .name-badge { font-size: 16px; padding: 10px 24px; }
+    .hero-container { margin-bottom: 50px; gap: 10px; }
+    .custom-btn { width: 100%; max-width: 280px; }
   }
 </style>
 </head>
 <body>
 
   <div class="stars-container">
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
-    <div class="shooting-star"></div>
+    <div class="shooting-star"></div><div class="shooting-star"></div>
+    <div class="shooting-star"></div><div class="shooting-star"></div>
     <div class="shooting-star"></div>
   </div>
 
-  <div class="hero-container">
-    <div class="magic-spark"></div>
-
+  <div class="hero-container" id="hero-area">
     <div class="name-badge">♥ Sevcan ♥</div>
     <div class="name-badge">♥ Ahmet ♥</div>
     <div class="name-badge">♥ Murathan ♥</div>
   </div>
 
   <div class="button-wrapper">
-    <a href="https://nuclewar1.github.io/web/AXYCRYSTAL.html" target="_blank" rel="noopener noreferrer" class="custom-btn crystal-btn">
-      AXY CRYSTAL OYUN
-    </a>
-    <a href="https://nuclewar1.github.io/web/2048.html" target="_blank" rel="noopener noreferrer" class="custom-btn jewelry-btn">
-      2048 JEWELRY OYUN
-    </a>
+    <a href="https://nuclewar1.github.io/web/AXYCRYSTAL.html" target="_blank" rel="noopener noreferrer" class="custom-btn crystal-btn">AXY CRYSTAL OYUN</a>
+    <a href="https://nuclewar1.github.io/web/2048.html" target="_blank" rel="noopener noreferrer" class="custom-btn jewelry-btn">2048 JEWELRY OYUN</a>
   </div>
 
+  <div id="fairy-engine">
+    <div class="fairy-spark" id="main-spark"></div>
+  </div>
+
+  <script>
+    /** * Ahmet Özel - Peri Tozu Parçacık Motoru 
+     * Profesyonel Standart: requestAnimationFrame ve GPU hızlandırmalı transform kullanılmıştır.
+     */
+    const engine = document.getElementById('fairy-engine');
+    const spark = document.getElementById('main-spark');
+    const heroArea = document.getElementById('hero-area');
+    
+    let time = 0;
+    // Renk paleti: İsimlerle uyumlu pembe, mavi ve altın sarısı tonları
+    const colors = ['#ff5e91', '#5dade2', '#f4d03f', '#ffffff'];
+
+    // Toz zerreciği oluşturan fonksiyon
+    function createFairyDust(x, y) {
+      const dust = document.createElement('div');
+      const size = Math.random() * 4 + 2; // 2px - 6px arası
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      dust.className = 'dust-particle';
+      dust.style.width = `${size}px`;
+      dust.style.height = `${size}px`;
+      dust.style.background = color;
+      dust.style.boxShadow = `0 0 8px ${color}`;
+      
+      // Başlangıç pozisyonu
+      dust.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+      dust.style.opacity = '1';
+      dust.style.transition = 'transform 1.2s ease-out, opacity 1.2s ease-out';
+      
+      engine.appendChild(dust);
+
+      // Rastgele dağılma animasyonunu tetikle (Micro-task ile)
+      setTimeout(() => {
+        const moveX = (Math.random() - 0.5) * 60; // Sağa sola savrulma
+        const moveY = (Math.random() - 0.5) * 60 + 20; // Yerçekimi etkisiyle hafif aşağı inme
+        dust.style.transform = `translate(${x + moveX}px, ${y + moveY}px) scale(0)`;
+        dust.style.opacity = '0';
+      }, 10);
+
+      // DOM'u şişirmemek için animasyon bitince elementi yok et (Garbage Collection)
+      setTimeout(() => dust.remove(), 1200);
+    }
+
+    function animateSpark() {
+      time += 0.003; // Genel animasyon hızı
+      let cycle = time % 1; // 0 ile 1 arasında sonsuz döngü
+
+      let xProgress;
+      // İstenen hareket: Soldan sağa yavaş, sağdan sola ani dönüş.
+      if (cycle < 0.75) {
+        // Soldan sağa giderken (yavaş ve kıvrılarak)
+        // Yumuşak geçiş formülü (Ease-in-out)
+        let p = cycle / 0.75;
+        xProgress = p * p * (3 - 2 * p); 
+      } else {
+        // Sağdan sola dönerken (aniden hızlanıp geri çekilme)
+        let p = (cycle - 0.75) / 0.25;
+        xProgress = 1 - Math.pow(p, 2); // Ease-in (hızlı ivmelenme)
+      }
+
+      // Animasyonun sınırlarını kahraman (isimler) alanına göre belirle
+      const rect = heroArea.getBoundingClientRect();
+      const centerY = rect.top + (rect.height / 2);
+      const startX = window.innerWidth * 0.1;
+      const moveWidth = window.innerWidth * 0.8;
+
+      const x = startX + (xProgress * moveWidth);
+      
+      // Yan 8 (Sonsuzluk) Kıvrımı: X ekseninde 1 tur atarken Y ekseninde 2 tam sinüs dalgası çizer.
+      const amplitude = 50; // Kıvrılma yüksekliği
+      const y = centerY + Math.sin(cycle * Math.PI * 4) * amplitude;
+
+      // Ana kıvılcımı hareket ettir (Sadece transform kullanıyoruz, performansı artırır)
+      spark.style.transform = `translate(${x}px, ${y}px)`;
+
+      // Arkasında peri tozu bırakma sıklığı
+      if (Math.random() < 0.6) {
+        // Tozu kıvılcımın tam merkezinden çıkartmak için +6px ofset
+        createFairyDust(x + 6, y + 6); 
+      }
+
+      requestAnimationFrame(animateSpark);
+    }
+
+    // Animasyonu başlat
+    animateSpark();
+  </script>
 </body>
 </html>
