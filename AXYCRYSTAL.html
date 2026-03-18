@@ -362,18 +362,47 @@ const HOLD_MS=100;        // ms to confirm a hold
 // ================================================================
 // AUDIO
 // ================================================================
-let AC;
-function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();return AC;}
-function tone(f,t,d,v=0.22){
-  if(!soundOn)return;
-  try{const c=getAC(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+d);o.start();o.stop(c.currentTime+d+.05);}catch(e){}
+let AC, masterGain;
+function getAC(){
+  if(!AC){
+    AC=new(window.AudioContext||window.webkitAudioContext)();
+    // Compressor — clip'i önler, sesi dolgun tutar
+    const comp=AC.createDynamicsCompressor();
+    comp.threshold.value=-6;
+    comp.knee.value=3;
+    comp.ratio.value=4;
+    comp.attack.value=0.003;
+    comp.release.value=0.1;
+    comp.connect(AC.destination);
+    // Master gain
+    masterGain=AC.createGain();
+    masterGain.gain.value=2.2; // 2.2x amplifikasyon
+    masterGain.connect(comp);
+  }
+  return AC;
 }
-function sfxSel(){tone(440,'sine',.08,.45);}
-function sfxMerge(v){const f=180+Math.log2(v)*42;tone(f,'triangle',.2,.75);setTimeout(()=>tone(f*1.5,'sine',.12,.5),75);}
-function sfxDrop(){tone(220,'sine',.07,.38);}
-function sfxSmash(){tone(200,'sawtooth',.18,.75);setTimeout(()=>tone(100,'sawtooth',.2,.55),50);}
-function sfxWin(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.2,.8),i*90));}
-function sfxGO(){[392,330,261,196].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.35,.55),i*120));}
+function tone(f,t,d,v=0.9){
+  if(!soundOn)return;
+  try{
+    const c=getAC();
+    const o=c.createOscillator();
+    const g=c.createGain();
+    o.connect(g);
+    g.connect(masterGain);
+    o.type=t;
+    o.frequency.value=f;
+    g.gain.setValueAtTime(v,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+d);
+    o.start();
+    o.stop(c.currentTime+d+.05);
+  }catch(e){}
+}
+function sfxSel(){tone(440,'sine',.1,.6);}
+function sfxMerge(v){const f=180+Math.log2(v)*42;tone(f,'triangle',.22,.9);setTimeout(()=>tone(f*1.5,'sine',.14,.6),75);}
+function sfxDrop(){tone(260,'sine',.08,.5);}
+function sfxSmash(){tone(200,'sawtooth',.2,.95);setTimeout(()=>tone(100,'sawtooth',.22,.7),50);}
+function sfxWin(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.22,.9),i*90));}
+function sfxGO(){[392,330,261,196].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.38,.7),i*120));}
 document.addEventListener('click',()=>{try{getAC();}catch(e){}},{once:true});
 document.getElementById('btn-sound').addEventListener('click',()=>{
   soundOn=!soundOn;
