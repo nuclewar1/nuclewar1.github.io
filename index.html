@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aile & Oyun Sayfası</title>
+<style>
+  /* Genel sıfırlama */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: transparent; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px; 
+    /* GÜNCELLEME: Çirkin scrollbar'ı tamamen gizlemek için */
+    overflow: hidden; 
+  }
+
+  /* Animasyonlu İsim Alanı */
+  .hero-section {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 800px;
+    padding-top: 10px;
+  }
+
+  .name-badge {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    
+    padding: 10px 24px; 
+    border-radius: 50px;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.1);
+    
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+
+  .name-badge:nth-child(1) { animation-delay: 0s; color: #e91e63; } 
+  .name-badge:nth-child(2) { animation-delay: 0.2s; color: #2b5876; } 
+  .name-badge:nth-child(3) { animation-delay: 0.4s; color: #b8860b; } 
+
+  .name-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+    animation-play-state: paused;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+  }
+
+  /* Butonlar Alanı */
+  .button-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .custom-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 200px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .crystal-btn {
+    background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .crystal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(78, 67, 118, 0.5);
+    background: linear-gradient(135deg, #356a8e 0%, #5d508d 100%);
+  }
+
+  .jewelry-btn {
+    background: linear-gradient(135deg, #b8860b 0%, #8b6508 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .jewelry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, #cf980c 0%, #a37609 100%);
+  }
+
+  /* Mobil Cihazlar İçin Özel Kural */
+  @media (max-width: 480px) {
+    .name-badge {
+      font-size: 15px;
+      padding: 8px 20px;
+    }
+    .custom-btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero-section">
+    <div class="name-badge">♥ Sevcan ♥</div>
+    <div class="name-badge">♥ Ahmet ♥</div>
+    <div class="name-badge">♥ Murathan ♥</div>
+  </div>
+
+  <div class="button-wrapper">
+    <a href="https://nuclewar1.github.io/web/AXYCRYSTAL.html" target="_blank" rel="noopener noreferrer" class="custom-btn crystal-btn">
+      AXY CRYSTAL OYUN
+    </a>
+    <a href="https://nuclewar1.github.io/web/2048.html" target="_blank" rel="noopener noreferrer" class="custom-btn jewelry-btn">
+      2048 JEWELRY OYUN
+    </a>
+  </div>
+
+</body>
+</html>
