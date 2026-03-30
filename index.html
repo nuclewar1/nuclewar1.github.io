@@ -207,12 +207,12 @@
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    max-width: 860px;
+    max-width: 1200px;
   }
 
   .game-card {
     position: relative;
-    width: clamp(260px, 42vw, 370px);
+    width: clamp(260px, 30vw, 350px);
     border-radius: 16px;
     overflow: hidden;
     text-decoration: none;
@@ -228,7 +228,7 @@
     transform: translateY(-8px) scale(1.02);
   }
 
-  /* AXY CRYSTAL */
+  /* AXY CRYSTAL (Sum Drop) */
   .card-crystal {
     border-color: rgba(91,200,245,0.3);
     background: linear-gradient(160deg, rgba(10,28,60,0.9) 0%, rgba(4,20,40,0.95) 100%);
@@ -238,7 +238,7 @@
     box-shadow: 0 16px 50px rgba(0,0,0,0.6), 0 0 40px rgba(91,200,245,0.25);
   }
 
-  /* 2048 JEWELRY */
+  /* AXY MERGE (Jewelry replacement) */
   .card-jewelry {
     border-color: rgba(240,180,41,0.3);
     background: linear-gradient(160deg, rgba(40,25,5,0.9) 0%, rgba(20,12,2,0.95) 100%);
@@ -246,6 +246,16 @@
   }
   .card-jewelry:hover {
     box-shadow: 0 16px 50px rgba(0,0,0,0.6), 0 0 40px rgba(240,180,41,0.25);
+  }
+
+  /* AXY TETRIS */
+  .card-tetris {
+    border-color: rgba(255,77,141,0.3);
+    background: linear-gradient(160deg, rgba(60,10,30,0.9) 0%, rgba(40,4,20,0.95) 100%);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  .card-tetris:hover {
+    box-shadow: 0 16px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,77,141,0.25);
   }
 
   /* Card art area */
@@ -259,13 +269,9 @@
     overflow: hidden;
   }
 
-  .card-crystal .card-art {
-    background: radial-gradient(ellipse at 50% 60%, rgba(91,200,245,0.18) 0%, transparent 70%);
-  }
-
-  .card-jewelry .card-art {
-    background: radial-gradient(ellipse at 50% 60%, rgba(240,180,41,0.18) 0%, transparent 70%);
-  }
+  .card-crystal .card-art { background: radial-gradient(ellipse at 50% 60%, rgba(91,200,245,0.18) 0%, transparent 70%); }
+  .card-jewelry .card-art { background: radial-gradient(ellipse at 50% 60%, rgba(240,180,41,0.18) 0%, transparent 70%); }
+  .card-tetris .card-art { background: radial-gradient(ellipse at 50% 60%, rgba(255,77,141,0.18) 0%, transparent 70%); }
 
   /* Pixel grid decoration inside card art */
   .pixel-grid {
@@ -294,11 +300,16 @@
   .px-c3 { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
   .px-c4 { background: rgba(130,80,255,0.2); color: rgba(180,130,255,0.8); border: 1px solid rgba(130,80,255,0.35); }
 
-  /* jewelry cells */
+  /* jewelry/merge cells */
   .px-j1 { background: rgba(240,180,41,0.3); color: var(--c-gold); border: 1px solid rgba(240,180,41,0.5); }
   .px-j2 { background: rgba(240,120,41,0.2); color: rgba(240,160,80,0.8); border: 1px solid rgba(240,120,41,0.3); }
   .px-j3 { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.1); }
   .px-j4 { background: rgba(180,40,40,0.2); color: rgba(255,100,100,0.8); border: 1px solid rgba(180,40,40,0.35); }
+
+  /* tetris cells */
+  .px-t1 { background: rgba(255,77,141,0.3); color: var(--c-pink); border: 1px solid rgba(255,77,141,0.5); }
+  .px-t2 { background: rgba(130,80,255,0.2); color: rgba(180,130,255,0.8); border: 1px solid rgba(130,80,255,0.35); }
+  .px-t3 { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.1); }
 
   /* card body */
   .card-body {
@@ -307,10 +318,12 @@
     flex-direction: column;
     gap: 10px;
     border-top: 1px solid;
+    flex-grow: 1;
   }
 
   .card-crystal .card-body { border-color: rgba(91,200,245,0.15); }
   .card-jewelry .card-body { border-color: rgba(240,180,41,0.15); }
+  .card-tetris .card-body { border-color: rgba(255,77,141,0.15); }
 
   .card-tag {
     font-family: 'Orbitron', monospace;
@@ -321,6 +334,7 @@
   }
   .card-crystal .card-tag { color: var(--c-crystal); }
   .card-jewelry .card-tag { color: var(--c-gold); }
+  .card-tetris .card-tag { color: var(--c-pink); }
 
   .card-title {
     font-family: 'Orbitron', monospace;
@@ -331,6 +345,7 @@
   }
   .card-crystal .card-title { color: #fff; text-shadow: 0 0 12px var(--c-crystal-glow); }
   .card-jewelry .card-title { color: #fff; text-shadow: 0 0 12px var(--c-gold-glow); }
+  .card-tetris .card-title { color: #fff; text-shadow: 0 0 12px rgba(255,77,141,0.3); }
 
   .card-desc {
     font-size: clamp(12px, 2vw, 14px);
@@ -343,7 +358,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: auto; /* Push to bottom */
     padding: 10px 22px;
     border-radius: 8px;
     font-family: 'Orbitron', monospace;
@@ -361,24 +376,23 @@
     border-color: rgba(91,200,245,0.4);
     background: rgba(91,200,245,0.08);
   }
-  .card-crystal:hover .card-cta {
-    background: rgba(91,200,245,0.18);
-    box-shadow: 0 0 14px rgba(91,200,245,0.3);
-  }
+  .card-crystal:hover .card-cta { background: rgba(91,200,245,0.18); box-shadow: 0 0 14px rgba(91,200,245,0.3); }
 
   .card-jewelry .card-cta {
     color: var(--c-gold);
     border-color: rgba(240,180,41,0.4);
     background: rgba(240,180,41,0.08);
   }
-  .card-jewelry:hover .card-cta {
-    background: rgba(240,180,41,0.18);
-    box-shadow: 0 0 14px rgba(240,180,41,0.3);
-  }
+  .card-jewelry:hover .card-cta { background: rgba(240,180,41,0.18); box-shadow: 0 0 14px rgba(240,180,41,0.3); }
 
-  .cta-arrow {
-    transition: transform 0.25s ease;
+  .card-tetris .card-cta {
+    color: var(--c-pink);
+    border-color: rgba(255,77,141,0.4);
+    background: rgba(255,77,141,0.08);
   }
+  .card-tetris:hover .card-cta { background: rgba(255,77,141,0.18); box-shadow: 0 0 14px rgba(255,77,141,0.3); }
+
+  .cta-arrow { transition: transform 0.25s ease; }
   .game-card:hover .cta-arrow { transform: translateX(4px); }
 
   /* ── FOOTER ──────────────────────────────────────── */
@@ -392,6 +406,9 @@
   }
 
   /* ── RESPONSIVE TWEAKS ───────────────────────────── */
+  @media (max-width: 768px) {
+    .cards-row { gap: 20px; }
+  }
   @media (max-width: 480px) {
     .game-card { width: 100%; max-width: 340px; }
     .cards-row { gap: 16px; }
@@ -421,8 +438,7 @@
 
   <div class="cards-row">
 
-    <!-- AXY CRYSTAL -->
-    <a href="https://nuclewar1.github.io/AXYCRYSTAL.html" target="_blank" rel="noopener noreferrer" class="game-card card-crystal">
+    <a href="https://nuclewar1.github.io/axy_sum_crystal_drop.html" target="_blank" rel="noopener noreferrer" class="game-card card-crystal">
       <div class="card-art">
         <div class="pixel-grid">
           <div class="px-cell px-c1">512</div>
@@ -444,14 +460,13 @@
       </div>
       <div class="card-body">
         <div class="card-tag">◈ Drop &amp; Merge</div>
-        <div class="card-title">AXY Crystal<br>Drop</div>
+        <div class="card-title">AXY Sum<br>Crystal Drop</div>
         <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için strateji kur.</div>
         <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
       </div>
     </a>
 
-    <!-- 2048 JEWELRY -->
-    <a href="https://nuclewar1.github.io/2048.html" target="_blank" rel="noopener noreferrer" class="game-card card-jewelry">
+    <a href="https://nuclewar1.github.io/axy_crystal_merge.html" target="_blank" rel="noopener noreferrer" class="game-card card-jewelry">
       <div class="card-art">
         <div class="pixel-grid">
           <div class="px-cell px-j1">2048</div>
@@ -473,8 +488,38 @@
       </div>
       <div class="card-body">
         <div class="card-tag">◈ Slide &amp; Merge</div>
-        <div class="card-title">2048<br>Jewelry</div>
-        <div class="card-desc">Kaydır, birleştir ve 2048'e ulaş. Klasik bulmaca, parlak mücevher estetik.</div>
+        <div class="card-title">AXY Crystal<br>Merge</div>
+        <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik bulmaca.</div>
+        <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+      </div>
+    </a>
+
+    <a href="https://nuclewar1.github.io/axy_tetris_classic.html" target="_blank" rel="noopener noreferrer" class="game-card card-tetris">
+      <div class="card-art">
+        <div class="pixel-grid">
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t1"></div>
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t2"></div>
+          <div class="px-cell px-t2"></div>
+          
+          <div class="px-cell px-t1"></div>
+          <div class="px-cell px-t1"></div>
+          <div class="px-cell px-t1"></div>
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t2"></div>
+          
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t3"></div>
+          <div class="px-cell px-t2"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">◈ Block Puzzle</div>
+        <div class="card-title">AXY Tetris<br>Classic</div>
+        <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon modern hali.</div>
         <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
       </div>
     </a>
