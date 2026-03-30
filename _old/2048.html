@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0037)https://nuclewar1.github.io/2048.html -->
-<html lang="tr" style="--col-w: 80px; --block-h: 80px; --col-gap: 8px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
-body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
-</style>
-
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>2048 X2 — Crystal Drop</title>
-<link href="./2048 X2 — Crystal Drop_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #050a1a;
@@ -280,160 +278,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     text-transform: uppercase;
   }
 
-
-  /* ===== TOOLTIP SİSTEMİ ===== */
-  .has-tooltip { position: relative; }
-  .tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(5,15,45,0.97);
-    border: 1.5px solid rgba(0,180,255,0.4);
-    border-radius: 10px;
-    padding: 8px 11px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: rgba(200,230,255,0.95);
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.18s 0.5s, visibility 0.18s 0.5s;
-    z-index: 300;
-    box-shadow: 0 4px 20px rgba(0,100,200,0.3);
-    line-height: 1.5;
-    text-align: center;
-    max-width: 180px;
-    white-space: normal;
-  }
-  .tooltip::after {
-    content:''; position:absolute;
-    top:100%; left:50%; transform:translateX(-50%);
-    border:5px solid transparent;
-    border-top-color: rgba(0,180,255,0.4);
-  }
-  .has-tooltip:hover .tooltip { opacity: 1; visibility: visible; }
-
-  /* ===== GOAL/HEDEF GÖSTERGESİ ===== */
-  #goal-tile {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(40px,8vw,52px);
-    height: clamp(40px,8vw,52px);
-    border-radius: 10px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(0.5rem,2vw,0.72rem);
-    font-weight: 900;
-    cursor: default;
-    transition: all 0.4s ease;
-  }
-
-  /* ===== GAME STATS - KARE GRİD ===== */
-  .stats-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px;
-    padding: 4px 2px;
-  }
-  .stats-item {
-    background: rgba(0,30,80,0.4);
-    border: 1.5px solid rgba(0,80,180,0.2);
-    border-radius: 14px;
-    padding: 10px 6px 8px;
-    text-align: center;
-    transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-  .stats-item.achieved {
-    border-color: rgba(0,180,255,0.4);
-    background: rgba(0,40,100,0.55);
-    box-shadow: 0 0 10px rgba(0,100,200,0.2);
-  }
-  .stats-item.achieved:hover { transform: scale(1.04); border-color: rgba(0,180,255,0.7); }
-  .stats-item .st-tile {
-    display: flex; align-items: center; justify-content: center;
-    width: 52px; height: 52px; border-radius: 12px;
-    font-family: 'Orbitron', sans-serif; font-weight: 900;
-  }
-  .stats-item .st-count {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem; font-weight: 700;
-    color: rgba(200,220,255,0.9);
-  }
-  .stats-item.locked .st-tile { filter: grayscale(1) brightness(0.35); box-shadow: none !important; }
-  .stats-item.locked .st-count { color: rgba(200,220,255,0.22); }
-
-  /* ===== PAUSE MODAL ===== */
-  #pause-btn {
-    background: rgba(100,200,255,0.1);
-    border: 1.5px solid rgba(100,200,255,0.3);
-    border-radius: 10px; padding: 6px 10px;
-    color: rgba(100,200,255,0.8);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.78rem; font-weight: 700;
-    cursor: pointer; letter-spacing: 0.06em;
-    text-transform: uppercase; transition: 0.2s;
-  }
-  #pause-btn:hover { background: rgba(100,200,255,0.2); }
-  #pause-btn.paused { background:rgba(251,191,36,0.15); border-color:rgba(251,191,36,0.4); color:rgba(251,191,36,0.9); }
-
-  #pause-modal {
-    display: none !important;
-    position: fixed; inset: 0;
-    background: rgba(0,5,20,0.92);
-    z-index: 210;
-    align-items: center; justify-content: center;
-    backdrop-filter: blur(12px);
-  }
-  #pause-box {
-    background: rgba(5,15,40,0.98);
-    border: 2px solid rgba(0,180,255,0.35);
-    border-radius: 24px; padding: 28px 22px;
-    max-width: 340px; width: 92%; margin: 0 16px;
-    animation: overlayIn 0.4s ease;
-    max-height: 88vh; overflow-y: auto;
-  }
-  .pause-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.15rem; font-weight: 900;
-    color: var(--glow-blue);
-    text-align: center; margin-bottom: 18px;
-    letter-spacing: 0.06em;
-  }
-  .pmenu-btn {
-    width: 100%; border-radius: 12px;
-    padding: 12px 16px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem; font-weight: 700;
-    cursor: pointer; letter-spacing: 0.04em;
-    transition: all 0.18s; margin-bottom: 8px;
-    text-align: left; display: flex;
-    align-items: center; gap: 10px;
-  }
-  .pmenu-btn:hover { transform: translateX(4px); }
-  .pmenu-btn.p-primary { background:linear-gradient(135deg,#0ea5e9,#6366f1); border:none; color:#fff; box-shadow:0 4px 16px rgba(99,102,241,0.35); }
-  .pmenu-btn.p-secondary { background:rgba(0,80,180,0.15); border:1.5px solid rgba(0,100,200,0.3); color:rgba(200,220,255,0.85); }
-  .pmenu-btn.p-warn { background:rgba(185,28,28,0.12); border:1.5px solid rgba(185,28,28,0.35); color:rgba(239,68,68,0.85); }
-
-  #howto-panel {
-    display: none;
-    margin-top: 4px;
-    background: rgba(0,20,60,0.55);
-    border: 1px solid rgba(0,100,200,0.25);
-    border-radius: 14px; padding: 14px 12px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.88rem; color: rgba(200,220,255,0.85);
-    line-height: 1.7; margin-bottom: 8px;
-  }
-  .howto-row { display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; }
-  .howto-icon { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
-  .howto-title { font-family:'Orbitron',sans-serif; font-size:0.68rem; color:var(--glow-blue); letter-spacing:0.08em; display:block; margin-bottom:1px; }
-
   /* Block color themes - Maximum Contrast & Distinction */
   .b2    { background:linear-gradient(145deg,#1e40af,#3b82f6); border:1.5px solid #60a5fa; box-shadow:0 4px 16px rgba(59,130,246,0.6),inset 0 1px 0 rgba(255,255,255,0.2); color:#dbeafe; }
   .b4    { background:linear-gradient(145deg,#dc2626,#ef4444); border:1.5px solid #f87171; box-shadow:0 4px 16px rgba(239,68,68,0.6),inset 0 1px 0 rgba(255,255,255,0.2); color:#fee2e2; }
@@ -501,7 +345,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
   #next-wrap {
     display: flex;
     align-items: center;
-    gap: 4px; justify-content: space-around;
+    gap: 8px;
     margin: 3px 0;
     padding: 5px 12px;
     background: var(--panel);
@@ -828,49 +672,21 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 }
 
 </style>
-<style id="combo-splash-styles">
-    @keyframes comboSplash {
-      0% {
-        transform: translate(-50%, -50%) scale(0) rotate(-10deg);
-        opacity: 0;
-      }
-      15% {
-        transform: translate(-50%, -50%) scale(1.3) rotate(5deg);
-        opacity: 1;
-      }
-      25% {
-        transform: translate(-50%, -50%) scale(0.95) rotate(-2deg);
-      }
-      35% {
-        transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
-      }
-      45% {
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-      }
-      70% {
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -60%) scale(0.8) rotate(0deg);
-        opacity: 0;
-      }
-    }
-  </style></head>
+</head>
 <body>
 
-<canvas id="stars" width="1920" height="1039"></canvas>
+<canvas id="stars"></canvas>
 
 <div id="header">
   <div id="logo">Axy Sum<span>Crystal Drop</span> <span style="font-size:0.5rem; opacity:0.6; margin-left:4px;">v1.0</span></div>
   <div style="display:flex;gap:10px;">
     <div class="score-box">
       <div class="label">Score</div>
-      <div class="val pop" id="score-val">12</div>
+      <div class="val" id="score-val">0</div>
     </div>
     <div class="score-box">
       <div class="label">Best</div>
-      <div class="val" id="best-val">14.920</div>
+      <div class="val" id="best-val">0</div>
     </div>
   </div>
 </div>
@@ -878,37 +694,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <div id="gems-wrap" style="position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;width:100%;max-width:520px;padding:0 clamp(6px,2vw,12px);margin-bottom:2px;gap:8px;flex-shrink:0;">
   <div id="gems-bar" style="margin-bottom:0;">
     <span class="gem-icon">💎</span>
-    <span id="gems-count">448</span>
+    <span id="gems-count">25</span>
     <span style="opacity:0.45">gems</span>
   </div>
   <div style="display:flex;gap:6px;align-items:center;">
-  <span class="has-tooltip" style="position:relative;">
-    <button id="reset-btn" onclick="showResetConfirm()">🔄 Sıfırla</button>
-    <span class="tooltip">Oyunu sıfırla</span>
-  </span>
-  <span class="has-tooltip" style="position:relative;">
-    <button onclick="openHSModal()" style="background:rgba(251,191,36,0.1);border:1.5px solid rgba(251,191,36,0.3);border-radius:10px;padding:6px 10px;color:rgba(251,191,36,0.8);font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:all 0.2s;">🏅</button>
-    <span class="tooltip">En yüksek skorlar</span>
-  </span>
-  <span class="has-tooltip" style="position:relative;">
-    <button onclick="godPasswordCheck()" style="background:rgba(168,85,247,0.1);border:1.5px solid rgba(168,85,247,0.3);border-radius:10px;padding:6px 10px;color:rgba(168,85,247,0.8);font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:0.2s;">⚡</button>
-    <span class="tooltip">God Mode — geliştirici modu</span>
-  </span>
-  <span class="has-tooltip" style="position:relative;">
-    <button onclick="openStatsModal()" style="background:rgba(0,180,255,0.1);border:1.5px solid rgba(0,180,255,0.3);border-radius:10px;padding:6px 10px;color:rgba(0,180,255,0.8);font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:0.2s;">📊</button>
-    <span class="tooltip">Oyun istatistikleri<br>Kaç tane ne oluşturdun</span>
-  </span>
-  <span class="has-tooltip" style="position:relative;">
-    <button id="pause-btn" onclick="togglePause()">⏸ Duraklat</button>
-    <span class="tooltip">Oyunu duraklat / menü</span>
-  </span>
+  <button id="reset-btn" onclick="showResetConfirm()">🔄 Sıfırla</button>
+  <button onclick="openHSModal()" style="background:rgba(251,191,36,0.1);border:1.5px solid rgba(251,191,36,0.3);border-radius:10px;padding:6px 10px;color:rgba(251,191,36,0.8);font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.background='rgba(251,191,36,0.2)'" onmouseout="this.style.background='rgba(251,191,36,0.1)'">🏅</button>
+  <button onclick="godPasswordCheck()" style="background:rgba(168,85,247,0.1);border:1.5px solid rgba(168,85,247,0.3);border-radius:10px;padding:6px 10px;color:rgba(168,85,247,0.8);font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.background='rgba(168,85,247,0.2)'" onmouseout="this.style.background='rgba(168,85,247,0.1)'">⚡</button>
 </div>
 </div>
 
 <div id="timer-bar">
   <span class="t-label">Bonus Gem</span>
-  <span id="timer-countdown">2:38</span>
-  <div id="timer-progress-wrap"><div id="timer-progress" style="width: 87.7778%; background: linear-gradient(90deg, rgb(0, 180, 255), rgb(168, 85, 247)); box-shadow: rgba(0, 180, 255, 0.4) 0px 0px 8px;"></div></div>
+  <span id="timer-countdown">3:00</span>
+  <div id="timer-progress-wrap"><div id="timer-progress"></div></div>
   <span id="timer-bonus-flash">+5 💎</span>
 </div>
 
@@ -918,84 +717,65 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <p>Oyun sıfırlanacak ve gemler varsayılan (25) değere düşecek.</p>
     <div style="display:flex; flex-direction:column; gap:10px;">
       
-      <button onclick="confirmReset()" style="width:100%; background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; border-radius:10px; padding:12px 24px; font-family:&#39;Orbitron&#39;,sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); letter-spacing:0.08em; transition:all 0.2s;">Sadece Oyunu Sıfırla</button>
+      <button onclick="confirmReset()" style="width:100%; background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border:none; border-radius:10px; padding:12px 24px; font-family:'Orbitron',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); letter-spacing:0.08em; transition:all 0.2s;">Sadece Oyunu Sıfırla</button>
       
-      <button onclick="hardReset()" style="width:100%; background:rgba(185,28,28,0.15); color:#ef4444; border:1px solid rgba(185,28,28,0.5); border-radius:10px; padding:8px 16px; font-family:&#39;Orbitron&#39;,sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer; transition:all 0.2s;">🔥 Her Şeyi Sil (Rekorlar Dahil)</button>
+      <button onclick="hardReset()" style="width:100%; background:rgba(185,28,28,0.15); color:#ef4444; border:1px solid rgba(185,28,28,0.5); border-radius:10px; padding:8px 16px; font-family:'Orbitron',sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer; transition:all 0.2s;">🔥 Her Şeyi Sil (Rekorlar Dahil)</button>
       
-      <button onclick="hideResetConfirm()" style="width:100%; background:rgba(0,80,180,0.2); color:rgba(200,220,255,0.8); border:1.5px solid rgba(0,100,200,0.3); border-radius:10px; padding:10px 24px; font-family:&#39;Orbitron&#39;,sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.2s;">Vazgeç</button>
+      <button onclick="hideResetConfirm()" style="width:100%; background:rgba(0,80,180,0.2); color:rgba(200,220,255,0.8); border:1.5px solid rgba(0,100,200,0.3); border-radius:10px; padding:10px 24px; font-family:'Orbitron',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.2s;">Vazgeç</button>
       
     </div>
   </div>
 </div>
 
 <div id="game-wrap">
-  <div id="col-arrows"><div class="col-btn" data-col="0">▼</div><div class="col-btn" data-col="1">▼</div><div class="col-btn" data-col="2">▼</div><div class="col-btn" data-col="3">▼</div><div class="col-btn" data-col="4">▼</div></div>
+  <div id="col-arrows"></div>
 
   <div id="grid-container">
     <div id="danger-overlay"></div>
-    <div id="grid"><div class="cell" data-r="0" data-c="0"></div><div class="cell" data-r="0" data-c="1"></div><div class="cell" data-r="0" data-c="2"></div><div class="cell" data-r="0" data-c="3"></div><div class="cell" data-r="0" data-c="4"></div><div class="cell" data-r="1" data-c="0"></div><div class="cell" data-r="1" data-c="1"></div><div class="cell" data-r="1" data-c="2"></div><div class="cell" data-r="1" data-c="3"></div><div class="cell" data-r="1" data-c="4"></div><div class="cell" data-r="2" data-c="0"></div><div class="cell" data-r="2" data-c="1"></div><div class="cell" data-r="2" data-c="2"></div><div class="cell" data-r="2" data-c="3"></div><div class="cell" data-r="2" data-c="4"></div><div class="cell" data-r="3" data-c="0"></div><div class="cell" data-r="3" data-c="1"></div><div class="cell" data-r="3" data-c="2"></div><div class="cell" data-r="3" data-c="3"></div><div class="cell" data-r="3" data-c="4"></div><div class="cell" data-r="4" data-c="0"></div><div class="cell" data-r="4" data-c="1"></div><div class="cell" data-r="4" data-c="2"></div><div class="cell" data-r="4" data-c="3"></div><div class="cell" data-r="4" data-c="4"></div><div class="cell" data-r="5" data-c="0"></div><div class="cell" data-r="5" data-c="1"></div><div class="cell" data-r="5" data-c="2"></div><div class="cell" data-r="5" data-c="3"></div><div class="cell" data-r="5" data-c="4"></div><div class="cell" data-r="6" data-c="0"></div><div class="cell" data-r="6" data-c="1"></div><div class="cell" data-r="6" data-c="2"></div><div class="cell" data-r="6" data-c="3"></div><div class="cell" data-r="6" data-c="4"></div><div class="cell" data-r="7" data-c="0"></div><div class="cell" data-r="7" data-c="1"></div><div class="cell" data-r="7" data-c="2"></div><div class="cell" data-r="7" data-c="3"></div><div class="cell" data-r="7" data-c="4"></div><div class="block" data-r="7" data-c="1" data-val="8" style="background: linear-gradient(145deg, rgb(234, 88, 12), rgb(249, 115, 22)); border: 1.5px solid rgb(251, 146, 60); box-shadow: rgba(249, 115, 22, 0.6) 0px 4px 16px, rgba(255, 255, 255, 0.2) 0px 1px 0px inset; color: rgb(255, 237, 213); left: 88px; top: 616px; width: var(--col-w); height: var(--block-h); transition: top 0.15s ease-out, left 0.15s ease-out, transform 0.15s ease-out, filter 0.15s ease-out;"><div class="num">8</div></div></div>
-  <div id="col-touch-overlay" style="position: absolute; inset: 0px; display: grid; grid-template-columns: repeat(5, 1fr); z-index: 20; pointer-events: none; border-radius: 20px; overflow: hidden;"><div data-col="0" style="pointer-events: auto; cursor: pointer; border-radius: 10px; transition: background 0.15s;"></div><div data-col="1" style="pointer-events: auto; cursor: pointer; border-radius: 10px; transition: background 0.15s;"></div><div data-col="2" style="pointer-events: auto; cursor: pointer; border-radius: 10px; transition: background 0.15s;"></div><div data-col="3" style="pointer-events: auto; cursor: pointer; border-radius: 10px; transition: background 0.15s;"></div><div data-col="4" style="pointer-events: auto; cursor: pointer; border-radius: 10px; transition: background 0.15s;"></div></div></div>
+    <div id="grid"></div>
+  </div>
 
   <div id="next-wrap">
     <div>
       <div class="label">Next Block</div>
-      <div id="next-preview" style="background: linear-gradient(145deg, rgb(30, 64, 175), rgb(59, 130, 246)); border: 1.5px solid rgb(96, 165, 250); box-shadow: rgba(59, 130, 246, 0.6) 0px 4px 16px, rgba(255, 255, 255, 0.2) 0px 1px 0px inset; color: rgb(219, 234, 254); outline: none;">2</div>
+      <div id="next-preview"></div>
     </div>
     <div id="combo-display">
       <div class="label">Combo</div>
-      <span class="combo-val" id="combo-val" style="animation: 0.3s ease 0s 1 normal none running scorePop;"></span>
+      <span class="combo-val" id="combo-val"></span>
     </div>
     <div>
       <div class="label">Level</div>
       <div style="font-family:'Orbitron',sans-serif;font-size:clamp(1rem,3.5vw,1.4rem);font-weight:700;color:var(--glow-blue);text-shadow:0 0 16px rgba(0,180,255,0.5)" id="level-val">1</div>
     </div>
-    <div style="text-align:center;">
-      <div class="label">🎯 Hedef</div>
-      <div id="goal-tile" style="background:linear-gradient(145deg,#7e22ce,#a855f7);border:1.5px solid #c084fc;box-shadow:0 4px 16px rgba(168,85,247,0.5);color:#f3e8ff;">256</div>
-    </div>
   </div>
 
   <div id="powerups">
-    <span class="has-tooltip" style="position:relative;display:inline-block;">
-      <button class="pu-btn" id="pu-smash" onclick="activatePower('smash')">
-        <div class="pu-icon">🔨</div>
-        <div class="pu-name">Smash</div>
-        <div class="pu-cost">💎 100</div>
-      </button>
-      <span class="tooltip" style="bottom:calc(100% + 6px);">Seçtiğin 1 bloğu<br>patlatıp siler</span>
-    </span>
-    <span class="has-tooltip" style="position:relative;display:inline-block;">
-      <button class="pu-btn" id="pu-swap" onclick="activatePower('swap')">
-        <div class="pu-icon">🔄</div>
-        <div class="pu-name">Swap</div>
-        <div class="pu-cost">💎 100</div>
-      </button>
-      <span class="tooltip" style="bottom:calc(100% + 6px);">2 komşu bloğun<br>yerini değiştirir</span>
-    </span>
-    <span class="has-tooltip" style="position:relative;display:inline-block;">
-      <button class="pu-btn" id="pu-x2" onclick="activatePower('x2')">
-        <div class="pu-icon">✨</div>
-        <div class="pu-name">×2 Next</div>
-        <div class="pu-cost">💎 50</div>
-      </button>
-      <span class="tooltip" style="bottom:calc(100% + 6px);">Sıradaki bloğu<br>2 katına çıkarır</span>
-    </span>
-    <span class="has-tooltip" style="position:relative;display:inline-block;">
-      <button class="pu-btn" id="pu-undo" onclick="activatePower('undo')">
-        <div class="pu-icon">↩️</div>
-        <div class="pu-name">Undo</div>
-        <div class="pu-cost">💎 50</div>
-      </button>
-      <span class="tooltip" style="bottom:calc(100% + 6px);">Son atılan bloğu<br>geri alır</span>
-    </span>
-    <span class="has-tooltip" style="position:relative;display:inline-block;">
-      <button class="pu-btn" id="pu-bomb" onclick="activatePower('bomb')">
-        <div class="pu-icon">💣</div>
-        <div class="pu-name">Bomb</div>
-        <div class="pu-cost">💎 500</div>
-      </button>
-      <span class="tooltip" style="bottom:calc(100% + 6px);">Seçilen bloğun<br>etrafındaki 3×3 alanı temizler</span>
-    </span>
+    <button class="pu-btn" id="pu-smash" onclick="activatePower('smash')">
+      <div class="pu-icon">🔨</div>
+      <div class="pu-name">Smash</div>
+      <div class="pu-cost">💎 100</div>
+    </button>
+    <button class="pu-btn" id="pu-swap" onclick="activatePower('swap')">
+      <div class="pu-icon">🔄</div>
+      <div class="pu-name">Swap</div>
+      <div class="pu-cost">💎 100</div>
+    </button>
+    <button class="pu-btn" id="pu-x2" onclick="activatePower('x2')">
+      <div class="pu-icon">✨</div>
+      <div class="pu-name">×2 Next</div>
+      <div class="pu-cost">💎 50</div>
+    </button>
+    <button class="pu-btn" id="pu-undo" onclick="activatePower('undo')">
+      <div class="pu-icon">↩️</div>
+      <div class="pu-name">Undo</div>
+      <div class="pu-cost">💎 50</div>
+    </button>
+    <button class="pu-btn" id="pu-bomb" onclick="activatePower('bomb')">
+      <div class="pu-icon">💣</div>
+      <div class="pu-name">Bomb</div>
+      <div class="pu-cost">💎 500</div>
+    </button>
   </div>
 </div>
 
@@ -1009,117 +789,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
   </div>
 </div>
 
-
-<!-- MİLESTONE POPUP -->
-<div id="milestone-popup" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(10px);">
-  <div id="milestone-box">
-    <div class="ms-well-done">WELL DONE! 🎉</div>
-    <div class="ms-next-goal" id="ms-next-goal-text">Next goal: 512</div>
-    <div id="ms-tile-wrap" style="margin-bottom:8px;"></div>
-    <div class="ms-gem-reward" id="ms-gem-amount">💎 +50</div>
-    <button class="ms-claim-x3" onclick="claimMilestoneX3()">💋 CLAIM ×3</button>
-    <button class="ms-claim" onclick="claimMilestone()">CLAIM</button>
-  </div>
-</div>
-
-
-<!-- PAUSE MODAL -->
-<div id="pause-modal" style="display:none !important;">
-  <div id="pause-box">
-    <div class="pause-title">⏸ DURAKLAT</div>
-    <button class="pmenu-btn p-primary" onclick="resumeGame()">▶ &nbsp;Devam Et</button>
-    <button class="pmenu-btn p-secondary" onclick="toggleHowto()" id="howto-toggle-btn">📖 &nbsp;Nasıl Oynanır?</button>
-    <div id="howto-panel">
-      <div class="howto-row">
-        <span class="howto-icon">🎯</span>
-        <div>
-          <span class="howto-title">TEMEL OYNANIR</span>
-          Sütunlara tıklayarak bloklar düşür. Aynı sayılar yan yana veya alt alta gelince birleşir — daha büyük sayılar oluşur.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">✖️</span>
-        <div>
-          <span class="howto-title">BİRLEŞİM KURALI</span>
-          2+2=4, 4+4=8, 8+8=16... şeklinde katlanır. Üçü aynı anda birleşirse 3 kat, dörtse 4 kat değer alırsın!
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">🔨</span>
-        <div>
-          <span class="howto-title">SMASH (💎100)</span>
-          Seçtiğin tek bir bloğu patlatarak siler.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">🔄</span>
-        <div>
-          <span class="howto-title">SWAP (💎100)</span>
-          İki komşu bloğun yerini değiştirir. Birleşme oluşacaksa çalışır!
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">✨</span>
-        <div>
-          <span class="howto-title">×2 NEXT (💎50)</span>
-          Bir sonraki düşecek bloğun değerini iki katına çıkarır.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">↩️</span>
-        <div>
-          <span class="howto-title">UNDO (💎50)</span>
-          Son attığın bloğu geri alır. Birleşme olmuşsa iptal olmaz.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">💣</span>
-        <div>
-          <span class="howto-title">BOMB (💎500)</span>
-          Seçtiğin bloğun etrafındaki 3×3 alanı tamamen temizler.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">💎</span>
-        <div>
-          <span class="howto-title">GEMS KAZANMA</span>
-          Her birleşimde gem kazanırsın. Kombo yapınca daha çok! Her 3 dakikada otomatik +5 gem gelir.
-        </div>
-      </div>
-      <div class="howto-row">
-        <span class="howto-icon">🏆</span>
-        <div>
-          <span class="howto-title">KAZANMA ŞARTI</span>
-          2–7. satırların tamamını 2048 bloklarıyla doldurursan kazanırsın!
-        </div>
-      </div>
-    </div>
-    <button class="pmenu-btn p-secondary" onclick="openStatsModal(); resumeGame();">📊 &nbsp;İstatistikler</button>
-    <button class="pmenu-btn p-secondary" onclick="openHSModal(); resumeGame();">🏅 &nbsp;Skor Tablosu</button>
-    <button class="pmenu-btn p-warn" onclick="resumeGame(); showResetConfirm();">🔄 &nbsp;Oyunu Sıfırla</button>
-  </div>
-</div>
-
-<!-- GAME STATS MODAL -->
-<div id="stats-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-  <div id="stats-box">
-    <div class="stats-title">📊 GAME STATS</div>
-    <div id="stats-scroll">
-      <div class="stats-grid" id="stats-grid-inner"></div>
-    </div>
-    <button onclick="closeStatsModal()" style="margin-top:14px;width:100%;background:rgba(0,80,180,0.2);border:1.5px solid rgba(0,100,200,0.3);border-radius:10px;padding:10px;font-family:'Orbitron',sans-serif;font-size:0.8rem;color:rgba(200,220,255,0.8);cursor:pointer;">Kapat</button>
-  </div>
-</div>
-
 <!-- 2048 WIN OVERLAY -->
 <div id="win-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:150;align-items:center;justify-content:center;backdrop-filter:blur(10px);">
   <div style="background:rgba(5,15,40,0.97);border:2px solid rgba(251,191,36,0.6);border-radius:24px;padding:36px 40px;text-align:center;max-width:320px;margin:0 16px;animation:overlayIn 0.5s ease;">
-    <div style="font-family:&#39;Orbitron&#39;,sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,#fbbf24,#f97316);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">🏆 MUHTEŞEM!</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,#fbbf24,#f97316);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">🏆 MUHTEŞEM!</div>
     <div style="font-size:0.95rem;color:rgba(200,220,255,0.8);margin-bottom:6px;line-height:1.6;">Satır 1-6'yı 2048 bloklarla doldurdun!<br>Bu gerçekten efsanevi bir oyun! 🎉</div>
-    <div style="font-family:&#39;Orbitron&#39;,sans-serif;font-size:1.1rem;color:#fbbf24;margin-bottom:20px;">Skor: <span id="win-score">0</span></div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fbbf24;margin-bottom:20px;">Skor: <span id="win-score">0</span></div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <button onclick="continueGame()" style="background:linear-gradient(135deg,#16a34a,#059669);border:none;border-radius:12px;padding:12px 22px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.8rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(22,163,74,0.4);">▶ Devam Et</button>
-      <button onclick="startGame()" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;border-radius:12px;padding:12px 22px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.8rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(99,102,241,0.4);">↺ Yeni Oyun</button>
+      <button onclick="continueGame()" style="background:linear-gradient(135deg,#16a34a,#059669);border:none;border-radius:12px;padding:12px 22px;font-family:'Orbitron',sans-serif;font-size:0.8rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(22,163,74,0.4);">▶ Devam Et</button>
+      <button onclick="startGame()" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;border-radius:12px;padding:12px 22px;font-family:'Orbitron',sans-serif;font-size:0.8rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(99,102,241,0.4);">↺ Yeni Oyun</button>
     </div>
   </div>
 </div>
@@ -1127,16 +805,16 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <!-- HIGH SCORES MODAL -->
 <div id="hs-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:150;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
   <div style="background:rgba(5,15,40,0.97);border:1.5px solid rgba(0,100,200,0.4);border-radius:20px;padding:28px 24px;max-width:340px;width:90%;margin:0 16px;animation:overlayIn 0.4s ease;">
-    <div style="font-family:&#39;Orbitron&#39;,sans-serif;font-size:1.2rem;font-weight:900;color:#fbbf24;margin-bottom:16px;text-align:center;">🏅 En Yüksek Skorlar</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;color:#fbbf24;margin-bottom:16px;text-align:center;">🏅 En Yüksek Skorlar</div>
     <div id="hs-list" style="max-height:300px;overflow-y:auto;"></div>
-    <button onclick="closeHSModal()" style="margin-top:16px;width:100%;background:rgba(0,80,180,0.2);border:1.5px solid rgba(0,100,200,0.3);border-radius:10px;padding:10px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.8rem;color:rgba(200,220,255,0.8);cursor:pointer;">Kapat</button>
+    <button onclick="closeHSModal()" style="margin-top:16px;width:100%;background:rgba(0,80,180,0.2);border:1.5px solid rgba(0,100,200,0.3);border-radius:10px;padding:10px;font-family:'Orbitron',sans-serif;font-size:0.8rem;color:rgba(200,220,255,0.8);cursor:pointer;">Kapat</button>
   </div>
 </div>
 
 <!-- GOD MODE PANEL -->
 <div id="god-panel" style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:150;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
   <div style="background:rgba(5,15,40,0.97);border:2px solid rgba(168,85,247,0.5);border-radius:20px;padding:24px;max-width:340px;width:92%;margin:0 16px;animation:overlayIn 0.4s ease;">
-    <div style="font-family:&#39;Orbitron&#39;,sans-serif;font-size:1.1rem;font-weight:900;color:#a855f7;margin-bottom:4px;text-align:center;">⚡ God Mode</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;color:#a855f7;margin-bottom:4px;text-align:center;">⚡ God Mode</div>
     <div style="font-size:0.75rem;color:rgba(200,220,255,0.5);text-align:center;margin-bottom:10px;">Değer seç → Sütuna tıkla</div>
     <div id="god-values" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;"></div>
     <div style="font-size:0.72rem;color:rgba(200,220,255,0.4);text-align:center;margin-bottom:10px;" id="god-selected-label">Seçili: —</div>
@@ -1148,7 +826,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <!-- filled by JS -->
       </div>
       <div style="display:flex;gap:5px;">
-        <select id="god-fill-val" style="flex:1;background:rgba(10,20,50,0.9);border:1.5px solid rgba(168,85,247,0.3);border-radius:8px;padding:6px 4px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.68rem;color:#e9d5ff;cursor:pointer;">
+        <select id="god-fill-val" style="flex:1;background:rgba(10,20,50,0.9);border:1.5px solid rgba(168,85,247,0.3);border-radius:8px;padding:6px 4px;font-family:'Orbitron',sans-serif;font-size:0.68rem;color:#e9d5ff;cursor:pointer;">
           <option value="2048">2048</option>
           <option value="1024">1024</option>
           <option value="512">512</option>
@@ -1161,13 +839,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
           <option value="4">4</option>
           <option value="2">2</option>
         </select>
-        <button onclick="godFillSelectedRows()" style="flex:1;background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(139,92,246,0.4));border:1.5px solid rgba(168,85,247,0.5);border-radius:8px;padding:6px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.68rem;font-weight:700;color:#e9d5ff;cursor:pointer;">Doldur ▶</button>
+        <button onclick="godFillSelectedRows()" style="flex:1;background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(139,92,246,0.4));border:1.5px solid rgba(168,85,247,0.5);border-radius:8px;padding:6px;font-family:'Orbitron',sans-serif;font-size:0.68rem;font-weight:700;color:#e9d5ff;cursor:pointer;">Doldur ▶</button>
       </div>
     </div>
 
     <div style="display:flex;gap:8px;">
-      <button onclick="toggleGodMode()" style="flex:1;background:rgba(168,85,247,0.15);border:1.5px solid rgba(168,85,247,0.4);border-radius:10px;padding:9px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.72rem;color:#a855f7;cursor:pointer;" id="god-toggle-btn">✓ Aktif</button>
-      <button onclick="closeGodPanel()" style="flex:1;background:rgba(0,80,180,0.15);border:1.5px solid rgba(0,100,200,0.3);border-radius:10px;padding:9px;font-family:&#39;Orbitron&#39;,sans-serif;font-size:0.72rem;color:rgba(200,220,255,0.7);cursor:pointer;">Kapat</button>
+      <button onclick="toggleGodMode()" style="flex:1;background:rgba(168,85,247,0.15);border:1.5px solid rgba(168,85,247,0.4);border-radius:10px;padding:9px;font-family:'Orbitron',sans-serif;font-size:0.72rem;color:#a855f7;cursor:pointer;" id="god-toggle-btn">✓ Aktif</button>
+      <button onclick="closeGodPanel()" style="flex:1;background:rgba(0,80,180,0.15);border:1.5px solid rgba(0,100,200,0.3);border-radius:10px;padding:9px;font-family:'Orbitron',sans-serif;font-size:0.72rem;color:rgba(200,220,255,0.7);cursor:pointer;">Kapat</button>
     </div>
   </div>
 </div>
@@ -1177,17 +855,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 var dropLocked = false;
 var winShown = false;
 var godMode = false;
-
-// ======= TILE STATS =======
-var tileStats = {};
-try { tileStats = JSON.parse(localStorage.getItem('2048tilestats') || '{}'); } catch(e) {}
-
-// ======= MİLESTONE SİSTEMİ =======
-const MILESTONES = [256, 512, 1024, 2048, 4096, 8192, 16384];
-var milestonesAchieved = new Set();
-try { milestonesAchieved = new Set(JSON.parse(localStorage.getItem('2048milestones') || '[]')); } catch(e) {}
-var pendingMilestoneGems = 0;
-var currentMilestoneVal = 0;
 
 // ======= AUDIO SYSTEM (Web Audio API — no files needed) =======
 let audioCtx = null;
@@ -1623,72 +1290,42 @@ function dropIntoCol(col) {
   let val = nextX2?nextVal*2:nextVal;
   nextX2=false;
 
+  grid[targetRow][col]=val;
+  
+  const el = createBlockEl(targetRow, col, val, false);
+  el.dataset.new = 'true';
+  
+  const startPos = getBlockPos(-1, col); 
+  const endPos = getBlockPos(targetRow, col); 
+  
+  el.style.transition = 'none'; 
+  el.style.top = startPos.top + 'px';
+  
+  void el.offsetWidth; 
+  
+  const dropDuration = 0.05 * (targetRow + 2); 
+  
+  el.style.transition = `top ${dropDuration}s ease-in`; 
+  el.style.top = endPos.top + 'px';
+
   moveCount++;
+
   nextVal=getNextValue();
   updateNextPreview();
 
   const btn = document.querySelector(`.col-btn[data-col="${col}"]`);
   if(btn) { btn.classList.add('drop-active'); setTimeout(()=>btn.classList.remove('drop-active'),300); }
 
-  // === YENİ: SLİDİNG DROP ANİMASYONU ===
-  slidingDropAnimation(col, val, targetRow, () => {
-    // Animasyon bitti, gerçek grid bloğunu oluştur
-    grid[targetRow][col] = val;
-    const el = createBlockEl(targetRow, col, val, false);
-    el.dataset.new = 'true';
-    playSound('drop');
-    el.style.transition = 'top 0.15s ease-out, left 0.15s ease-out, transform 0.15s ease-out, filter 0.15s ease-out';
-    setTimeout(() => { cascade(); }, 150);
-  });
-}
-
-function slidingDropAnimation(col, val, targetRow, onLand) {
-  const gridContainer = document.getElementById('grid-container');
-  const rect = gridContainer.getBoundingClientRect();
-  const colW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--col-w')) || 60;
-  const blockH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--block-h')) || 60;
-  const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--col-gap')) || 6;
-  const padInner = 5;
-
-  const xPos = rect.left + padInner + col * (colW + gap);
-  const startY = rect.top - blockH - 6;
-  const endY = rect.top + padInner + targetRow * (blockH + gap);
-
-  const styles = getBlockStyles(val);
-  const floatEl = document.createElement('div');
-  floatEl.className = 'sliding-drop-block';
-  floatEl.style.cssText = `
-    position:fixed;
-    left:${xPos}px; top:${startY}px;
-    width:${colW}px; height:${blockH}px;
-    background:${styles.background};
-    border:${styles.border};
-    box-shadow:${styles.boxShadow};
-    color:${styles.color};
-    border-radius:12px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:'Orbitron',sans-serif;font-weight:900;
-    pointer-events:none;z-index:50;
-    transition:none;
-  `;
-  floatEl.innerHTML = `<div style="font-size:clamp(0.75rem,2.5vw,1.3rem);font-weight:900;font-family:'Orbitron',sans-serif;">${val}</div>`;
-  if(val >= 256) floatEl.innerHTML += `<div style="font-size:0.4rem;opacity:0.7;letter-spacing:0.1em;">✦</div>`;
-  document.body.appendChild(floatEl);
-
-  void floatEl.offsetWidth;
-
-  const dropDuration = Math.max(0.12, 0.05 * (targetRow + 2));
-  floatEl.style.transition = `top ${dropDuration}s ease-in`;
-  floatEl.style.top = endY + 'px';
-
-  // Yere çarptığında küçük sıkışma animasyonu
+  // GÜNCELLENEN KISIM: Yere çarpma anı ve gecikmeli tetikleme
   setTimeout(() => {
-    floatEl.style.transition = 'transform 0.08s ease-out';
-    floatEl.style.transform = 'scaleY(0.85) scaleX(1.12)';
+    playSound('drop'); // Ses anında çalar, blok yere oturdu hissi verir
+    el.style.transition = 'top 0.15s ease-out, left 0.15s ease-out, transform 0.15s ease-out, filter 0.15s ease-out';
+    
+    // Etkileşime girmesi için (cascade) 150ms ufak bir es veriyoruz
     setTimeout(() => {
-      floatEl.remove();
-      onLand();
-    }, 80);
+      cascade();
+    }, 150);
+
   }, dropDuration * 1000);
 }
 
@@ -1733,12 +1370,6 @@ function doMultiMerge(keepR, keepC, neighbours, val) {
     clearTimeout(comboTimer);
     comboTimer = setTimeout(() => { combo = 0; updateCombo(); }, 3000);
     updateCombo();
-
-    // Tile stats kaydet
-    tileStats[newVal] = (tileStats[newVal] || 0) + 1;
-    localStorage.setItem('2048tilestats', JSON.stringify(tileStats));
-    // Milestone kontrol
-    checkMilestone(newVal);
 
     spawnParticles(keepR, keepC, newVal);
     const label = count >= 3 ? `💥 ×${count+1}  +${newVal}!` : count === 2 ? `⚡ ×3  +${newVal}` : `+${newVal}`;
@@ -2482,222 +2113,6 @@ document.addEventListener('keydown', e=>{
   if(map[e.key]!==undefined) { if(godMode) godDropIntoCol(map[e.key]); else dropIntoCol(map[e.key]); }
 });
 
-
-
-// ===== PAUSE SİSTEMİ =====
-var isPaused = false;
-
-function togglePause() {
-  if (isPaused) { resumeGame(); return; }
-  isPaused = true;
-  dropLocked = true;
-  const btn = document.getElementById('pause-btn');
-  btn.textContent = '▶ Devam';
-  btn.classList.add('paused');
-  const pm = document.getElementById('pause-modal');
-  pm.style.removeProperty('display');
-  pm.style.display = 'flex';
-  pm.style.position = 'fixed';
-  pm.style.inset = '0';
-  pm.style.zIndex = '210';
-}
-
-function resumeGame() {
-  isPaused = false;
-  dropLocked = false;
-  const btn = document.getElementById('pause-btn');
-  btn.textContent = '⏸ Duraklat';
-  btn.classList.remove('paused');
-  document.getElementById('pause-modal').style.display = 'none';
-  // howto paneli kapat
-  const howto = document.getElementById('howto-panel');
-  if(howto) howto.style.display = 'none';
-  const hbtn = document.getElementById('howto-toggle-btn');
-  if(hbtn) hbtn.innerHTML = '📖 &nbsp;Nasıl Oynanır?';
-}
-
-function toggleHowto() {
-  const panel = document.getElementById('howto-panel');
-  const btn = document.getElementById('howto-toggle-btn');
-  if(panel.style.display === 'block') {
-    panel.style.display = 'none';
-    btn.innerHTML = '📖 &nbsp;Nasıl Oynanır?';
-  } else {
-    panel.style.display = 'block';
-    btn.innerHTML = '📖 &nbsp;Gizle ▲';
-  }
-}
-
-// ===== GOAL TİLE GÜNCELLE =====
-function updateGoalTile() {
-  const el = document.getElementById('goal-tile');
-  if(!el) return;
-  // Bir sonraki ulaşılmamış milestone'u bul
-  const nextMilestone = MILESTONES.find(m => !milestonesAchieved.has(m));
-  if(!nextMilestone) {
-    el.textContent = '🏆';
-    el.style.background = 'linear-gradient(145deg,#ca8a04,#facc15)';
-    el.style.border = '2px solid #fde047';
-    el.style.boxShadow = '0 4px 24px rgba(250,204,21,0.8)';
-    el.style.color = '#fff';
-    return;
-  }
-  const styles = getBlockStyles(nextMilestone);
-  el.textContent = nextMilestone >= 1000 ? (nextMilestone >= 10000 ? Math.round(nextMilestone/1000)+'K' : nextMilestone) : nextMilestone;
-  el.style.background = styles.background;
-  el.style.border = styles.border;
-  el.style.boxShadow = styles.boxShadow;
-  el.style.color = styles.color;
-  el.style.fontSize = nextMilestone >= 1000 ? 'clamp(0.5rem,1.8vw,0.68rem)' : 'clamp(0.6rem,2vw,0.8rem)';
-}
-
-// ===== MİLESTONE SİSTEMİ =====
-function checkMilestone(val) {
-  if (dropLocked && !milestonesAchieved.size) return; // henüz oyun başlamadı
-  for (const m of MILESTONES) {
-    if (val >= m && !milestonesAchieved.has(m)) {
-      milestonesAchieved.add(m);
-      localStorage.setItem('2048milestones', JSON.stringify([...milestonesAchieved]));
-      updateGoalTile();
-      setTimeout(() => showMilestonePopup(m), 800);
-      break;
-    }
-  }
-}
-
-function showMilestonePopup(achievedVal) {
-  currentMilestoneVal = achievedVal;
-  const gemReward = Math.max(25, Math.floor(Math.log2(achievedVal)) * 10);
-  pendingMilestoneGems = gemReward;
-
-  // Next goal
-  const idx = MILESTONES.indexOf(achievedVal);
-  const nextGoal = idx < MILESTONES.length - 1 ? MILESTONES[idx + 1] : null;
-  document.getElementById('ms-next-goal-text').textContent = nextGoal ? `Next goal: ${nextGoal}` : '🏆 MAX REACHED!';
-
-  // Tile görseli
-  const styles = getBlockStyles(achievedVal);
-  const tileWrap = document.getElementById('ms-tile-wrap');
-  tileWrap.innerHTML = `<div class="ms-tile" style="background:${styles.background};border:${styles.border};box-shadow:${styles.boxShadow};color:${styles.color};">${achievedVal}</div>`;
-
-  document.getElementById('ms-gem-amount').textContent = `💎 +${gemReward}`;
-  const mpEl = document.getElementById('milestone-popup');
-  mpEl.style.display = 'flex';
-  mpEl.style.position = 'fixed';
-  mpEl.style.inset = '0';
-  mpEl.style.zIndex = '200';
-
-  dropLocked = true;
-  playSound('levelup');
-}
-
-function claimMilestone() {
-  addGems(pendingMilestoneGems);
-  const _mpEl = document.getElementById('milestone-popup');
-  _mpEl.style.display = 'none';
-  dropLocked = false;
-  // Küçük float
-  const el = document.createElement('div');
-  el.style.cssText = `position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:#34d399;text-shadow:0 0 30px rgba(52,211,153,0.8);pointer-events:none;z-index:999;animation:floatUp 2s ease-out forwards;white-space:nowrap;`;
-  el.textContent = `💎 +${pendingMilestoneGems}`;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2100);
-}
-
-function claimMilestoneX3() {
-  document.getElementById('milestone-popup').style.display = 'none';
-  showKissAnimation(() => {
-    const tripleGems = pendingMilestoneGems * 3;
-    addGems(tripleGems);
-    dropLocked = false;
-    const el = document.createElement('div');
-    el.style.cssText = `position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:#ec4899;text-shadow:0 0 30px rgba(236,72,153,0.9);pointer-events:none;z-index:999;animation:floatUp 2s ease-out forwards;white-space:nowrap;`;
-    el.textContent = `💋 +${tripleGems} 💎`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 2100);
-  });
-}
-
-function showKissAnimation(onComplete) {
-  // Büyük öpücük splash
-  const splash = document.createElement('div');
-  splash.style.cssText = `
-    position:fixed;top:45%;left:50%;transform:translate(-50%,-50%) scale(0);
-    font-size:6rem;pointer-events:none;z-index:9999;
-    animation:kissFloat 1.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  `;
-  splash.textContent = '💋';
-  document.body.appendChild(splash);
-
-  // Uçuşan küçük öpücükler
-  const kissCount = 8;
-  for(let i = 0; i < kissCount; i++) {
-    setTimeout(() => {
-      const k = document.createElement('div');
-      const angle = (i / kissCount) * Math.PI * 2;
-      const r1 = 60 + Math.random() * 40;
-      const r2 = 120 + Math.random() * 60;
-      const x1 = Math.cos(angle) * r1, y1 = Math.sin(angle) * r1;
-      const x2 = Math.cos(angle + 0.5) * r2, y2 = Math.sin(angle + 0.5) * r2 - 40;
-      const x3 = Math.cos(angle + 1) * (r2 + 30), y3 = Math.sin(angle + 1) * (r2 + 30) - 80;
-      const x4 = Math.cos(angle + 1.5) * (r2 + 60), y4 = Math.sin(angle + 1.5) * (r2 + 60) - 140;
-      const sz = 1.5 + Math.random() * 2;
-      k.style.cssText = `
-        position:fixed;top:45%;left:50%;font-size:${sz}rem;pointer-events:none;z-index:9998;
-        --kx1:${x1}px; --ky1:${y1}px; --kx2:${x2}px; --ky2:${y2}px;
-        --kx3:${x3}px; --ky3:${y3}px; --kx4:${x4}px; --ky4:${y4}px;
-        animation:kissOrbit 1.2s ease-out forwards;
-      `;
-      k.textContent = '💋';
-      document.body.appendChild(k);
-      setTimeout(() => k.remove(), 1300);
-    }, i * 60);
-  }
-
-  // Arka plan kısa pembe flash
-  const bg = document.createElement('div');
-  bg.style.cssText = `position:fixed;inset:0;background:rgba(236,72,153,0.12);pointer-events:none;z-index:9990;transition:opacity 0.4s;`;
-  document.body.appendChild(bg);
-
-  setTimeout(() => {
-    splash.remove();
-    bg.style.opacity = '0';
-    setTimeout(() => bg.remove(), 400);
-    if(onComplete) onComplete();
-  }, 1500);
-}
-
-// ===== GAME STATS MODAL =====
-const STATS_TILE_VALUES = [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
-
-function openStatsModal() {
-  const grid = document.getElementById('stats-grid-inner');
-  grid.innerHTML = '';
-  for(const v of STATS_TILE_VALUES) {
-    const count = tileStats[v] || 0;
-    const achieved = count > 0;
-    const styles = getBlockStyles(v);
-    const label = v >= 10000 ? Math.round(v/1000)+'K' : v;
-    const fontSize = v >= 10000 ? '0.55rem' : v >= 1000 ? '0.62rem' : '0.75rem';
-    const item = document.createElement('div');
-    item.className = 'stats-item' + (achieved ? ' achieved' : ' locked');
-    item.innerHTML = `
-      <div class="st-tile" style="background:${styles.background};border:${styles.border};box-shadow:${achieved ? styles.boxShadow : 'none'};color:${styles.color};font-size:${fontSize};">${label}</div>
-      <div class="st-count">${count > 0 ? count + 'x' : '—'}</div>
-    `;
-    grid.appendChild(item);
-  }
-  const smEl = document.getElementById('stats-modal');
-  smEl.style.display = 'flex';
-  smEl.style.position = 'fixed';
-  smEl.style.inset = '0';
-  smEl.style.zIndex = '200';
-}
-
-function closeStatsModal() {
-  document.getElementById('stats-modal').style.display = 'none';
-}
-
 // ======= START GAME =======
 function startGame() {
   document.getElementById('overlay').classList.remove('show');
@@ -2718,7 +2133,6 @@ function startGame() {
   localStorage.setItem('2048gems',gems);
   document.getElementById('gems-count').textContent=gems;
   updateUI();
-  updateGoalTile();
 }
 
 // Declare timer state before any calls
@@ -3060,32 +2474,17 @@ function godDropIntoCol(col) {
   for(let r=ROWS-1;r>=0;r--) { if(!grid[r][col]){targetRow=r;break;} }
   if(targetRow===-1) { shakeCol(col); return; }
   dropLocked = true;
-  slidingDropAnimation(col, godSelectedVal, targetRow, () => {
-    grid[targetRow][col] = godSelectedVal;
-    const el = createBlockEl(targetRow, col, godSelectedVal, false);
-    el.dataset.new = 'true';
-    playSound('drop');
-    setTimeout(() => { cascade(); }, 220);
-  });
+  grid[targetRow][col] = godSelectedVal;
+  createBlockEl(targetRow, col, godSelectedVal, true);
+  playSound('drop');
+  setTimeout(() => {
+    cascade();
+  }, 220);
 } // <-- Bu parantez fonksiyonu kapatıyor
 </script>
 <!-- Hazırlayan bilgisi -->
 <div style="text-align:center; font-size:0.6rem; color:rgba(200,220,255,0.4); padding:4px 0; width:100%; max-width:520px; margin:0 auto;">
-  hazırlayan: <a href="/cdn-cgi/l/email-protection#fa9bd49d8f949f89cfcfba9d979b9396d4999597" style="color:rgba(200,220,255,0.6); text-decoration:none;">Ahmet Güneş</a>
+  hazırlayan: <a href="mailto:a.gunes55@gmail.com" style="color:rgba(200,220,255,0.6); text-decoration:none;">Ahmet Güneş</a>
 </div>
-
-<audio class="audio-output" style="display: none;"></audio><div id="volume-booster-visusalizer">
-                    <div class="sound">
-                        <div class="sound-icon"></div>
-                        <div class="sound-wave sound-wave_one"></div>
-                        <div class="sound-wave sound-wave_two"></div>
-                        <div class="sound-wave sound-wave_three"></div>
-                    </div>
-                    <div class="segments-box">
-                        <div data-range="1-20" class="segment"><span></span></div>
-                        <div data-range="21-40" class="segment"><span></span></div>
-                        <div data-range="41-60" class="segment"><span></span></div>
-                        <div data-range="61-80" class="segment"><span></span></div>
-                        <div data-range="81-100" class="segment"><span></span></div>
-                    </div>
-                </div><veepn-lock-screen><template shadowrootmode="open"><style>html{box-sizing:border-box;text-size-adjust:100%;word-break:normal;tab-size:4}*,:before,:after{background-repeat:no-repeat;box-sizing:border-box}:before,:after{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0;color:inherit;border:0;border-top:1px solid}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none!important}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-color:inherit;text-indent:0}iframe{border-style:none}input{border-radius:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit;color:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit],[role=button]{cursor:pointer}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button,html [type=button],[type=reset],[type=submit]{appearance:auto}button,input,select,textarea{background-color:transparent;border-style:none}button:-moz-focusring,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{outline:1px dotted ButtonText}select{appearance:none}a:focus,button:focus,input:focus,select:focus,textarea:focus{outline-width:0}select::-ms-expand{display:none}select::-ms-value{color:currentcolor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{appearance:auto;color:inherit;font:inherit}[disabled]{cursor:default}img{border-style:none}progress{vertical-align:baseline}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled=true]{cursor:default}ul,ol{list-style-type:none}figure{margin:0}@keyframes slide-in{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.gradient-blue{background:radial-gradient(106.41% 128.47% at 50.15% 128.47%,#23abff,#3066ff)}.gradient-green{background:radial-gradient(92.26% 118.88% at 50.15% .13%,#00c3c3,#00aab3)}.gradient-purple{background:radial-gradient(165.12% 115.56% at 50.15% .13%,#a15aff,#00a0eb)}.bg-blue{background-color:#f2f5ff}.bg-purple{background-color:#f7f0ff}.bg-green{background-color:#ebffed}.lock-screen{font-family:FigtreeVF,sans-serif;letter-spacing:normal;position:fixed;z-index:2147483638;right:24px;bottom:24px;width:327px;border-radius:24px;overflow:hidden;box-shadow:0 24px 32px #00000014;animation:slide-in .3s ease-in-out forwards}.lock-screen__content{position:relative;padding:24px 24px 64px}.lock-screen__close{position:absolute;top:16px;right:16px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;opacity:.5}.lock-screen__label{height:26px;width:fit-content;border-radius:50px;background-color:#fff3;padding-inline:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:12px;line-height:18px;margin:-8px auto 16px}.lock-screen__title{color:#fff;text-align:center;font-size:20px;line-height:28px;font-weight:600;margin-bottom:8px}.lock-screen__description{color:#f5f6f7;text-align:center;font-size:14px;line-height:20px}.lock-screen__description b{font-weight:600}.lock-screen__card{position:relative;z-index:1;margin-top:-44px;background-color:#fff;border-radius:24px;padding:32px 20px 20px}.lock-screen__inner{margin-bottom:24px}.lock-screen__submit{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;height:40px;width:100%;border-radius:12px;padding-inline:16px;background-color:#f70;color:#fff;margin-bottom:16px}.lock-screen__skip{display:flex;align-items:center;justify-content:center;font-size:14px;line-height:20px;color:#82829c;margin-inline:auto}.price-card{border:1px solid #f2f2fc;background:linear-gradient(254.14deg,#fafbff .04%,#f5f8ff 100.04%);border-radius:24px;padding:24px 28px}.price-card__label{color:#4a5764;text-align:center;font-size:14px;line-height:20px;text-transform:uppercase;margin-bottom:16px}.price-card__price{display:flex;justify-content:center;align-items:flex-start;column-gap:2px;margin-bottom:12px}.price-card__currency{color:#515478;font-size:18px;line-height:28px}.price-card__number{color:#14142a;text-align:center;font-size:64px;line-height:54px}.price-card__wrap{display:flex;flex-direction:column}.price-card__decimal{color:#515478;font-size:18px;line-height:28px;font-weight:600}.price-card__period{color:#515478;font-size:14px;line-height:20px;margin-top:-6px}.price-card__discount{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}.price-card__discount-divider{position:absolute;z-index:0;top:50%;left:0;width:100%;height:1px;background-color:#dbe2f9;transform:translateY(-50%)}.price-card__discount-icon{position:absolute;z-index:1;top:50%;left:50%;transform:translate(-50%,-50%)}.price-card__discount-text{position:relative;z-index:2;color:#fff;font-size:12px;font-weight:600;line-height:18px}.price-card__features{display:flex;align-items:center;justify-content:center;column-gap:16px}.price-card__feature{color:#222e3a;font-size:14px;line-height:20px;display:flex;align-items:center;gap:6px}.price-card__feature:before{content:"";display:block;width:4px;height:4px;background-color:#20df9e;border-radius:50%;flex-shrink:0}.features-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.features-list__item{display:flex;flex-direction:column;align-items:center;gap:6px}.features-list__icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center}.features-list__text{color:#293a53;text-align:center;font-size:16px;line-height:24px;letter-spacing:-.1px}</style></template><style>@font-face{font-family:FigtreeVF;src:url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2 supports variations"),url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2-variations");font-weight:100 1000;font-display:swap}
+</body>
+</html>
