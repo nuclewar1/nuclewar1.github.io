@@ -127,24 +127,24 @@
     #game-wrap {
       position: relative; z-index: 10;
       display: flex; align-items: flex-start; justify-content: center;
-      gap: 8px; flex: 1; min-height: 0; padding: 0 6px 4px;
+      gap: 6px; flex: 1; min-height: 0; padding: 0 4px 4px;
       width: 100%; max-width: 520px;
     }
 
     /* ─── SIDE PANELS ─── */
     .side-panel {
-      display: flex; flex-direction: column; gap: 6px;
-      width: 80px; flex-shrink: 0; align-self: flex-start;
+      display: flex; flex-direction: column; gap: 4px;
+      width: clamp(55px, 15vw, 75px); flex-shrink: 0; align-self: flex-start;
     }
-    .side-panel.right { width: 82px; }
+    .side-panel.right { width: clamp(55px, 15vw, 75px); }
     .panel-box {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 12px; padding: 8px 6px;
+      border-radius: 10px; padding: 6px 4px;
       text-align: center; backdrop-filter: blur(10px);
     }
     .panel-box .p-label {
-      font-size: 0.55rem; letter-spacing: 0.12em;
+      font-size: 0.52rem; letter-spacing: 0.12em;
       color: rgba(200,220,255,0.45); text-transform: uppercase; margin-bottom: 4px;
     }
 
@@ -178,8 +178,8 @@
     #board-container {
       background: rgba(5,12,35,0.92);
       border: 1.5px solid rgba(0,100,200,0.3);
-      border-radius: 14px;
-      padding: 4px;
+      border-radius: 12px;
+      padding: 3px;
       box-shadow: 0 0 40px rgba(0,80,200,0.2), inset 0 0 30px rgba(0,20,80,0.5);
       position: relative; overflow: hidden;
     }
@@ -336,7 +336,7 @@
     /* ─── CONTROLS HINT ─── */
     #controls-hint {
       position:relative; z-index:10;
-      display:flex; gap:8px; justify-content:center;
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
       padding: 2px 6px 4px; flex-shrink:0;
       width:100%; max-width:520px;
     }
@@ -345,6 +345,50 @@
       border-radius:6px; padding:2px 6px;
       font-size:0.55rem; color:rgba(200,220,255,0.4);
       font-family:'Rajdhani',sans-serif; letter-spacing:0.05em;
+    }
+
+    /* ─── MOBILE CONTROLS ─── */
+    #mobile-controls {
+      display: none;
+      width: 100%; max-width: 520px;
+      padding: 2px 12px 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative; z-index: 20;
+    }
+    .mc-group { display: flex; gap: 6px; }
+    .mc-btn {
+      background: rgba(0, 80, 180, 0.25);
+      border: 1.5px solid rgba(0, 180, 255, 0.3);
+      border-radius: 14px; color: rgba(220, 240, 255, 0.95);
+      font-size: clamp(1.4rem, 7vw, 1.8rem);
+      width: clamp(50px, 14.5vw, 70px); height: clamp(50px, 14.5vw, 70px);
+      display: flex; align-items: center; justify-content: center;
+      user-select: none; touch-action: none; cursor: pointer;
+      backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0, 80, 200, 0.2);
+    }
+    .mc-btn:active { background: rgba(0, 180, 255, 0.45); transform: translateY(2px) scale(0.95); box-shadow: 0 2px 6px rgba(0, 80, 200, 0.3); }
+    
+    @media (max-width: 600px) {
+      #controls-hint { display: none !important; }
+      #mobile-controls { display: flex !important; }
+      .side-panel, .side-panel.right { width: 52px; }
+      .stat-row.m-hide { display: none !important; }
+      .stat-row { margin-bottom: 2px; }
+      .stat-val { font-size: 0.75rem; }
+      .stat-label { font-size: 0.45rem; }
+      .p-label { font-size: 0.45rem; margin-bottom: 2px; }
+      #next-canvas-2, #next-canvas-3 { display: none !important; }
+      .pu-btn { padding: 4px 1px; }
+      .pu-icon { font-size: 1.1rem; }
+      .pu-name, .pu-cost { font-size: 0.48rem; }
+      #mobile-controls { padding: 2px 4px 8px; }
+      .mc-btn { border-radius: 12px; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      #controls-hint { display: none !important; }
+      #mobile-controls { display: flex !important; }
     }
 
     /* Touch swipe area */
@@ -407,11 +451,11 @@
         <div class="stat-val" id="combo-val">—</div>
         <div class="stat-label">Combo</div>
       </div>
-      <div class="stat-row">
+      <div class="stat-row m-hide">
         <div class="stat-val" id="tetris-count">0</div>
         <div class="stat-label">Tetris</div>
       </div>
-      <div class="stat-row">
+      <div class="stat-row m-hide">
         <div class="stat-val" id="pieces-count">0</div>
         <div class="stat-label">Pieces</div>
       </div>
@@ -441,11 +485,11 @@
         <div class="stat-val" id="speed-val" style="color:#34d399;">1.0×</div>
         <div class="stat-label">Drop/s</div>
       </div>
-      <div class="stat-row">
+      <div class="stat-row m-hide">
         <div class="stat-val" id="singles-val">0</div>
         <div class="stat-label">Singles</div>
       </div>
-      <div class="stat-row">
+      <div class="stat-row m-hide">
         <div class="stat-val" id="doubles-val">0</div>
         <div class="stat-label">Doubles</div>
       </div>
@@ -505,6 +549,20 @@
   <span class="ctrl-key">↓ Hızlı</span>
   <span class="ctrl-key">Space Hard Drop</span>
   <span class="ctrl-key">C Hold</span>
+</div>
+
+<!-- MOBILE CONTROLS -->
+<div id="mobile-controls">
+  <div class="mc-group">
+    <button class="mc-btn" id="m-left">◀</button>
+    <button class="mc-btn" id="m-down">▼</button>
+    <button class="mc-btn" id="m-right">▶</button>
+  </div>
+  <div class="mc-group">
+    <button class="mc-btn" id="m-hold" style="font-size:clamp(0.8rem, 4vw, 1.1rem); font-weight:700; font-family:'Orbitron',sans-serif;">HLD</button>
+    <button class="mc-btn" id="m-drop">⏬</button>
+    <button class="mc-btn" id="m-rot">↻</button>
+  </div>
 </div>
 
 <!-- OVERLAYS -->
@@ -761,30 +819,34 @@ const canvas = document.getElementById('board-canvas');
 const ctx = canvas.getContext('2d');
 
 function fitBoard() {
-  // Get available height: total height minus header, levelbar, powerups, hints
+  // Get available height dynamically
   const totalH = window.innerHeight;
-  const headerH = document.getElementById('header').offsetHeight || 46;
-  const levelH = document.getElementById('level-bar').offsetHeight || 26;
-  const puH = document.getElementById('powerups').offsetHeight || 58;
-  const ctrlH = document.getElementById('controls-hint').offsetHeight || 22;
-  const padding = 20;
-  const availH = totalH - headerH - levelH - puH - ctrlH - padding;
+  const headerH = document.getElementById('header')?.offsetHeight || 0;
+  const levelH = document.getElementById('level-bar')?.offsetHeight || 0;
+  const puH = document.getElementById('powerups')?.offsetHeight || 0;
+  const ctrlH = document.getElementById('controls-hint')?.offsetHeight || 0;
+  const mcH = document.getElementById('mobile-controls')?.offsetHeight || 0;
+  const isMobile = window.innerWidth <= 600;
+  const padding = isMobile ? 12 : 24; // top/bottom extra spacing
+  const availH = totalH - headerH - levelH - puH - ctrlH - mcH - padding;
 
   // Available width
   const totalW = Math.min(window.innerWidth, 520);
-  const sidePanels = 80 + 82 + 8 + 12; // left+right panel + gaps + padding
-  const availW = totalW - sidePanels;
+  const leftW = document.querySelector('.side-panel')?.offsetWidth || (isMobile ? 52 : 75);
+  const rightW = document.querySelector('.side-panel.right')?.offsetWidth || (isMobile ? 52 : 75);
+  const nonBoardSpace = leftW + rightW + (isMobile ? 22 : 36);
+  const availW = totalW - nonBoardSpace;
 
   const byH = Math.floor(availH / ROWS);
   const byW = Math.floor(availW / COLS);
   CS = Math.min(byH, byW, 38);
-  CS = Math.max(CS, 22);
+  CS = Math.max(CS, 10); // Allow much smaller cells for tiny screens
 
   canvas.width = CS * COLS;
   canvas.height = CS * ROWS;
 
-  // Preview canvas cell size
-  const pcs = Math.max(13, Math.round(CS * 0.62));
+  // Preview canvas cell size scaling
+  const pcs = isMobile ? Math.max(5, Math.round(CS * 0.48)) : Math.max(5, Math.round(CS * 0.62));
   ['next-canvas-1','next-canvas-2','next-canvas-3','hold-canvas'].forEach((id,i) => {
     const c = document.getElementById(id);
     if (!c) return;
@@ -1497,27 +1559,37 @@ function hideAllOverlays() {
 let dasTimer=null, dasInterval=null;
 const DAS=150, ARR=50;
 
+function startDasLeft() {
+  if (gameState!=='playing') return;
+  moveLeft(); playSound('move'); clearDas();
+  dasTimer = setTimeout(()=>{ dasInterval = setInterval(()=>{ moveLeft(); playSound('move'); }, ARR); }, DAS);
+}
+function startDasRight() {
+  if (gameState!=='playing') return;
+  moveRight(); playSound('move'); clearDas();
+  dasTimer = setTimeout(()=>{ dasInterval = setInterval(()=>{ moveRight(); playSound('move'); }, ARR); }, DAS);
+}
+function clearDas() { clearTimeout(dasTimer); clearInterval(dasInterval); }
+
 let softDropActive=false;
 let softInterval=null;
+function startSoftDrop() {
+  if (softDropActive || gameState!=='playing') return;
+  softDropActive=true;
+  if (moveDown()) { score+=1; updateScore(); }
+  clearInterval(softInterval);
+  softInterval = setInterval(()=>{ if(moveDown()){score+=1;updateScore();} }, 50);
+}
+function stopSoftDrop() { softDropActive=false; clearInterval(softInterval); }
 
 document.addEventListener('keydown', e => {
   if (e.repeat) return;
   switch(e.code) {
-    case 'ArrowLeft':
-      moveLeft(); playSound('move');
-      dasTimer=setTimeout(()=>{ dasInterval=setInterval(()=>{ moveLeft(); },ARR); },DAS);
-      break;
-    case 'ArrowRight':
-      moveRight(); playSound('move');
-      dasTimer=setTimeout(()=>{ dasInterval=setInterval(()=>{ moveRight(); },ARR); },DAS);
-      break;
+    case 'ArrowLeft': startDasLeft(); break;
+    case 'ArrowRight': startDasRight(); break;
     case 'ArrowUp': case 'KeyX': rotate(1); playSound('rotate'); break;
     case 'KeyZ': rotate(-1); playSound('rotate'); break;
-    case 'ArrowDown':
-      softDropActive=true;
-      moveDown(); score+=1; updateScore();
-      softInterval=setInterval(()=>{ if(moveDown()){score+=1;updateScore();} },50);
-      break;
+    case 'ArrowDown': startSoftDrop(); break;
     case 'Space': e.preventDefault(); hardDrop(); break;
     case 'KeyC': case 'ShiftLeft': case 'ShiftRight': holdPiece(); break;
     case 'KeyP': case 'Escape':
@@ -1528,13 +1600,30 @@ document.addEventListener('keydown', e => {
 });
 
 document.addEventListener('keyup', e => {
-  if (e.code==='ArrowLeft'||e.code==='ArrowRight') {
-    clearTimeout(dasTimer); clearInterval(dasInterval);
-  }
-  if (e.code==='ArrowDown') {
-    softDropActive=false; clearInterval(softInterval);
-  }
+  if (e.code==='ArrowLeft'||e.code==='ArrowRight') clearDas();
+  if (e.code==='ArrowDown') stopSoftDrop();
 });
+
+// ─── MOBILE BUTTON BINDINGS ───
+function bindBtn(id, onStart, onStop) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  const start = (e) => { if(e.cancelable) e.preventDefault(); onStart(); };
+  const stop = (e) => { if(e.cancelable) e.preventDefault(); if(onStop) onStop(); };
+  el.addEventListener('touchstart', start, {passive:false});
+  el.addEventListener('mousedown', start);
+  el.addEventListener('touchend', stop, {passive:false});
+  el.addEventListener('touchcancel', stop, {passive:false});
+  el.addEventListener('mouseup', stop);
+  el.addEventListener('mouseleave', stop);
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+bindBtn('m-left', startDasLeft, clearDas);
+bindBtn('m-right', startDasRight, clearDas);
+bindBtn('m-down', startSoftDrop, stopSoftDrop);
+bindBtn('m-rot', () => { rotate(1); playSound('rotate'); });
+bindBtn('m-drop', () => { hardDrop(); });
+bindBtn('m-hold', () => { holdPiece(); });
 
 // ═══════════════════════════════════════════════════════
 // TOUCH INPUT
