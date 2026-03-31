@@ -241,7 +241,7 @@
       opacity: 0.5;
     }
 
-    /* ── CATEGORY CONTAINERS (MENÜLER) ───────────────── */
+    /* ── CATEGORY CONTAINERS & ACCORDION ─────────────── */
     .category-container {
       width: 100%;
       max-width: 1200px;
@@ -252,6 +252,22 @@
       margin-bottom: 40px;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(91, 200, 245, 0.03);
+      transition: padding 0.4s ease;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: clamp(20px, 4vw, 40px);
+      transition: opacity 0.3s ease, margin 0.4s ease;
+    }
+
+    .category-header:hover {
+      opacity: 0.8;
     }
 
     .category-title {
@@ -259,10 +275,46 @@
       font-size: clamp(20px, 4vw, 32px);
       font-weight: 900;
       color: var(--c-white);
-      text-align: center;
       letter-spacing: 0.15em;
-      margin-bottom: clamp(20px, 4vw, 40px);
       text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      margin: 0;
+    }
+
+    .toggle-icon {
+      font-size: clamp(14px, 2vw, 20px);
+      color: var(--c-crystal);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Modern CSS Grid Accordion Trick */
+    .category-content {
+      display: grid;
+      grid-template-rows: 1fr;
+      transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      opacity: 1;
+    }
+
+    .category-content-inner {
+      overflow: hidden;
+    }
+
+    /* Collapsed State Styles */
+    .category-container.collapsed {
+      padding-bottom: clamp(20px, 4vw, 40px);
+      /* Keep padding consistent or reduce it */
+    }
+
+    .category-container.collapsed .category-header {
+      margin-bottom: 0;
+    }
+
+    .category-container.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .category-container.collapsed .category-content {
+      grid-template-rows: 0fr;
+      opacity: 0;
     }
 
     /* ── CARDS ROW ───────────────────────────────────── */
@@ -272,6 +324,8 @@
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
+      padding-top: 10px;
+      /* Slight buffer for the accordion */
     }
 
     .game-card {
@@ -293,7 +347,6 @@
     }
 
     /* ── CARD THEMES ─────────────────────────────────── */
-    /* AXY CRYSTAL */
     .card-crystal {
       border-color: rgba(91, 200, 245, 0.3);
       background: linear-gradient(160deg, rgba(10, 28, 60, 0.9) 0%, rgba(4, 20, 40, 0.95) 100%);
@@ -304,7 +357,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(91, 200, 245, 0.25);
     }
 
-    /* AXY MERGE */
     .card-jewelry {
       border-color: rgba(240, 180, 41, 0.3);
       background: linear-gradient(160deg, rgba(40, 25, 5, 0.9) 0%, rgba(20, 12, 2, 0.95) 100%);
@@ -315,7 +367,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(240, 180, 41, 0.25);
     }
 
-    /* AXY TETRIS */
     .card-tetris {
       border-color: rgba(255, 77, 141, 0.3);
       background: linear-gradient(160deg, rgba(60, 10, 30, 0.9) 0%, rgba(40, 4, 20, 0.95) 100%);
@@ -326,7 +377,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 77, 141, 0.25);
     }
 
-    /* AXY PEGRIX */
     .card-pegrix {
       border-color: rgba(0, 238, 255, 0.4);
       background: linear-gradient(160deg, rgba(3, 0, 16, 0.9) 0%, rgba(14, 0, 48, 0.95) 100%);
@@ -337,7 +387,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 238, 255, 0.2), inset 0 0 20px rgba(255, 0, 238, 0.15);
     }
 
-    /* VIGNETTE TOOL */
     .card-vignette {
       border-color: rgba(0, 255, 136, 0.3);
       background: linear-gradient(160deg, rgba(10, 40, 25, 0.9) 0%, rgba(4, 20, 12, 0.95) 100%);
@@ -348,7 +397,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 136, 0.25);
     }
 
-    /* IMSAKIYE TOOL */
     .card-imsakiye {
       border-color: rgba(176, 77, 255, 0.3);
       background: linear-gradient(160deg, rgba(35, 15, 60, 0.9) 0%, rgba(18, 5, 30, 0.95) 100%);
@@ -415,7 +463,7 @@
       font-weight: 700;
     }
 
-    /* Crystal Cells */
+    /* Cells */
     .px-c1 {
       background: rgba(91, 200, 245, 0.25);
       color: var(--c-crystal);
@@ -440,7 +488,6 @@
       border: 1px solid rgba(130, 80, 255, 0.35);
     }
 
-    /* Jewelry Cells */
     .px-j1 {
       background: rgba(240, 180, 41, 0.3);
       color: var(--c-gold);
@@ -465,7 +512,6 @@
       border: 1px solid rgba(180, 40, 40, 0.35);
     }
 
-    /* Tetris Cells */
     .px-t1 {
       background: rgba(255, 77, 141, 0.3);
       color: var(--c-pink);
@@ -484,7 +530,6 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* Pegrix Cells */
     .px-p1 {
       background: rgba(255, 0, 238, 0.2);
       color: var(--c-px-mg);
@@ -509,7 +554,6 @@
       border: 1px solid rgba(255, 204, 0, 0.4);
     }
 
-    /* Tool Cells */
     .px-v1 {
       background: rgba(0, 255, 136, 0.2);
       color: var(--c-tool-green);
@@ -799,189 +843,202 @@
 
     <div class="divider"></div>
 
-    <section class="category-container">
-      <h2 class="category-title">◈ OYUNLAR ◈</h2>
-      <div class="cards-row">
+    <section class="category-container collapsed">
+      <div class="category-header">
+        <h2 class="category-title">◈ OYUNLAR ◈</h2>
+        <span class="toggle-icon">▼</span>
+      </div>
 
-        <a href="https://nuclewar1.github.io/axy_sum_crystal_drop.html" target="_blank" rel="noopener noreferrer"
-          class="game-card card-crystal">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-c1">512</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c4">256</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c2">128</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c2">64</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c1">32</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c4">16</div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c3"></div>
-              <div class="px-cell px-c2">8</div>
-              <div class="px-cell px-c3"></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Drop &amp; Merge</div>
-            <div class="card-title">AXY Sum<br>Crystal Drop</div>
-            <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için strateji kur.</div>
-            <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
+      <div class="category-content">
+        <div class="category-content-inner">
+          <div class="cards-row">
+            <a href="https://nuclewar1.github.io/axy_sum_crystal_drop.html" target="_blank" rel="noopener noreferrer"
+              class="game-card card-crystal">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-c1">512</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c4">256</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c2">128</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c2">64</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c1">32</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c4">16</div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c3"></div>
+                  <div class="px-cell px-c2">8</div>
+                  <div class="px-cell px-c3"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Drop &amp; Merge</div>
+                <div class="card-title">AXY Sum<br>Crystal Drop</div>
+                <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için strateji kur.</div>
+                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
 
-        <a href="https://nuclewar1.github.io/axy_crystal_merge.html" target="_blank" rel="noopener noreferrer"
-          class="game-card card-jewelry">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-j1">2048</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j2">1024</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j4">512</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j4">256</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j1">128</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j2">64</div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j3"></div>
-              <div class="px-cell px-j4">32</div>
-              <div class="px-cell px-j3"></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Slide &amp; Merge</div>
-            <div class="card-title">AXY Crystal<br>Merge</div>
-            <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik bulmaca.</div>
-            <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
+            <a href="https://nuclewar1.github.io/axy_crystal_merge.html" target="_blank" rel="noopener noreferrer"
+              class="game-card card-jewelry">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-j1">2048</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j2">1024</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j4">512</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j4">256</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j1">128</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j2">64</div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j3"></div>
+                  <div class="px-cell px-j4">32</div>
+                  <div class="px-cell px-j3"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Slide &amp; Merge</div>
+                <div class="card-title">AXY Crystal<br>Merge</div>
+                <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik bulmaca.</div>
+                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
 
-        <a href="https://nuclewar1.github.io/axy_tetris_classic.html" target="_blank" rel="noopener noreferrer"
-          class="game-card card-tetris">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t1"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t2"></div>
-              <div class="px-cell px-t2"></div>
-              <div class="px-cell px-t1"></div>
-              <div class="px-cell px-t1"></div>
-              <div class="px-cell px-t1"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t2"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t3"></div>
-              <div class="px-cell px-t2"></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Block Puzzle</div>
-            <div class="card-title">AXY Tetris<br>Classic</div>
-            <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon modern hali.</div>
-            <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
+            <a href="https://nuclewar1.github.io/axy_tetris_classic.html" target="_blank" rel="noopener noreferrer"
+              class="game-card card-tetris">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t1"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t2"></div>
+                  <div class="px-cell px-t2"></div>
+                  <div class="px-cell px-t1"></div>
+                  <div class="px-cell px-t1"></div>
+                  <div class="px-cell px-t1"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t2"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t3"></div>
+                  <div class="px-cell px-t2"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Block Puzzle</div>
+                <div class="card-title">AXY Tetris<br>Classic</div>
+                <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon modern hali.</div>
+                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
 
-        <a href="axy_pegrix.html" target="_blank" rel="noopener noreferrer" class="game-card card-pegrix">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-p4">$5</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p2">$2</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p1">50¢</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p2">★</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p1">!</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p4">$</div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p3"></div>
-              <div class="px-cell px-p2">▼</div>
-              <div class="px-cell px-p3"></div>
-            </div>
+            <a href="axy_pegrix.html" target="_blank" rel="noopener noreferrer" class="game-card card-pegrix">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-p4">$5</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p2">$2</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p1">50¢</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p2">★</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p1">!</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p4">$</div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p3"></div>
+                  <div class="px-cell px-p2">▼</div>
+                  <div class="px-cell px-p3"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Nail Bouncer</div>
+                <div class="card-title">AXY Pegrix</div>
+                <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade yap ve prestije
+                  ulaş!</div>
+                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
           </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Nail Bouncer</div>
-            <div class="card-title">AXY Pegrix</div>
-            <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade yap ve prestije ulaş!
-            </div>
-            <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
-
+        </div>
       </div>
     </section>
 
-    <section class="category-container">
-      <h2 class="category-title">◈ ARAÇLAR ◈</h2>
-      <div class="cards-row">
+    <section class="category-container collapsed">
+      <div class="category-header">
+        <h2 class="category-title">◈ ARAÇLAR ◈</h2>
+        <span class="toggle-icon">▼</span>
+      </div>
 
-        <a href="vignette-tool.html" target="_blank" rel="noopener noreferrer" class="game-card card-vignette">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v1"></div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v1">O</div>
-              <div class="px-cell px-v2"></div>
-              <div class="px-cell px-v1"></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Photo FX</div>
-            <div class="card-title">AXY Vignette<br>Tool</div>
-            <div class="card-desc">Görsellerinize hızlı ve profesyonel vinyet (karartma) efektleri uygulayın.</div>
-            <div class="card-cta">Kullan <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
+      <div class="category-content">
+        <div class="category-content-inner">
+          <div class="cards-row">
+            <a href="vignette-tool.html" target="_blank" rel="noopener noreferrer" class="game-card card-vignette">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v1"></div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v1">O</div>
+                  <div class="px-cell px-v2"></div>
+                  <div class="px-cell px-v1"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Photo FX</div>
+                <div class="card-title">AXY Vignette<br>Tool</div>
+                <div class="card-desc">Görsellerinize hızlı ve profesyonel vinyet (karartma) efektleri uygulayın.</div>
+                <div class="card-cta">Kullan <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
 
-        <a href="imsakiye.html" target="_blank" rel="noopener noreferrer" class="game-card card-imsakiye">
-          <div class="card-art">
-            <div class="pixel-grid">
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i1"></div>
-              <div class="px-cell px-i1"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i1"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i1"></div>
-              <div class="px-cell px-i1"></div>
-              <div class="px-cell px-i2"></div>
-              <div class="px-cell px-i2"></div>
-            </div>
+            <a href="imsakiye.html" target="_blank" rel="noopener noreferrer" class="game-card card-imsakiye">
+              <div class="card-art">
+                <div class="pixel-grid">
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i1"></div>
+                  <div class="px-cell px-i1"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i1"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i1"></div>
+                  <div class="px-cell px-i1"></div>
+                  <div class="px-cell px-i2"></div>
+                  <div class="px-cell px-i2"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">◈ Takvim</div>
+                <div class="card-title">AXY İmsakiye</div>
+                <div class="card-desc">Ramazan ayına özel iftar ve sahur vakitleri için hazırlanan modern imsakiye.
+                </div>
+                <div class="card-cta">İncele <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
           </div>
-          <div class="card-body">
-            <div class="card-tag">◈ Takvim</div>
-            <div class="card-title">AXY İmsakiye</div>
-            <div class="card-desc">Ramazan ayına özel iftar ve sahur vakitleri için hazırlanan modern imsakiye.</div>
-            <div class="card-cta">İncele <span class="cta-arrow">→</span></div>
-          </div>
-        </a>
-
+        </div>
       </div>
     </section>
 
@@ -990,6 +1047,15 @@
   </div>
 
   <script>
+    // --- Accordion Logic ---
+    document.querySelectorAll('.category-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const container = header.closest('.category-container');
+        container.classList.toggle('collapsed');
+      });
+    });
+
+    // --- Background Canvas Animation ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -1005,7 +1071,6 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // ── Mouse trail
     window.addEventListener('mousemove', e => {
       mouse.x = e.clientX; mouse.y = e.clientY;
       for (let i = 0; i < 4; i++) spawnTrailDust(e.clientX, e.clientY);
@@ -1016,19 +1081,13 @@
       for (let i = 0; i < 3; i++) spawnTrailDust(t.clientX, t.clientY);
     }, { passive: true });
 
-    // ── Color palettes for fairy dust
     const dustColors = [
-      [180, 120, 255], // violet
-      [91, 200, 245], // crystal blue
-      [255, 180, 240], // pink
-      [240, 200, 80], // gold
-      [150, 255, 200], // mint
-      [255, 255, 255], // white
+      [180, 120, 255], [91, 200, 245], [255, 180, 240],
+      [240, 200, 80], [150, 255, 200], [255, 255, 255],
     ];
 
     function randColor() { return dustColors[Math.floor(Math.random() * dustColors.length)]; }
 
-    // ── Static stars
     for (let i = 0; i < 200; i++) {
       stars.push({
         x: Math.random(), y: Math.random(),
@@ -1039,7 +1098,6 @@
       });
     }
 
-    // ── Ambient floating dust motes
     for (let i = 0; i < 55; i++) {
       dustMotes.push(makeDustMote(true));
     }
@@ -1062,7 +1120,6 @@
       };
     }
 
-    // ── Mouse trail dust
     function spawnTrailDust(x, y) {
       const [r, g, b] = randColor();
       const angle = Math.random() * Math.PI * 2;
@@ -1080,7 +1137,6 @@
       });
     }
 
-    // ── Fairy orbs
     for (let i = 0; i < 6; i++) {
       fairies.push(makeFairy());
     }
@@ -1101,7 +1157,6 @@
       };
     }
 
-    // ── Shooting stars
     function spawnShooter() {
       shootingStars.push({
         x: W * (0.3 + Math.random() * 0.7),
@@ -1116,7 +1171,6 @@
     }
     spawnShooter();
 
-    // ── Aurora bands
     let auroraT = 0;
 
     function drawAurora(t) {
@@ -1137,7 +1191,6 @@
       });
     }
 
-    // ── Star shape helper
     function drawSparkle(x, y, size, alpha, r, g, b) {
       ctx.save();
       ctx.globalAlpha = alpha;
@@ -1166,7 +1219,6 @@
       ctx.restore();
     }
 
-    // ── Main draw loop
     function draw(ts) {
       if (!t0) t0 = ts;
       const t = ts - t0;
