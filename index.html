@@ -21,11 +21,14 @@
       --c-pink: #ff4d8d;
       --c-blue: #4d9fff;
       --c-yellow: #ffd84d;
-      --c-magenta: #ff00ff;
-      --c-magenta-glow: rgba(255, 0, 255, 0.35);
       --c-white: #e8f0ff;
       --c-grid: rgba(91, 200, 245, 0.06);
       --c-border: rgba(91, 200, 245, 0.18);
+
+      /* Pegrix Neon Colors */
+      --c-px-cy: #00eeff;
+      --c-px-mg: #ff00ee;
+      --c-px-gd: #ffcc00;
     }
 
     * {
@@ -345,7 +348,7 @@
       transform: translateY(-8px) scale(1.02);
     }
 
-    /* AXY CRYSTAL (Sum Drop) */
+    /* AXY CRYSTAL */
     .card-crystal {
       border-color: rgba(91, 200, 245, 0.3);
       background: linear-gradient(160deg, rgba(10, 28, 60, 0.9) 0%, rgba(4, 20, 40, 0.95) 100%);
@@ -356,7 +359,7 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(91, 200, 245, 0.25);
     }
 
-    /* AXY MERGE (Jewelry replacement) */
+    /* AXY MERGE */
     .card-jewelry {
       border-color: rgba(240, 180, 41, 0.3);
       background: linear-gradient(160deg, rgba(40, 25, 5, 0.9) 0%, rgba(20, 12, 2, 0.95) 100%);
@@ -378,15 +381,15 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 77, 141, 0.25);
     }
 
-    /* AXY PEGRIX */
+    /* AXY PEGRIX (UPDATED TO MATCH GAME THEME) */
     .card-pegrix {
-      border-color: rgba(255, 0, 255, 0.3);
-      background: linear-gradient(160deg, rgba(30, 0, 40, 0.9) 0%, rgba(10, 0, 20, 0.95) 100%);
+      border-color: rgba(0, 238, 255, 0.4);
+      background: linear-gradient(160deg, rgba(3, 0, 16, 0.9) 0%, rgba(14, 0, 48, 0.95) 100%);
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
     }
 
     .card-pegrix:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 0, 255, 0.25);
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 238, 255, 0.2), inset 0 0 20px rgba(255, 0, 238, 0.15);
     }
 
     /* Card art area */
@@ -413,7 +416,7 @@
     }
 
     .card-pegrix .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(255, 0, 255, 0.18) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 60%, rgba(0, 238, 255, 0.15) 0%, transparent 70%);
     }
 
     /* Pixel grid decoration inside card art */
@@ -506,29 +509,29 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* pegrix cells */
+    /* pegrix cells (UPDATED) */
     .px-p1 {
-      background: rgba(255, 0, 255, 0.3);
-      color: var(--c-magenta);
-      border: 1px solid rgba(255, 0, 255, 0.5);
+      background: rgba(255, 0, 238, 0.2);
+      color: var(--c-px-mg);
+      border: 1px solid rgba(255, 0, 238, 0.4);
     }
 
     .px-p2 {
-      background: rgba(0, 245, 255, 0.2);
-      color: #00f5ff;
-      border: 1px solid rgba(0, 245, 255, 0.4);
+      background: rgba(0, 238, 255, 0.2);
+      color: var(--c-px-cy);
+      border: 1px solid rgba(0, 238, 255, 0.4);
     }
 
     .px-p3 {
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .px-p4 {
-      background: rgba(255, 215, 0, 0.2);
-      color: #ffd700;
-      border: 1px solid rgba(255, 215, 0, 0.35);
+      background: rgba(255, 204, 0, 0.2);
+      color: var(--c-px-gd);
+      border: 1px solid rgba(255, 204, 0, 0.4);
     }
 
     /* card body */
@@ -554,7 +557,7 @@
     }
 
     .card-pegrix .card-body {
-      border-color: rgba(255, 0, 255, 0.15);
+      border-color: rgba(0, 238, 255, 0.15);
     }
 
     .card-tag {
@@ -578,7 +581,7 @@
     }
 
     .card-pegrix .card-tag {
-      color: var(--c-magenta);
+      color: var(--c-px-cy);
     }
 
     .card-title {
@@ -605,8 +608,10 @@
     }
 
     .card-pegrix .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px var(--c-magenta-glow);
+      background: linear-gradient(90deg, var(--c-px-cy), var(--c-px-mg));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 8px rgba(255, 0, 238, 0.3));
     }
 
     .card-desc {
@@ -667,14 +672,16 @@
     }
 
     .card-pegrix .card-cta {
-      color: var(--c-magenta);
-      border-color: rgba(255, 0, 255, 0.4);
-      background: rgba(255, 0, 255, 0.08);
+      color: var(--c-px-cy);
+      border-color: rgba(0, 238, 255, 0.4);
+      background: rgba(0, 238, 255, 0.08);
     }
 
     .card-pegrix:hover .card-cta {
-      background: rgba(255, 0, 255, 0.18);
-      box-shadow: 0 0 14px rgba(255, 0, 255, 0.3);
+      background: rgba(0, 238, 255, 0.18);
+      box-shadow: 0 0 14px rgba(0, 238, 255, 0.4);
+      border-color: var(--c-px-mg);
+      color: var(--c-px-mg);
     }
 
     .cta-arrow {
@@ -732,7 +739,6 @@
       <div class="logo">AXY <span>GAMES</span></div>
 
       <nav class="main-nav">
-
         <div class="dropdown">
           <button class="drop-btn">◈ OYUNLAR ◈</button>
           <div class="drop-content">
@@ -750,7 +756,6 @@
             <a href="imsakiye.html" target="_blank">İmsakiye</a>
           </div>
         </div>
-
       </nav>
     </header>
 
@@ -856,13 +861,13 @@
       <a href="axypegrix.html" target="_blank" rel="noopener noreferrer" class="game-card card-pegrix">
         <div class="card-art">
           <div class="pixel-grid">
-            <div class="px-cell px-p1">X15</div>
+            <div class="px-cell px-p4">$5</div>
             <div class="px-cell px-p3"></div>
-            <div class="px-cell px-p2">X5</div>
+            <div class="px-cell px-p2">$2</div>
             <div class="px-cell px-p3"></div>
-            <div class="px-cell px-p4">X2</div>
+            <div class="px-cell px-p1">50¢</div>
             <div class="px-cell px-p3"></div>
-            <div class="px-cell px-p2">+</div>
+            <div class="px-cell px-p2">★</div>
             <div class="px-cell px-p3"></div>
             <div class="px-cell px-p1">!</div>
             <div class="px-cell px-p3"></div>
@@ -874,9 +879,10 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-tag">◈ Bounce &amp; Earn</div>
-          <div class="card-title">AxyPegrix<br>Extreme</div>
-          <div class="card-desc">Topları bırak, engellerden sektir ve kovalara düşürerek upgrade yap!</div>
+          <div class="card-tag">◈ Nail Bouncer</div>
+          <div class="card-title">AxyPegrix</div>
+          <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade yap ve prestije ulaş!
+          </div>
           <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
         </div>
       </a>
