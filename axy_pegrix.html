@@ -21,9 +21,9 @@
     }
 
     [data-theme="dark"] {
-      --bg:   #0d0820;
-      --bg2:  #160f2e;
-      --bg3:  #1e1540;
+      --bg:   #0e0920;
+      --bg2:  #180e35;
+      --bg3:  #221550;
       --br:   rgba(200,160,255,.13);
       --br2:  rgba(200,160,255,.24);
       --tx:   #f0eeff;
@@ -329,28 +329,37 @@
 
     /* RESPONSIVE — mobile/tablet */
     @media (max-width: 700px) {
-      html, body { height: 100dvh; overflow: hidden; }
+      html { height: 100%; }
+      body { height: 100%; overflow-y: auto; overflow-x: hidden; }
 
       #main {
         flex-direction: column;
-        overflow-y: auto;
+        overflow: visible;
         padding: 8px;
-        align-items: center;
+        align-items: stretch;
         gap: 8px;
+        min-height: unset;
       }
 
-      #cw { width: 100%; align-items: center; }
+      #cw {
+        width: 100%;
+        align-items: center;
+        flex: none;
+      }
 
       canvas {
-        max-width: 100%;
-        height: auto !important;
         width: 100% !important;
+        height: auto !important;
+        max-width: 100%;
       }
 
       #panel {
-        max-width: 100%; width: 100%;
-        max-height: none; overflow-y: visible;
-        padding-bottom: 12px;
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+        max-height: none;
+        overflow-y: visible;
+        padding-bottom: env(safe-area-inset-bottom, 16px);
       }
 
       .h-mid { display: none; }
@@ -502,8 +511,8 @@
     /* CANVAS THEME COLORS */
     const CT = {
       dark: {
-        bg: '#0d0820', grid: 'rgba(200,150,255,.018)', scan: 'rgba(0,0,0,.08)',
-        dl: 'rgba(61,232,192,.10)', dt: 'rgba(61,232,192,.32)',
+        bg: '#0e0920', grid: 'rgba(180,120,255,.022)', scan: 'rgba(0,0,0,.07)',
+        dl: 'rgba(61,232,192,.12)', dt: 'rgba(61,232,192,.35)',
         pegG: '#3de8c0', pegF: a => `rgba(192,120,255,${a})`, pegC: a => `rgba(255,255,255,${a})`,
         bTx: (l) => l > .4 ? '#ffffff' : '#eee0ff', bSb: 'rgba(220,200,255,.38)',
         bCs: 'rgba(200,170,255,.22)', bDv: 'rgba(255,255,255,.06)',
@@ -533,11 +542,11 @@
       score: 0, mult: 1, balls: [], particles: [], popups: [], rings: [],
       pegs: [], buckets: [], frame: 0, autoTimer: 0, earns: [], paused: false,
       upgrades: {
-        ball: { n: '+1 TOP', ico: '+', col: '#ffaa00', lvl: 1, base: 10, max: 10 },
-        grav: { n: 'HIZ', ico: '↓', col: '#3399ff', lvl: 1, base: 25, max: 8 },
-        auto: { n: 'OTO-ATIŞ', ico: '⟳', col: '#00bb66', lvl: 0, base: 30, max: 5 },
-        bonus: { n: 'BONUS', ico: '★', col: '#cc33dd', lvl: 1, base: 500, max: 10 },
-        crit: { n: 'KRİTİK', ico: '!', col: '#ee2222', lvl: 1, base: 200, max: 10 },
+        ball:  { n: '+1 TOP',   ico: '+', col: '#ffe066', lvl: 1, base: 10,  max: 10 },
+        grav:  { n: 'HIZ',      ico: '↓', col: '#60d5fa', lvl: 1, base: 25,  max: 8  },
+        auto:  { n: 'OTO-ATIŞ', ico: '⟳', col: '#3de8c0', lvl: 0, base: 30,  max: 5  },
+        bonus: { n: 'BONUS',    ico: '★', col: '#ff6eb4', lvl: 1, base: 500, max: 10 },
+        crit:  { n: 'KRİTİK',   ico: '!', col: '#c084fc', lvl: 1, base: 200, max: 10 },
       }
     };
 
@@ -597,52 +606,89 @@
 
       const dead = [];
       G.balls.forEach((b, bi) => {
-        b.trail.push({ x: b.x, y: b.y }); if (b.trail.length > 20) b.trail.shift();
-        b.vy += g; b.x += b.vx; b.y += b.vy;
+        b.trail.push({ x: b.x, y: b.y });
+        if (b.trail.length > 20) b.trail.shift();
 
-        /* Wall bounces — no corner sticking */
-        const margin = b.r + 1;
-        if (b.x < margin) {
-          b.x = margin;
-          b.vx = Math.abs(b.vx) * .72 + .3;
-          b.vy *= .98;
-        }
-        if (b.x > W - margin) {
-          b.x = W - margin;
-          b.vx = -(Math.abs(b.vx) * .72 + .3);
-          b.vy *= .98;
-        }
-        /* Ceiling bounce (prevent balls escaping top) */
-        if (b.y < margin) {
-          b.y = margin;
-          b.vy = Math.abs(b.vy) * .6 + .5;
-        }
+        /* ── SUBSTEP FİZİK: 3 adıma böl, her adımda tam çarpışma ── */
+        const STEPS = 3;
+        const dt_step = 1 / STEPS;
 
-        for (const p of G.pegs) {
-          const dx = b.x - p.x, dy = b.y - p.y, d = Math.sqrt(dx * dx + dy * dy), mn = b.r + p.r;
-          if (d < mn && d > .01) {
-            const nx = dx / d, ny = dy / d, dt = b.vx * nx + b.vy * ny;
-            if (dt < 0) {
-              b.vx -= 1.72 * dt * nx; b.vy -= 1.72 * dt * ny;
-              b.vx *= .60; b.vy *= .60;
-              /* Ensure ball always moves downward after peg hit */
-              if (b.vy < .6) b.vy = .6 + Math.random() * 1.2;
-              /* Add small sideways nudge to prevent vertical sticking */
-              b.vx += (Math.random() - .5) * 2.5;
+        for (let step = 0; step < STEPS; step++) {
+          /* Hareket */
+          b.vy += g * dt_step;
+          b.x  += b.vx * dt_step;
+          b.y  += b.vy * dt_step;
+
+          /* Duvar */
+          if (b.x < b.r + 1) {
+            b.x = b.r + 1;
+            b.vx = Math.abs(b.vx) * 0.75 + 0.5;
+          } else if (b.x > W - b.r - 1) {
+            b.x = W - b.r - 1;
+            b.vx = -(Math.abs(b.vx) * 0.75 + 0.5);
+          }
+          if (b.y < b.r + 1) {
+            b.y = b.r + 1;
+            b.vy = Math.abs(b.vy) * 0.5 + 0.5;
+          }
+
+          /* Çivi çarpışmaları — TÜM çivilerle her substep'te */
+          for (const p of G.pegs) {
+            const dx = b.x - p.x, dy = b.y - p.y;
+            const d2 = dx * dx + dy * dy;
+            const mn = b.r + p.r;
+            if (d2 < mn * mn) {
+              const d = Math.sqrt(d2) || 0.001;
+              const nx = dx / d, ny = dy / d;
+
+              /* 1. Topu çivi yüzeyine çek (overlap gider) */
+              const overlap = mn - d + 0.5;
+              b.x += nx * overlap;
+              b.y += ny * overlap;
+
+              /* 2. Normal yönündeki hız bileşeni */
+              const vn = b.vx * nx + b.vy * ny;
+
+              /* Sadece birbirlerine yaklaşıyorlarsa yansıt */
+              if (vn < 0) {
+                /* Yansıma katsayısı 0.55 + rastgele gürültü */
+                const restitution = 0.55 + Math.random() * 0.15;
+                b.vx -= (1 + restitution) * vn * nx;
+                b.vy -= (1 + restitution) * vn * ny;
+
+                /* Sürtünme: teğet hızı biraz azalt */
+                const tx = -ny, ty = nx;
+                const vt = b.vx * tx + b.vy * ty;
+                b.vx -= 0.08 * vt * tx;
+                b.vy -= 0.08 * vt * ty;
+
+                /* Hız büyüklüğünü sınırla (patlama önleme) */
+                const spd = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
+                if (spd > 18) { b.vx = b.vx/spd*18; b.vy = b.vy/spd*18; }
+
+                /* Her zaman aşağı doğru minimum hız */
+                if (b.vy < 0.8) b.vy = 0.8 + Math.random() * 1.0;
+
+                /* Çok az yatay hız varsa rastgele küçük itme */
+                if (Math.abs(b.vx) < 0.5) b.vx += (Math.random() - 0.5) * 2.0;
+
+                p.hit = 1; p.hc = `hsl(${b.hue},100%,70%)`;
+                const cs = [T().pegG, '#ff6eb4', '#ffe066', '#a3f07a', '#60d5fa'];
+                sparks(b.x, b.y, cs[Math.floor(Math.random() * cs.length)], 7);
+                ring(b.x, b.y, p.hc);
+              }
             }
-            /* Push ball fully outside peg — prevent tunneling */
-            b.x = p.x + nx * (mn + 1.2); b.y = p.y + ny * (mn + 1.2);
-            p.hit = 1; p.hc = `hsl(${b.hue},100%,70%)`;
-            const cs = [T().pegG, '#ff6eb4', '#ffe066', '#a3f07a', '#60d5fa'];
-            sparks(b.x, b.y, cs[Math.floor(Math.random() * cs.length)], 7); ring(b.x, b.y, p.hc);
           }
         }
+        /* ── SUBSTEP BİTTİ ── */
+
+        /* Kova çarpışması */
         if (b.y + b.r > G.buckets[0].y) {
           for (const bk of G.buckets) {
             if (b.x >= bk.x && b.x < bk.x + bk.w) {
               let v = bk.val * bk.lvl * G.mult, lbl = `+${fmt(v)}`, cl = bk.color;
-              if (Math.random() < bonC()) { v *= 5; lbl = `BONUS! ${fmt(v)}`; cl = '#cc33dd'; sparks(b.x, bk.y - 15, '#cc33dd', 28); }
-              if (Math.random() < critC()) { v *= 15; lbl = `💥 ${fmt(v)}`; cl = '#ee2222'; sparks(b.x, bk.y - 15, '#ee2222', 40); ring(b.x, bk.y, '#ee2222'); }
+              if (Math.random() < bonC()) { v *= 5; lbl = `BONUS! ${fmt(v)}`; cl = '#ff6eb4'; sparks(b.x, bk.y - 15, '#ff6eb4', 28); }
+              if (Math.random() < critC()) { v *= 15; lbl = `💥 ${fmt(v)}`; cl = '#c084fc'; sparks(b.x, bk.y - 15, '#c084fc', 40); ring(b.x, bk.y, '#c084fc'); }
               G.score += v; if (G.score > HS) { HS = G.score; setHS(HS); }
               G.earns.push({ v, t: performance.now() });
               bk.lit = 1; sparks(b.x, bk.y + 10, bk.color, 18); ring(b.x, bk.y + 22, bk.color);
@@ -653,76 +699,115 @@
         if (b.y > H + 30) b.dead = true;
         if (b.dead) dead.push(bi);
       });
-      for (let i = dead.length - 1; i >= 0; i--)G.balls.splice(dead[i], 1);
+
+      for (let i = dead.length - 1; i >= 0; i--) G.balls.splice(dead[i], 1);
       G.particles = G.particles.filter(p => { p.x += p.vx; p.y += p.vy; p.vy += .12; p.life -= .032; return p.life > 0; });
-      G.rings = G.rings.filter(r => { r.r += 3.5; r.life -= .055; return r.life > 0; });
-      G.popups = G.popups.filter(p => { p.x += p.vx; p.y += p.vy; p.life -= .016; return p.life > 0; });
+      G.rings    = G.rings.filter(r => { r.r += 3.5; r.life -= .055; return r.life > 0; });
+      G.popups   = G.popups.filter(p => { p.x += p.vx; p.y += p.vy; p.life -= .016; return p.life > 0; });
       G.pegs.forEach(p => { p.gw += .022; p.hit = Math.max(0, p.hit - .038); });
       G.buckets.forEach(b => { b.lit = Math.max(0, b.lit - .022); });
     }
 
     /* DRAW */
+    const isMob = () => window.innerWidth <= 700;
+
+    // Statik gradyanları önbelleğe al (her frame yeniden oluşturma)
+    let _cachedBg = null, _cachedBgW = 0;
+    function getBgOverlays() {
+      if (_cachedBg && _cachedBgW === W) return _cachedBg;
+      const oc = document.createElement('canvas'); oc.width = W; oc.height = H;
+      const ox = oc.getContext('2d');
+      const cg0 = ox.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*.65);
+      cg0.addColorStop(0, 'rgba(140,60,220,.07)'); cg0.addColorStop(1, 'transparent');
+      ox.fillStyle = cg0; ox.fillRect(0, 0, W, H);
+      const cg1 = ox.createRadialGradient(60, 40, 0, 60, 40, 180);
+      cg1.addColorStop(0, 'rgba(255,110,180,.10)'); cg1.addColorStop(1, 'transparent');
+      ox.fillStyle = cg1; ox.fillRect(0, 0, W, H);
+      const cg2 = ox.createRadialGradient(W-60, H-40, 0, W-60, H-40, 180);
+      cg2.addColorStop(0, 'rgba(61,232,192,.08)'); cg2.addColorStop(1, 'transparent');
+      ox.fillStyle = cg2; ox.fillRect(0, 0, W, H);
+      const vg = ox.createRadialGradient(W/2, H/2, W*.3, W/2, H/2, W*.85);
+      vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,.45)');
+      ox.fillStyle = vg; ox.fillRect(0, 0, W, H);
+      _cachedBg = oc; _cachedBgW = W;
+      return oc;
+    }
+
     function draw() {
-      const t = T(), dk = isDark();
+      const t = T(), dk = isDark(), mob = isMob();
       cx.fillStyle = t.bg; cx.fillRect(0, 0, W, H);
 
-      /* Sweet grid */
+      /* Grid — mobilde daha seyrek */
       cx.strokeStyle = t.grid; cx.lineWidth = 1;
-      for (let x = 0; x < W; x += 44) { cx.beginPath(); cx.moveTo(x, 0); cx.lineTo(x, H); cx.stroke(); }
-      for (let y = 0; y < H; y += 44) { cx.beginPath(); cx.moveTo(0, y); cx.lineTo(W, y); cx.stroke(); }
+      const gs = mob ? 88 : 44;
+      for (let x = 0; x < W; x += gs) { cx.beginPath(); cx.moveTo(x, 0); cx.lineTo(x, H); cx.stroke(); }
+      for (let y = 0; y < H; y += gs) { cx.beginPath(); cx.moveTo(0, y); cx.lineTo(W, y); cx.stroke(); }
 
-      /* Dark vignette */
-      if (dk) {
-        const vg = cx.createRadialGradient(W/2, H/2, W*.25, W/2, H/2, W*.8);
-        vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,.5)');
-        cx.fillStyle = vg; cx.fillRect(0, 0, W, H);
-        /* Corner glow accents */
-        const cg1 = cx.createRadialGradient(0, 0, 0, 0, 0, 140);
-        cg1.addColorStop(0, 'rgba(255,110,180,.06)'); cg1.addColorStop(1, 'transparent');
-        cx.fillStyle = cg1; cx.fillRect(0, 0, W, H);
-        const cg2 = cx.createRadialGradient(W, H, 0, W, H, 160);
-        cg2.addColorStop(0, 'rgba(61,232,192,.05)'); cg2.addColorStop(1, 'transparent');
-        cx.fillStyle = cg2; cx.fillRect(0, 0, W, H);
-      }
+      /* Atmosfer — tek seferlik önbellekten */
+      if (dk) cx.drawImage(getBgOverlays(), 0, 0);
 
-      /* Scan lines subtle */
-      for (let y = 0; y < H; y += 3) { cx.fillStyle = t.scan; cx.fillRect(0, y, W, 1); }
+      /* Scan lines — mobilde atla */
+      if (!mob) { for (let y = 0; y < H; y += 3) { cx.fillStyle = t.scan; cx.fillRect(0, y, W, 1); } }
 
-      /* Drop zone guides */
+      /* Drop zone */
       cx.strokeStyle = t.dl; cx.setLineDash([4, 8]); cx.lineWidth = 1;
       cx.beginPath(); cx.moveTo(W/2-70, 2); cx.lineTo(W/2-70, 32); cx.stroke();
       cx.beginPath(); cx.moveTo(W/2+70, 2); cx.lineTo(W/2+70, 32); cx.stroke();
       cx.setLineDash([]);
       cx.fillStyle = t.dt; cx.font = '8px Orbitron'; cx.textAlign = 'center'; cx.fillText('▼ TIKLA / DOKUN', W/2, 18);
 
-      G.rings.forEach(r => { cx.save(); cx.globalAlpha = r.life * .5; cx.strokeStyle = r.c; cx.lineWidth = 1.5; cx.shadowBlur = 10; cx.shadowColor = r.c; cx.beginPath(); cx.arc(r.x, r.y, r.r, 0, Math.PI * 2); cx.stroke(); cx.restore(); });
+      /* Rings */
+      G.rings.forEach(r => {
+        cx.save(); cx.globalAlpha = r.life * .5; cx.strokeStyle = r.c; cx.lineWidth = 1.5;
+        if (!mob) { cx.shadowBlur = 10; cx.shadowColor = r.c; }
+        cx.beginPath(); cx.arc(r.x, r.y, r.r, 0, Math.PI * 2); cx.stroke(); cx.restore();
+      });
 
+      /* Pegs — shadowBlur sadece çarpışmada, mobilde yok */
       G.pegs.forEach(p => {
         const pl = .55 + .45 * Math.sin(p.gw), h = p.hit;
-        const pegColor = h > .05 ? p.hc : (isDark() ? `hsla(270,80%,${Math.floor((42+58*pl)*100)/100}%,1)` : `rgba(100,50,200,${.42+.58*pl})`);
-        cx.shadowBlur = h > .05 ? 24 * h : 7 * pl; cx.shadowColor = h > .05 ? p.hc : (isDark() ? '#c084fc' : '#7c3aed');
+        const bri = Math.round(35 + 20 * pl);
+        const pegColor = h > .05 ? p.hc : (dk ? `hsl(270,75%,${bri}%)` : `hsl(260,60%,${bri+10}%)`);
+        if (!mob && h > .05) { cx.shadowBlur = 22 * h; cx.shadowColor = p.hc; }
+        else if (!mob) { cx.shadowBlur = 6 * pl; cx.shadowColor = dk ? '#c084fc' : '#7c3aed'; }
         cx.fillStyle = pegColor;
-        cx.beginPath(); cx.arc(p.x, p.y, p.r + h * 5, 0, Math.PI * 2); cx.fill(); cx.shadowBlur = 0;
-        /* Sweet shine dot */
-        cx.fillStyle = `rgba(255,255,255,${.45 + .35*pl})`; cx.beginPath(); cx.arc(p.x - 1.5, p.y - 1.5, 1.8, 0, Math.PI * 2); cx.fill();
+        cx.beginPath(); cx.arc(p.x, p.y, p.r + h * 4, 0, Math.PI * 2); cx.fill();
+        cx.shadowBlur = 0;
+        cx.fillStyle = `rgba(255,255,255,${.45 + .3*pl})`;
+        cx.beginPath(); cx.arc(p.x - 1.5, p.y - 1.8, 1.8, 0, Math.PI * 2); cx.fill();
       });
 
+      /* Ball trails */
       G.balls.forEach(b => {
+        const tlen = mob ? 10 : b.trail.length;
+        const start = b.trail.length - tlen;
         b.trail.forEach((tr, i) => {
-          const a = (i / b.trail.length) * .44, r = b.r * (i / b.trail.length) * .65;
-          if (r < .2) return; cx.fillStyle = `hsla(${b.hue},100%,70%,${a})`; cx.beginPath(); cx.arc(tr.x, tr.y, r, 0, Math.PI * 2); cx.fill();
+          if (i < start) return;
+          const ni = i - start, a = (ni / tlen) * .38, r = b.r * (ni / tlen) * .6;
+          if (r < .2) return;
+          cx.fillStyle = `hsla(${b.hue},100%,70%,${a})`;
+          cx.beginPath(); cx.arc(tr.x, tr.y, r, 0, Math.PI * 2); cx.fill();
         });
       });
+
+      /* Balls */
       G.balls.forEach(b => {
-        cx.shadowBlur = 30; cx.shadowColor = `hsl(${b.hue},100%,60%)`;
-        const gr = cx.createRadialGradient(b.x - 2.5, b.y - 3, 1, b.x, b.y, b.r);
+        if (!mob) { cx.shadowBlur = 28; cx.shadowColor = `hsl(${b.hue},100%,60%)`; }
+        const gr = cx.createRadialGradient(b.x-2.5, b.y-3, 1, b.x, b.y, b.r);
         gr.addColorStop(0, '#ffffff'); gr.addColorStop(.3, `hsl(${b.hue},100%,88%)`); gr.addColorStop(1, `hsl(${b.hue},100%,28%)`);
-        cx.fillStyle = gr; cx.beginPath(); cx.arc(b.x, b.y, b.r, 0, Math.PI * 2); cx.fill(); cx.shadowBlur = 0;
-        cx.fillStyle = 'rgba(255,255,255,.32)'; cx.beginPath(); cx.arc(b.x - 2.5, b.y - 3, 3, 0, Math.PI * 2); cx.fill();
+        cx.fillStyle = gr; cx.beginPath(); cx.arc(b.x, b.y, b.r, 0, Math.PI * 2); cx.fill();
+        cx.shadowBlur = 0;
+        cx.fillStyle = 'rgba(255,255,255,.35)'; cx.beginPath(); cx.arc(b.x-2.5, b.y-3, 2.5, 0, Math.PI * 2); cx.fill();
       });
 
+      /* Particles */
       cx.save();
-      G.particles.forEach(p => { cx.globalAlpha = Math.max(0, p.life); cx.shadowBlur = 11; cx.shadowColor = p.c; cx.fillStyle = p.c; cx.beginPath(); cx.arc(p.x, p.y, p.sz * Math.max(.1, p.life), 0, Math.PI * 2); cx.fill(); });
+      G.particles.forEach(p => {
+        cx.globalAlpha = Math.max(0, p.life);
+        if (!mob) { cx.shadowBlur = 10; cx.shadowColor = p.c; }
+        cx.fillStyle = p.c;
+        cx.beginPath(); cx.arc(p.x, p.y, p.sz * Math.max(.1, p.life), 0, Math.PI * 2); cx.fill();
+      });
       cx.shadowBlur = 0; cx.restore();
 
       G.buckets.forEach(bk => {
@@ -823,30 +908,20 @@
       if (G.paused) { po.classList.remove('off'); pb.textContent = '▶'; } else { po.classList.add('off'); pb.textContent = '⏸'; }
     }
 
-    /* RESIZE — responsive canvas scaling */
+    /* RESIZE */
     function resize() {
-      const wrap = document.getElementById('cw');
       const isMobile = window.innerWidth <= 700;
       if (isMobile) {
-        /* On mobile: fill available width, maintain aspect ratio */
-        const availW = Math.min(wrap.clientWidth || window.innerWidth - 16, W);
-        const scale = availW / W;
-        cv.style.width = availW + 'px';
-        cv.style.height = Math.round(H * scale) + 'px';
+        // Mobilde CSS zaten width:100% / height:auto yapıyor, JS müdahale etme
+        cv.style.width  = '';
+        cv.style.height = '';
       } else {
-        /* Desktop: fit canvas in vertical space */
-        const availH = wrap.clientHeight || (window.innerHeight - 60);
-        const availW = wrap.clientWidth || W;
-        const scaleH = availH / H;
-        const scaleW = availW / W;
-        const scale = Math.min(scaleH, scaleW, 1);
-        if (scale < 1) {
-          cv.style.width = Math.round(W * scale) + 'px';
-          cv.style.height = Math.round(H * scale) + 'px';
-        } else {
-          cv.style.width = '';
-          cv.style.height = '';
-        }
+        const wrap   = document.getElementById('cw');
+        const availH = (wrap.clientHeight || window.innerHeight - 60);
+        const availW = (wrap.clientWidth  || W);
+        const scale  = Math.min(availH / H, availW / W, 1);
+        cv.style.width  = scale < 1 ? Math.round(W * scale) + 'px' : '';
+        cv.style.height = scale < 1 ? Math.round(H * scale) + 'px' : '';
       }
     }
     let _rAF = 0;
@@ -878,9 +953,42 @@
       }
     });
 
-    /* LOOP */
-    function loop() { update(); draw(); renderUI(); requestAnimationFrame(loop); }
-    loop();
+    /* ── SABİT ZAMAN ADIMLI DÖNGÜ (Frame rate bağımsız) ──
+       Fizik her zaman 60fps hızında çalışır.
+       Render ise cihazın desteklediği hızda (30/60/120fps) yapılır.
+       Bu sayede hem kasma olmaz hem de hız farklılığı olmaz. */
+    const FIXED_DT   = 1000 / 60;   // 16.67 ms — fizik adım süresi
+    const MAX_ACCUM  = FIXED_DT * 5; // max birikmiş süre (sekme arka plana geçince patlama önleme)
+    let   _lastTime  = 0;
+    let   _accum     = 0;
+    let   _uiTimer   = 0;
+
+    function loop(now) {
+      requestAnimationFrame(loop);
+
+      if (!_lastTime) { _lastTime = now; return; }
+      let delta = now - _lastTime;
+      _lastTime = now;
+
+      // Sekme arka planda kaldıysa veya ilk kare geciktiyse sınırla
+      if (delta > MAX_ACCUM) delta = MAX_ACCUM;
+      _accum += delta;
+
+      // Fizik: sabit adımlarla ilerle (kaç adım gerekiyorsa)
+      while (_accum >= FIXED_DT) {
+        update();
+        _accum -= FIXED_DT;
+      }
+
+      // Render: her kare bir kez çiz
+      draw();
+
+      // UI: her 3 karede bir güncelle (performans)
+      _uiTimer++;
+      if (_uiTimer >= 3) { renderUI(); _uiTimer = 0; }
+    }
+
+    requestAnimationFrame(loop);
   </script>
 </body>
 
