@@ -2,1359 +2,248 @@
 <html lang="tr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sevcan, Ahmet ve Murathan'ın oyun sayfası.">
-  <title>AXYON</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --c-bg: #04060f;
-      --c-deep: #070c1a;
-      --c-crystal: #5bc8f5;
-      --c-crystal-glow: rgba(91, 200, 245, 0.35);
-      --c-gold: #f0b429;
-      --c-gold-glow: rgba(240, 180, 41, 0.35);
-      --c-pink: #ff4d8d;
-      --c-blue: #4d9fff;
-      --c-yellow: #ffd84d;
-      --c-white: #e8f0ff;
-      --c-grid: rgba(91, 200, 245, 0.06);
-      --c-border: rgba(91, 200, 245, 0.18);
-
-      /* Pegrix Neon Colors */
-      --c-px-cy: #00eeff;
-      --c-px-mg: #ff00ee;
-      --c-px-gd: #ffcc00;
-
-      /* Tools Colors */
-      --c-tool-green: #00ff88;
-      --c-tool-purple: #b04dff;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      background: var(--c-bg);
-      color: var(--c-white);
-      font-family: 'Rajdhani', sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* ── CANVAS ARKAPLAN ─────────────────────────────── */
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* ── GRID OVERLAY ────────────────────────────────── */
-    .grid-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background-image:
-        linear-gradient(var(--c-grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--c-grid) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-    }
-
-    /* ── SCAN LINE ───────────────────────────────────── */
-    .scanline {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      background: repeating-linear-gradient(0deg,
-          transparent,
-          transparent 2px,
-          rgba(0, 0, 0, 0.03) 2px,
-          rgba(0, 0, 0, 0.03) 4px);
-    }
-
-    /* ── MAIN LAYOUT ─────────────────────────────────── */
-    .page {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 20px 60px;
-    }
-
-    /* ── HEADER / LOGO ───────────────────────────────── */
-    .header {
-      width: 100%;
-      max-width: 860px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: clamp(36px, 7vw, 80px);
-      margin-bottom: clamp(20px, 4vw, 40px);
-    }
-
-    .logo {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(32px, 8vw, 80px);
-      font-weight: 900;
-      letter-spacing: 0.12em;
-      line-height: 1;
-      text-transform: uppercase;
-      position: relative;
-      display: inline-block;
-      color: transparent;
-      background: linear-gradient(180deg, #ffffff 0%, var(--c-crystal) 55%, #2a6ebd 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      text-shadow: none;
-      filter: drop-shadow(0 0 18px var(--c-crystal-glow)) drop-shadow(0 0 40px rgba(91, 200, 245, 0.2));
-      animation: logo-pulse 3s ease-in-out infinite;
-      margin-bottom: 20px;
-    }
-
-    .logo span {
-      color: transparent;
-      background: linear-gradient(180deg, #fff 0%, var(--c-gold) 60%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      filter: drop-shadow(0 0 12px var(--c-gold-glow));
-    }
-
-    @keyframes logo-pulse {
-
-      0%,
-      100% {
-        filter: drop-shadow(0 0 18px var(--c-crystal-glow)) drop-shadow(0 0 40px rgba(91, 200, 245, 0.2));
-      }
-
-      50% {
-        filter: drop-shadow(0 0 28px rgba(91, 200, 245, 0.7)) drop-shadow(0 0 60px rgba(91, 200, 245, 0.3));
-      }
-    }
-
-    /* ── NAMES BAND ──────────────────────────────────── */
-    .names-band {
-      display: flex;
-      gap: clamp(10px, 3vw, 22px);
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: clamp(40px, 7vw, 60px);
-    }
-
-    .name-chip {
-      position: relative;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(12px, 2.5vw, 16px);
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border: 1.5px solid;
-      backdrop-filter: blur(10px);
-      animation: chip-float 4s ease-in-out infinite;
-      cursor: default;
-      overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .name-chip::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
-      border-radius: inherit;
-    }
-
-    .name-chip:hover {
-      transform: translateY(-4px) scale(1.04);
-    }
-
-    .chip-sevcan {
-      color: var(--c-pink);
-      border-color: rgba(255, 77, 141, 0.45);
-      background: rgba(255, 77, 141, 0.08);
-      box-shadow: 0 0 18px rgba(255, 77, 141, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      animation-delay: 0s;
-    }
-
-    .chip-sevcan:hover {
-      box-shadow: 0 6px 28px rgba(255, 77, 141, 0.45);
-    }
-
-    .chip-ahmet {
-      color: var(--c-blue);
-      border-color: rgba(77, 159, 255, 0.45);
-      background: rgba(77, 159, 255, 0.08);
-      box-shadow: 0 0 18px rgba(77, 159, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      animation-delay: 0.3s;
-    }
-
-    .chip-ahmet:hover {
-      box-shadow: 0 6px 28px rgba(77, 159, 255, 0.45);
-    }
-
-    .chip-murathan {
-      color: var(--c-yellow);
-      border-color: rgba(255, 216, 77, 0.45);
-      background: rgba(255, 216, 77, 0.08);
-      box-shadow: 0 0 18px rgba(255, 216, 77, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      animation-delay: 0.6s;
-    }
-
-    .chip-murathan:hover {
-      box-shadow: 0 6px 28px rgba(255, 216, 77, 0.45);
-    }
-
-    @keyframes chip-float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-7px);
-      }
-    }
-
-    /* ── DIVIDER ─────────────────────────────────────── */
-    .divider {
-      width: min(500px, 90%);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--c-crystal), transparent);
-      margin-bottom: clamp(36px, 6vw, 50px);
-      opacity: 0.5;
-    }
-
-    /* ── CATEGORY CONTAINERS & ACCORDION ─────────────── */
-    .category-container {
-      width: 100%;
-      max-width: 1200px;
-      background: rgba(7, 12, 26, 0.4);
-      border: 1px solid rgba(91, 200, 245, 0.15);
-      border-radius: 20px;
-      padding: clamp(20px, 4vw, 40px);
-      margin-bottom: 40px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(91, 200, 245, 0.03);
-      transition: padding 0.4s ease;
-    }
-
-    .category-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      cursor: pointer;
-      user-select: none;
-      margin-bottom: clamp(20px, 4vw, 40px);
-      transition: opacity 0.3s ease, margin 0.4s ease;
-    }
-
-    .category-header:hover {
-      opacity: 0.8;
-    }
-
-    .category-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(20px, 4vw, 32px);
-      font-weight: 900;
-      color: var(--c-white);
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-      margin: 0;
-    }
-
-    .toggle-icon {
-      font-size: clamp(14px, 2vw, 20px);
-      color: var(--c-crystal);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Modern CSS Grid Accordion Trick */
-    .category-content {
-      display: grid;
-      grid-template-rows: 1fr;
-      transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-      opacity: 1;
-    }
-
-    .category-content-inner {
-      overflow: hidden;
-    }
-
-    /* Collapsed State Styles */
-    .category-container.collapsed {
-      padding-bottom: clamp(20px, 4vw, 40px);
-    }
-
-    .category-container.collapsed .category-header {
-      margin-bottom: 0;
-    }
-
-    .category-container.collapsed .toggle-icon {
-      transform: rotate(-90deg);
-    }
-
-    .category-container.collapsed .category-content {
-      grid-template-rows: 0fr;
-      opacity: 0;
-    }
-
-    /* ── CARDS ROW ───────────────────────────────────── */
-    .cards-row {
-      display: flex;
-      gap: clamp(18px, 3vw, 32px);
-      flex-wrap: wrap;
-      justify-content: center;
-      width: 100%;
-      padding-top: 10px;
-    }
-
-    .game-card {
-      position: relative;
-      width: clamp(260px, 30vw, 320px);
-      border-radius: 16px;
-      overflow: hidden;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-
-    .game-card:hover {
-      transform: translateY(-8px) scale(1.02);
-    }
-
-    /* ── CARD THEMES ─────────────────────────────────── */
-    .card-crystal {
-      border-color: rgba(91, 200, 245, 0.3);
-      background: linear-gradient(160deg, rgba(10, 28, 60, 0.9) 0%, rgba(4, 20, 40, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-crystal:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(91, 200, 245, 0.25);
-    }
-
-    .card-jewelry {
-      border-color: rgba(240, 180, 41, 0.3);
-      background: linear-gradient(160deg, rgba(40, 25, 5, 0.9) 0%, rgba(20, 12, 2, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-jewelry:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(240, 180, 41, 0.25);
-    }
-
-    .card-tetris {
-      border-color: rgba(255, 77, 141, 0.3);
-      background: linear-gradient(160deg, rgba(60, 10, 30, 0.9) 0%, rgba(40, 4, 20, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-tetris:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 77, 141, 0.25);
-    }
-
-    .card-pegrix {
-      border-color: rgba(0, 238, 255, 0.4);
-      background: linear-gradient(160deg, rgba(3, 0, 16, 0.9) 0%, rgba(14, 0, 48, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-pegrix:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 238, 255, 0.2), inset 0 0 20px rgba(255, 0, 238, 0.15);
-    }
-
-    .card-vignette {
-      border-color: rgba(0, 255, 136, 0.3);
-      background: linear-gradient(160deg, rgba(10, 40, 25, 0.9) 0%, rgba(4, 20, 12, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-vignette:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 136, 0.25);
-    }
-
-    .card-imsakiye {
-      border-color: rgba(176, 77, 255, 0.3);
-      background: linear-gradient(160deg, rgba(35, 15, 60, 0.9) 0%, rgba(18, 5, 30, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-imsakiye:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(176, 77, 255, 0.25);
-    }
-
-    /* ── CARD ART AREA ───────────────────────────────── */
-    .card-art {
-      width: 100%;
-      height: clamp(130px, 22vw, 170px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-crystal .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(91, 200, 245, 0.18) 0%, transparent 70%);
-    }
-
-    .card-jewelry .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(240, 180, 41, 0.18) 0%, transparent 70%);
-    }
-
-    .card-tetris .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(255, 77, 141, 0.18) 0%, transparent 70%);
-    }
-
-    .card-pegrix .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(0, 238, 255, 0.15) 0%, transparent 70%);
-    }
-
-    .card-vignette .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
-    }
-
-    .card-imsakiye .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(176, 77, 255, 0.15) 0%, transparent 70%);
-    }
-
-    /* Pixel grid decoration */
-    .pixel-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
-      padding: 12px;
-      opacity: 0.85;
-    }
-
-    .px-cell {
-      width: clamp(26px, 4vw, 36px);
-      height: clamp(26px, 4vw, 36px);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(8px, 1.5vw, 11px);
-      font-weight: 700;
-    }
-
-    /* Cells */
-    .px-c1 {
-      background: rgba(91, 200, 245, 0.25);
-      color: var(--c-crystal);
-      border: 1px solid rgba(91, 200, 245, 0.4);
-    }
-
-    .px-c2 {
-      background: rgba(91, 200, 245, 0.12);
-      color: rgba(91, 200, 245, 0.6);
-      border: 1px solid rgba(91, 200, 245, 0.2);
-    }
-
-    .px-c3 {
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .px-c4 {
-      background: rgba(130, 80, 255, 0.2);
-      color: rgba(180, 130, 255, 0.8);
-      border: 1px solid rgba(130, 80, 255, 0.35);
-    }
-
-    .px-j1 {
-      background: rgba(240, 180, 41, 0.3);
-      color: var(--c-gold);
-      border: 1px solid rgba(240, 180, 41, 0.5);
-    }
-
-    .px-j2 {
-      background: rgba(240, 120, 41, 0.2);
-      color: rgba(240, 160, 80, 0.8);
-      border: 1px solid rgba(240, 120, 41, 0.3);
-    }
-
-    .px-j3 {
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .px-j4 {
-      background: rgba(180, 40, 40, 0.2);
-      color: rgba(255, 100, 100, 0.8);
-      border: 1px solid rgba(180, 40, 40, 0.35);
-    }
-
-    .px-t1 {
-      background: rgba(255, 77, 141, 0.3);
-      color: var(--c-pink);
-      border: 1px solid rgba(255, 77, 141, 0.5);
-    }
-
-    .px-t2 {
-      background: rgba(130, 80, 255, 0.2);
-      color: rgba(180, 130, 255, 0.8);
-      border: 1px solid rgba(130, 80, 255, 0.35);
-    }
-
-    .px-t3 {
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .px-p1 {
-      background: rgba(255, 0, 238, 0.2);
-      color: var(--c-px-mg);
-      border: 1px solid rgba(255, 0, 238, 0.4);
-    }
-
-    .px-p2 {
-      background: rgba(0, 238, 255, 0.2);
-      color: var(--c-px-cy);
-      border: 1px solid rgba(0, 238, 255, 0.4);
-    }
-
-    .px-p3 {
-      background: rgba(255, 255, 255, 0.03);
-      color: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .px-p4 {
-      background: rgba(255, 204, 0, 0.2);
-      color: var(--c-px-gd);
-      border: 1px solid rgba(255, 204, 0, 0.4);
-    }
-
-    .px-v1 {
-      background: rgba(0, 255, 136, 0.2);
-      color: var(--c-tool-green);
-      border: 1px solid rgba(0, 255, 136, 0.4);
-    }
-
-    .px-v2 {
-      background: rgba(0, 255, 136, 0.05);
-      color: rgba(0, 255, 136, 0.3);
-      border: 1px solid rgba(0, 255, 136, 0.1);
-    }
-
-    .px-i1 {
-      background: rgba(176, 77, 255, 0.2);
-      color: var(--c-tool-purple);
-      border: 1px solid rgba(176, 77, 255, 0.4);
-    }
-
-    .px-i2 {
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ── CARD BODY ───────────────────────────────────── */
-    .card-body {
-      padding: clamp(14px, 3vw, 24px) clamp(16px, 3vw, 26px) clamp(18px, 3vw, 26px);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border-top: 1px solid;
-      flex-grow: 1;
-    }
-
-    .card-crystal .card-body {
-      border-color: rgba(91, 200, 245, 0.15);
-    }
-
-    .card-jewelry .card-body {
-      border-color: rgba(240, 180, 41, 0.15);
-    }
-
-    .card-tetris .card-body {
-      border-color: rgba(255, 77, 141, 0.15);
-    }
-
-    .card-pegrix .card-body {
-      border-color: rgba(0, 238, 255, 0.15);
-    }
-
-    .card-vignette .card-body {
-      border-color: rgba(0, 255, 136, 0.15);
-    }
-
-    .card-imsakiye .card-body {
-      border-color: rgba(176, 77, 255, 0.15);
-    }
-
-    .card-tag {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      opacity: 0.6;
-    }
-
-    .card-crystal .card-tag {
-      color: var(--c-crystal);
-    }
-
-    .card-jewelry .card-tag {
-      color: var(--c-gold);
-    }
-
-    .card-tetris .card-tag {
-      color: var(--c-pink);
-    }
-
-    .card-pegrix .card-tag {
-      color: var(--c-px-cy);
-    }
-
-    .card-vignette .card-tag {
-      color: var(--c-tool-green);
-    }
-
-    .card-imsakiye .card-tag {
-      color: var(--c-tool-purple);
-    }
-
-    .card-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(16px, 3.5vw, 22px);
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-    }
-
-    .card-crystal .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px var(--c-crystal-glow);
-    }
-
-    .card-jewelry .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px var(--c-gold-glow);
-    }
-
-    .card-tetris .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px rgba(255, 77, 141, 0.3);
-    }
-
-    .card-pegrix .card-title {
-      background: linear-gradient(90deg, var(--c-px-cy), var(--c-px-mg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 8px rgba(255, 0, 238, 0.3));
-    }
-
-    .card-vignette .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
-    }
-
-    .card-imsakiye .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px rgba(176, 77, 255, 0.3);
-    }
-
-    .card-desc {
-      font-size: clamp(12px, 2vw, 14px);
-      font-weight: 400;
-      color: rgba(220, 230, 255, 0.55);
-      line-height: 1.5;
-    }
-
-    .card-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: auto;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border: 1px solid;
-      transition: all 0.25s ease;
-      width: fit-content;
-    }
-
-    .card-crystal .card-cta {
-      color: var(--c-crystal);
-      border-color: rgba(91, 200, 245, 0.4);
-      background: rgba(91, 200, 245, 0.08);
-    }
-
-    .card-crystal:hover .card-cta {
-      background: rgba(91, 200, 245, 0.18);
-      box-shadow: 0 0 14px rgba(91, 200, 245, 0.3);
-    }
-
-    .card-jewelry .card-cta {
-      color: var(--c-gold);
-      border-color: rgba(240, 180, 41, 0.4);
-      background: rgba(240, 180, 41, 0.08);
-    }
-
-    .card-jewelry:hover .card-cta {
-      background: rgba(240, 180, 41, 0.18);
-      box-shadow: 0 0 14px rgba(240, 180, 41, 0.3);
-    }
-
-    .card-tetris .card-cta {
-      color: var(--c-pink);
-      border-color: rgba(255, 77, 141, 0.4);
-      background: rgba(255, 77, 141, 0.08);
-    }
-
-    .card-tetris:hover .card-cta {
-      background: rgba(255, 77, 141, 0.18);
-      box-shadow: 0 0 14px rgba(255, 77, 141, 0.3);
-    }
-
-    .card-pegrix .card-cta {
-      color: var(--c-px-cy);
-      border-color: rgba(0, 238, 255, 0.4);
-      background: rgba(0, 238, 255, 0.08);
-    }
-
-    .card-pegrix:hover .card-cta {
-      background: rgba(0, 238, 255, 0.18);
-      box-shadow: 0 0 14px rgba(0, 238, 255, 0.4);
-      border-color: var(--c-px-mg);
-      color: var(--c-px-mg);
-    }
-
-    .card-vignette .card-cta {
-      color: var(--c-tool-green);
-      border-color: rgba(0, 255, 136, 0.4);
-      background: rgba(0, 255, 136, 0.08);
-    }
-
-    .card-vignette:hover .card-cta {
-      background: rgba(0, 255, 136, 0.18);
-      box-shadow: 0 0 14px rgba(0, 255, 136, 0.3);
-    }
-
-    .card-imsakiye .card-cta {
-      color: var(--c-tool-purple);
-      border-color: rgba(176, 77, 255, 0.4);
-      background: rgba(176, 77, 255, 0.08);
-    }
-
-    .card-imsakiye:hover .card-cta {
-      background: rgba(176, 77, 255, 0.18);
-      box-shadow: 0 0 14px rgba(176, 77, 255, 0.3);
-    }
-
-    .cta-arrow {
-      transition: transform 0.25s ease;
-    }
-
-    .game-card:hover .cta-arrow {
-      transform: translateX(4px);
-    }
-
-    /* ── FOOTER ──────────────────────────────────────── */
-    .footer {
-      margin-top: clamp(20px, 4vw, 40px);
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      color: rgba(91, 200, 245, 0.25);
-      text-align: center;
-    }
-
-    /* ── RESPONSIVE TWEAKS ───────────────────────────── */
-    @media (max-width: 768px) {
-      .cards-row {
-        gap: 20px;
-      }
-
-      .category-container {
-        padding: 20px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .game-card {
-        width: 100%;
-        max-width: 340px;
-      }
-
-      .cards-row {
-        gap: 16px;
-      }
-
-      .pixel-grid {
-        gap: 4px;
-        padding: 10px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sevcan, Ahmet ve Murathan'ın oyun sayfası.">
+    <title>AXYON</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <canvas id="bg-canvas"></canvas>
-  <div class="grid-overlay"></div>
-  <div class="scanline"></div>
+    <canvas id="bg-canvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="scanline"></div>
 
-  <div class="page">
+    <div class="page">
 
-    <header class="header">
-      <div class="logo">AXY<span>ON</span></div>
+        <header class="header">
+            <div class="logo">AXY<span>ON</span></div>
 
-      <div class="names-band">
-        <div class="name-chip chip-sevcan">♥ Sevcan ♥</div>
-        <div class="name-chip chip-ahmet">♥ Ahmet ♥</div>
-        <div class="name-chip chip-murathan">♥ Murathan ♥</div>
-      </div>
-    </header>
+            <div class="names-band">
+                <div class="name-chip chip-sevcan">♥ Sevcan ♥</div>
+                <div class="name-chip chip-ahmet">♥ Ahmet ♥</div>
+                <div class="name-chip chip-murathan">♥ Murathan ♥</div>
+            </div>
+        </header>
 
-    <div class="divider"></div>
+        <div class="divider"></div>
 
-    <section class="category-container collapsed">
-      <div class="category-header">
-        <h2 class="category-title">◈ OYUNLAR ◈</h2>
-        <span class="toggle-icon">▼</span>
-      </div>
+        <section class="category-container collapsed">
+            <div class="category-header">
+                <h2 class="category-title">◈ OYUNLAR ◈</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
 
-      <div class="category-content">
-        <div class="category-content-inner">
-          <div class="cards-row">
-            <a href="axyon_sum_crystal_drop.html" target="_blank" rel="noopener noreferrer"
-              class="game-card card-crystal">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-c1">512</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c4">256</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c2">128</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c2">64</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c1">32</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c4">16</div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c3"></div>
-                  <div class="px-cell px-c2">8</div>
-                  <div class="px-cell px-c3"></div>
+            <div class="category-content">
+                <div class="category-content-inner">
+                    <div class="cards-row">
+
+                        <a href="games/axyon_sum_crystal_drop.html" target="_blank" rel="noopener noreferrer"
+                            class="game-card card-crystal">
+                            <div class="card-art">
+                                <div class="pixel-grid">
+                                    <div class="px-cell px-c1">512</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c4">256</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c2">128</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c2">64</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c1">32</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c4">16</div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c3"></div>
+                                    <div class="px-cell px-c2">8</div>
+                                    <div class="px-cell px-c3"></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">◈ Drop &amp; Merge</div>
+                                <div class="card-title">AXYON Sum<br>Crystal Drop</div>
+                                <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için
+                                    strateji kur.</div>
+                                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="games/axyon_crystal_merge.html" target="_blank" rel="noopener noreferrer"
+                            class="game-card card-jewelry">
+                            <div class="card-art">
+                                <div class="pixel-grid">
+                                    <div class="px-cell px-j1">2048</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j2">1024</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j4">512</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j4">256</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j1">128</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j2">64</div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j3"></div>
+                                    <div class="px-cell px-j4">32</div>
+                                    <div class="px-cell px-j3"></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">◈ Slide &amp; Merge</div>
+                                <div class="card-title">AXYON Crystal<br>Merge</div>
+                                <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik
+                                    bulmaca.</div>
+                                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="games/axyon_tetris_classic.html" target="_blank" rel="noopener noreferrer"
+                            class="game-card card-tetris">
+                            <div class="card-art">
+                                <div class="pixel-grid">
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t1"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t2"></div>
+                                    <div class="px-cell px-t2"></div>
+                                    <div class="px-cell px-t1"></div>
+                                    <div class="px-cell px-t1"></div>
+                                    <div class="px-cell px-t1"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t2"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t3"></div>
+                                    <div class="px-cell px-t2"></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">◈ Block Puzzle</div>
+                                <div class="card-title">AXYON Tetris<br>Classic</div>
+                                <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon
+                                    modern hali.</div>
+                                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="games/axyon_pegrix.html" target="_blank" rel="noopener noreferrer"
+                            class="game-card card-pegrix">
+                            <div class="card-art">
+                                <div class="pixel-grid">
+                                    <div class="px-cell px-p4">$5</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p2">$2</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p1">50¢</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p2">★</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p1">!</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p4">$</div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p3"></div>
+                                    <div class="px-cell px-p2">▼</div>
+                                    <div class="px-cell px-p3"></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">◈ Nail Bouncer</div>
+                                <div class="card-title">AXYON Pegrix</div>
+                                <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade
+                                    yap ve prestije ulaş!</div>
+                                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                    </div>
                 </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Drop &amp; Merge</div>
-                <div class="card-title">AXYON Sum<br>Crystal Drop</div>
-                <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için strateji kur.</div>
-                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
+            </div>
+        </section>
 
-            <a href="axyon_crystal_merge.html" target="_blank" rel="noopener noreferrer" class="game-card card-jewelry">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-j1">2048</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j2">1024</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j4">512</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j4">256</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j1">128</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j2">64</div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j3"></div>
-                  <div class="px-cell px-j4">32</div>
-                  <div class="px-cell px-j3"></div>
+        <section class="category-container collapsed">
+            <div class="category-header">
+                <h2 class="category-title">◈ ARAÇLAR ◈</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+
+            <div class="category-content">
+                <div class="category-content-inner">
+                    <div class="cards-row">
+
+                        <a href="tools/axyon_vignette-tool.html" target="_blank" rel="noopener noreferrer"
+                            class="tool-card tool-vignette">
+                            <div class="tool-art art-vignette">
+                                <div class="mock-dropzone">
+                                    <div class="mock-icon-img"></div>
+                                </div>
+                                <div class="mock-slider"></div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">Fotoğraf & Grafik</div>
+                                <div class="card-title">Vignette Tool</div>
+                                <div class="card-desc">Görsellerinize profesyonel vinyet efektleri uygulayın ve arka
+                                    plan indirin.</div>
+                                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="tools/axyon_imsakiye.html" target="_blank" rel="noopener noreferrer"
+                            class="tool-card tool-imsakiye">
+                            <div class="tool-art art-imsakiye">
+                                <svg class="mock-moon-svg" viewBox="0 0 24 24">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <div class="mock-time-grid">
+                                    <div class="mock-time-box"></div>
+                                    <div class="mock-time-box active"></div>
+                                    <div class="mock-time-box"></div>
+                                    <div class="mock-time-box"></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">Dini Takvim</div>
+                                <div class="card-title">İmsakiye 1447</div>
+                                <div class="card-desc">Ramazan ayına özel detaylı iftar, sahur vakitleri ve geri sayım.
+                                </div>
+                                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="tools/axyon_zikirmatik.html" target="_blank" rel="noopener noreferrer"
+                            class="tool-card tool-zikir">
+                            <div class="tool-art art-zikir">
+                                <div class="mock-ring">
+                                    <div class="mock-ring-inner">33</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-tag">Sayaç & Rehber</div>
+                                <div class="card-title">Dijital Zikirmatik</div>
+                                <div class="card-desc">Dokunsal geri bildirimli sayaç, esmaül hüsna ve özel zikir
+                                    rehberi.</div>
+                                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                    </div>
                 </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Slide &amp; Merge</div>
-                <div class="card-title">AXYON Crystal<br>Merge</div>
-                <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik bulmaca.</div>
-                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
+            </div>
+        </section>
 
-            <a href="axyon_tetris_classic.html" target="_blank" rel="noopener noreferrer" class="game-card card-tetris">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t1"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t2"></div>
-                  <div class="px-cell px-t2"></div>
-                  <div class="px-cell px-t1"></div>
-                  <div class="px-cell px-t1"></div>
-                  <div class="px-cell px-t1"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t2"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t3"></div>
-                  <div class="px-cell px-t2"></div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Block Puzzle</div>
-                <div class="card-title">AXYON Tetris<br>Classic</div>
-                <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon modern hali.</div>
-                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
+        <footer class="footer">AXYON · MADE WITH ♥</footer>
 
-            <a href="axyon_pegrix.html" target="_blank" rel="noopener noreferrer" class="game-card card-pegrix">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-p4">$5</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p2">$2</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p1">50¢</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p2">★</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p1">!</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p4">$</div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p3"></div>
-                  <div class="px-cell px-p2">▼</div>
-                  <div class="px-cell px-p3"></div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Nail Bouncer</div>
-                <div class="card-title">AXYON Pegrix</div>
-                <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade yap ve prestije
-                  ulaş!</div>
-                <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
 
-    <section class="category-container collapsed">
-      <div class="category-header">
-        <h2 class="category-title">◈ ARAÇLAR ◈</h2>
-        <span class="toggle-icon">▼</span>
-      </div>
-
-      <div class="category-content">
-        <div class="category-content-inner">
-          <div class="cards-row">
-            <a href="axyon_vignette-tool.html" target="_blank" rel="noopener noreferrer"
-              class="game-card card-vignette">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1">O</div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Photo FX</div>
-                <div class="card-title">AXYON Vignette<br>Tool</div>
-                <div class="card-desc">Görsellerinize hızlı ve profesyonel vinyet (karartma) efektleri uygulayın.</div>
-                <div class="card-cta">Kullan <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
-
-            <a href="axyon_imsakiye.html" target="_blank" rel="noopener noreferrer" class="game-card card-imsakiye">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-tag">◈ Takvim</div>
-                <div class="card-title">AXYON İmsakiye</div>
-                <div class="card-desc">Ramazan ayına özel iftar ve sahur vakitleri için hazırlanan modern imsakiye.
-                </div>
-                <div class="card-cta">İncele <span class="cta-arrow">→</span></div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">AXYON · MADE WITH ♥</footer>
-
-  </div>
-
-  <script>
-    // --- Accordion Logic ---
-    document.querySelectorAll('.category-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const container = header.closest('.category-container');
-        container.classList.toggle('collapsed');
-      });
-    });
-
-    // --- Background Canvas Animation ---
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let W, H;
-    let mouse = { x: -999, y: -999 };
-    let stars = [], shootingStars = [], dustMotes = [], fairies = [], trailDust = [];
-    let t0 = null;
-
-    function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    window.addEventListener('mousemove', e => {
-      mouse.x = e.clientX; mouse.y = e.clientY;
-      for (let i = 0; i < 4; i++) spawnTrailDust(e.clientX, e.clientY);
-    });
-    window.addEventListener('touchmove', e => {
-      const t = e.touches[0];
-      mouse.x = t.clientX; mouse.y = t.clientY;
-      for (let i = 0; i < 3; i++) spawnTrailDust(t.clientX, t.clientY);
-    }, { passive: true });
-
-    const dustColors = [
-      [180, 120, 255], [91, 200, 245], [255, 180, 240],
-      [240, 200, 80], [150, 255, 200], [255, 255, 255],
-    ];
-
-    function randColor() { return dustColors[Math.floor(Math.random() * dustColors.length)]; }
-
-    for (let i = 0; i < 200; i++) {
-      stars.push({
-        x: Math.random(), y: Math.random(),
-        r: Math.random() * 1.3 + 0.15,
-        a: Math.random() * 0.65 + 0.1,
-        phase: Math.random() * Math.PI * 2,
-        speed: Math.random() * 0.0008 + 0.0002
-      });
-    }
-
-    for (let i = 0; i < 55; i++) {
-      dustMotes.push(makeDustMote(true));
-    }
-
-    function makeDustMote(randomY) {
-      const [r, g, b] = randColor();
-      return {
-        x: Math.random() * W,
-        y: randomY ? Math.random() * H : H + 10,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: -(Math.random() * 0.5 + 0.15),
-        r: Math.random() * 2.5 + 0.6,
-        alpha: Math.random() * 0.6 + 0.2,
-        maxAlpha: Math.random() * 0.6 + 0.2,
-        phase: Math.random() * Math.PI * 2,
-        speed: Math.random() * 0.003 + 0.001,
-        cr: r, cg: g, cb: b,
-        wobble: (Math.random() - 0.5) * 0.008,
-        life: 1, maxLife: 200 + Math.random() * 400
-      };
-    }
-
-    function spawnTrailDust(x, y) {
-      const [r, g, b] = randColor();
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 1.8 + 0.3;
-      trailDust.push({
-        x: x + (Math.random() - 0.5) * 12,
-        y: y + (Math.random() - 0.5) * 12,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.8,
-        r: Math.random() * 3 + 1,
-        alpha: 0.9,
-        cr: r, cg: g, cb: b,
-        decay: Math.random() * 0.025 + 0.018,
-        gravity: 0.04
-      });
-    }
-
-    for (let i = 0; i < 6; i++) {
-      fairies.push(makeFairy());
-    }
-
-    function makeFairy() {
-      const [r, g, b] = randColor();
-      return {
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 5 + 4,
-        alpha: Math.random() * 0.4 + 0.15,
-        phase: Math.random() * Math.PI * 2,
-        speed: Math.random() * 0.002 + 0.001,
-        cr: r, cg: g, cb: b,
-        trail: []
-      };
-    }
-
-    function spawnShooter() {
-      shootingStars.push({
-        x: W * (0.3 + Math.random() * 0.7),
-        y: Math.random() * H * 0.35,
-        vx: -2.8 - Math.random() * 2.2,
-        vy: 1.6 + Math.random() * 1.4,
-        len: 100 + Math.random() * 90,
-        alpha: 1,
-        width: 1.2 + Math.random() * 1
-      });
-      setTimeout(spawnShooter, 1600 + Math.random() * 3000);
-    }
-    spawnShooter();
-
-    let auroraT = 0;
-
-    function drawAurora(t) {
-      auroraT = t * 0.0003;
-      const bands = [
-        { y: H * 0.0, h: H * 0.45, cr: 80, cg: 40, cb: 180, a: 0.04 },
-        { y: H * 0.05, h: H * 0.30, cr: 40, cg: 120, cb: 220, a: 0.035 },
-        { y: H * 0.0, h: H * 0.20, cr: 180, cg: 60, cb: 200, a: 0.025 },
-      ];
-      bands.forEach((b, i) => {
-        const wave = Math.sin(auroraT + i * 1.4) * 0.5 + 0.5;
-        const grd = ctx.createLinearGradient(0, b.y, 0, b.y + b.h);
-        grd.addColorStop(0, `rgba(${b.cr},${b.cg},${b.cb},${b.a * wave})`);
-        grd.addColorStop(0.5, `rgba(${b.cr},${b.cg},${b.cb},${b.a * wave * 0.6})`);
-        grd.addColorStop(1, `rgba(${b.cr},${b.cg},${b.cb},0)`);
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, b.y, W, b.h);
-      });
-    }
-
-    function drawSparkle(x, y, size, alpha, r, g, b) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.translate(x, y);
-      const arms = 4;
-      for (let i = 0; i < arms; i++) {
-        ctx.save();
-        ctx.rotate((Math.PI / arms) * i);
-        const grd = ctx.createLinearGradient(0, -size, 0, size);
-        grd.addColorStop(0, `rgba(${r},${g},${b},0)`);
-        grd.addColorStop(0.5, `rgba(${r},${g},${b},${alpha})`);
-        grd.addColorStop(1, `rgba(${r},${g},${b},0)`);
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, size * 0.12, size, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-      const cg = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 0.5);
-      cg.addColorStop(0, `rgba(255,255,255,${alpha})`);
-      cg.addColorStop(1, `rgba(${r},${g},${b},0)`);
-      ctx.fillStyle = cg;
-      ctx.beginPath();
-      ctx.arc(0, 0, size * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function draw(ts) {
-      if (!t0) t0 = ts;
-      const t = ts - t0;
-
-      ctx.clearRect(0, 0, W, H);
-
-      drawAurora(t);
-
-      stars.forEach(p => {
-        const pulse = Math.sin(t * p.speed * 1000 + p.phase) * 0.35 + 0.65;
-        ctx.beginPath();
-        ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180,210,255,${p.a * pulse})`;
-        ctx.fill();
-      });
-
-      for (let i = shootingStars.length - 1; i >= 0; i--) {
-        const s = shootingStars[i];
-        const grd = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * (s.len / 3), s.y - s.vy * (s.len / 3));
-        grd.addColorStop(0, `rgba(200,230,255,${s.alpha})`);
-        grd.addColorStop(0.3, `rgba(91,200,245,${s.alpha * 0.7})`);
-        grd.addColorStop(1, 'rgba(91,200,245,0)');
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(s.x - s.vx * (s.len / 3), s.y - s.vy * (s.len / 3));
-        ctx.strokeStyle = grd;
-        ctx.lineWidth = s.width;
-        ctx.stroke();
-
-        if (Math.random() < 0.4) {
-          const [r, g, b] = dustColors[Math.floor(Math.random() * 3)];
-          trailDust.push({
-            x: s.x + (Math.random() - 0.5) * 6,
-            y: s.y + (Math.random() - 0.5) * 6,
-            vx: (Math.random() - 0.5) * 0.8,
-            vy: (Math.random() - 0.5) * 0.8,
-            r: Math.random() * 2 + 0.5,
-            alpha: s.alpha * 0.8,
-            cr: r, cg: g, cb: b,
-            decay: 0.03, gravity: 0
-          });
-        }
-        s.x += s.vx; s.y += s.vy;
-        s.alpha -= 0.013;
-        if (s.alpha <= 0 || s.x < -150 || s.y > H + 100) shootingStars.splice(i, 1);
-      }
-
-      fairies.forEach(f => {
-        f.trail.push({ x: f.x, y: f.y });
-        if (f.trail.length > 18) f.trail.shift();
-
-        f.trail.forEach((pt, i) => {
-          const a = (i / f.trail.length) * f.alpha * 0.4;
-          const rr = f.r * (i / f.trail.length) * 0.7;
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, rr, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${f.cr},${f.cg},${f.cb},${a})`;
-          ctx.fill();
-        });
-
-        const pulse = Math.sin(t * f.speed * 1000 + f.phase) * 0.4 + 0.6;
-        const grd = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 3.5);
-        grd.addColorStop(0, `rgba(255,255,255,${f.alpha * pulse * 0.9})`);
-        grd.addColorStop(0.3, `rgba(${f.cr},${f.cg},${f.cb},${f.alpha * pulse * 0.6})`);
-        grd.addColorStop(1, `rgba(${f.cr},${f.cg},${f.cb},0)`);
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r * 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
-        if (Math.random() < 0.08) {
-          drawSparkle(f.x + (Math.random() - 0.5) * 8, f.y + (Math.random() - 0.5) * 8,
-            3 + Math.random() * 4, f.alpha * 0.9, f.cr, f.cg, f.cb);
-        }
-
-        f.x += f.vx; f.y += f.vy;
-        if (f.x < -20) f.x = W + 20;
-        if (f.x > W + 20) f.x = -20;
-        if (f.y < -20) f.y = H + 20;
-        if (f.y > H + 20) f.y = -20;
-      });
-
-      for (let i = dustMotes.length - 1; i >= 0; i--) {
-        const d = dustMotes[i];
-        d.life++;
-        const lifeRatio = d.life / d.maxLife;
-        const fade = lifeRatio < 0.15 ? lifeRatio / 0.15 : lifeRatio > 0.8 ? 1 - (lifeRatio - 0.8) / 0.2 : 1;
-        const pulse = Math.sin(t * d.speed * 1000 + d.phase) * 0.3 + 0.7;
-        const a = d.maxAlpha * fade * pulse;
-
-        const grd = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 2.5);
-        grd.addColorStop(0, `rgba(255,255,255,${a * 0.8})`);
-        grd.addColorStop(0.4, `rgba(${d.cr},${d.cg},${d.cb},${a * 0.5})`);
-        grd.addColorStop(1, `rgba(${d.cr},${d.cg},${d.cb},0)`);
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r * 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
-        if (Math.random() < 0.003) {
-          drawSparkle(d.x, d.y, d.r * 4, a * 1.2, d.cr, d.cg, d.cb);
-        }
-
-        d.x += d.vx + Math.sin(t * 0.0008 + d.phase) * 0.3;
-        d.y += d.vy;
-
-        if (d.life >= d.maxLife || d.y < -20) {
-          dustMotes[i] = makeDustMote(false);
-        }
-      }
-
-      for (let i = trailDust.length - 1; i >= 0; i--) {
-        const d = trailDust[i];
-        if (d.r < 0.6) { trailDust.splice(i, 1); continue; }
-
-        const grd = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 2);
-        grd.addColorStop(0, `rgba(255,255,255,${d.alpha * 0.9})`);
-        grd.addColorStop(0.4, `rgba(${d.cr},${d.cg},${d.cb},${d.alpha * 0.7})`);
-        grd.addColorStop(1, `rgba(${d.cr},${d.cg},${d.cb},0)`);
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r * 2, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
-        if (d.alpha > 0.5 && Math.random() < 0.25) {
-          drawSparkle(d.x, d.y, d.r * 2.5, d.alpha * 0.8, d.cr, d.cg, d.cb);
-        }
-
-        d.x += d.vx; d.y += d.vy;
-        d.vy += d.gravity;
-        d.vx *= 0.97; d.vy *= 0.97;
-        d.alpha -= d.decay;
-        d.r *= 0.97;
-      }
-
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  </script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
