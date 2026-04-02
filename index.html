@@ -29,10 +29,6 @@
       --c-px-cy: #00eeff;
       --c-px-mg: #ff00ee;
       --c-px-gd: #ffcc00;
-
-      /* Tools Colors */
-      --c-tool-green: #00ff88;
-      --c-tool-purple: #b04dff;
     }
 
     * {
@@ -286,7 +282,6 @@
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Modern CSS Grid Accordion Trick */
     .category-content {
       display: grid;
       grid-template-rows: 1fr;
@@ -298,7 +293,6 @@
       overflow: hidden;
     }
 
-    /* Collapsed State Styles */
     .category-container.collapsed {
       padding-bottom: clamp(20px, 4vw, 40px);
     }
@@ -326,6 +320,9 @@
       padding-top: 10px;
     }
 
+    /* =========================================================================
+       O Y U N L A R  (GAME CARDS)
+       ========================================================================= */
     .game-card {
       position: relative;
       width: clamp(260px, 30vw, 320px);
@@ -344,7 +341,6 @@
       transform: translateY(-8px) scale(1.02);
     }
 
-    /* ── CARD THEMES ─────────────────────────────────── */
     .card-crystal {
       border-color: rgba(91, 200, 245, 0.3);
       background: linear-gradient(160deg, rgba(10, 28, 60, 0.9) 0%, rgba(4, 20, 40, 0.95) 100%);
@@ -385,27 +381,6 @@
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 238, 255, 0.2), inset 0 0 20px rgba(255, 0, 238, 0.15);
     }
 
-    .card-vignette {
-      border-color: rgba(0, 255, 136, 0.3);
-      background: linear-gradient(160deg, rgba(10, 40, 25, 0.9) 0%, rgba(4, 20, 12, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-vignette:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 136, 0.25);
-    }
-
-    .card-imsakiye {
-      border-color: rgba(176, 77, 255, 0.3);
-      background: linear-gradient(160deg, rgba(35, 15, 60, 0.9) 0%, rgba(18, 5, 30, 0.95) 100%);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-
-    .card-imsakiye:hover {
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(176, 77, 255, 0.25);
-    }
-
-    /* ── CARD ART AREA ───────────────────────────────── */
     .card-art {
       width: 100%;
       height: clamp(130px, 22vw, 170px);
@@ -432,15 +407,6 @@
       background: radial-gradient(ellipse at 50% 60%, rgba(0, 238, 255, 0.15) 0%, transparent 70%);
     }
 
-    .card-vignette .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
-    }
-
-    .card-imsakiye .card-art {
-      background: radial-gradient(ellipse at 50% 60%, rgba(176, 77, 255, 0.15) 0%, transparent 70%);
-    }
-
-    /* Pixel grid decoration */
     .pixel-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -552,31 +518,6 @@
       border: 1px solid rgba(255, 204, 0, 0.4);
     }
 
-    .px-v1 {
-      background: rgba(0, 255, 136, 0.2);
-      color: var(--c-tool-green);
-      border: 1px solid rgba(0, 255, 136, 0.4);
-    }
-
-    .px-v2 {
-      background: rgba(0, 255, 136, 0.05);
-      color: rgba(0, 255, 136, 0.3);
-      border: 1px solid rgba(0, 255, 136, 0.1);
-    }
-
-    .px-i1 {
-      background: rgba(176, 77, 255, 0.2);
-      color: var(--c-tool-purple);
-      border: 1px solid rgba(176, 77, 255, 0.4);
-    }
-
-    .px-i2 {
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ── CARD BODY ───────────────────────────────────── */
     .card-body {
       padding: clamp(14px, 3vw, 24px) clamp(16px, 3vw, 26px) clamp(18px, 3vw, 26px);
       display: flex;
@@ -602,14 +543,6 @@
       border-color: rgba(0, 238, 255, 0.15);
     }
 
-    .card-vignette .card-body {
-      border-color: rgba(0, 255, 136, 0.15);
-    }
-
-    .card-imsakiye .card-body {
-      border-color: rgba(176, 77, 255, 0.15);
-    }
-
     .card-tag {
       font-family: 'Orbitron', monospace;
       font-size: 10px;
@@ -632,14 +565,6 @@
 
     .card-pegrix .card-tag {
       color: var(--c-px-cy);
-    }
-
-    .card-vignette .card-tag {
-      color: var(--c-tool-green);
-    }
-
-    .card-imsakiye .card-tag {
-      color: var(--c-tool-purple);
     }
 
     .card-title {
@@ -670,16 +595,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 8px rgba(255, 0, 238, 0.3));
-    }
-
-    .card-vignette .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
-    }
-
-    .card-imsakiye .card-title {
-      color: #fff;
-      text-shadow: 0 0 12px rgba(176, 77, 255, 0.3);
     }
 
     .card-desc {
@@ -752,33 +667,283 @@
       color: var(--c-px-mg);
     }
 
-    .card-vignette .card-cta {
-      color: var(--c-tool-green);
-      border-color: rgba(0, 255, 136, 0.4);
-      background: rgba(0, 255, 136, 0.08);
-    }
-
-    .card-vignette:hover .card-cta {
-      background: rgba(0, 255, 136, 0.18);
-      box-shadow: 0 0 14px rgba(0, 255, 136, 0.3);
-    }
-
-    .card-imsakiye .card-cta {
-      color: var(--c-tool-purple);
-      border-color: rgba(176, 77, 255, 0.4);
-      background: rgba(176, 77, 255, 0.08);
-    }
-
-    .card-imsakiye:hover .card-cta {
-      background: rgba(176, 77, 255, 0.18);
-      box-shadow: 0 0 14px rgba(176, 77, 255, 0.3);
-    }
-
     .cta-arrow {
       transition: transform 0.25s ease;
     }
 
     .game-card:hover .cta-arrow {
+      transform: translateX(4px);
+    }
+
+
+    /* =========================================================================
+       A R A Ç L A R  (TOOL CARDS) - SADE VE PROFESYONEL TASARIM
+       ========================================================================= */
+    .tool-card {
+      position: relative;
+      width: clamp(260px, 30vw, 320px);
+      border-radius: 12px;
+      /* Oyun kartlarından biraz daha keskin */
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 20, 30, 0.6);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .tool-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .tool-art {
+      width: 100%;
+      height: clamp(130px, 22vw, 170px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Vignette Tool */
+    .tool-vignette {
+      border-color: rgba(232, 200, 74, 0.2);
+    }
+
+    .tool-vignette:hover {
+      border-color: #e8c84a;
+      box-shadow: 0 10px 30px rgba(232, 200, 74, 0.15);
+    }
+
+    .art-vignette {
+      background: #111113;
+    }
+
+    .mock-dropzone {
+      width: 55%;
+      height: 45%;
+      border: 1.5px dashed #2e2e38;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #1a1a1e;
+    }
+
+    .mock-slider {
+      width: 55%;
+      height: 3px;
+      background: #2e2e38;
+      margin-top: 15px;
+      position: relative;
+      border-radius: 2px;
+    }
+
+    .mock-slider::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #e8c84a;
+      border-radius: 50%;
+      top: -2.5px;
+      left: 60%;
+    }
+
+    .mock-icon-img {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #888890;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-icon-img::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #888890;
+    }
+
+    /* İmsakiye Tool */
+    .tool-imsakiye {
+      border-color: rgba(201, 168, 76, 0.2);
+    }
+
+    .tool-imsakiye:hover {
+      border-color: #c9a84c;
+      box-shadow: 0 10px 30px rgba(201, 168, 76, 0.15);
+    }
+
+    .art-imsakiye {
+      background: #0b0f1c;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mock-moon-svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: #c9a84c;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .mock-time-grid {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mock-time-box {
+      width: 20px;
+      height: 26px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .mock-time-box.active {
+      background: rgba(201, 168, 76, 0.15);
+      border-color: rgba(201, 168, 76, 0.5);
+    }
+
+    /* Zikirmatik Tool */
+    .tool-zikir {
+      border-color: rgba(46, 125, 79, 0.2);
+    }
+
+    .tool-zikir:hover {
+      border-color: #4cca80;
+      box-shadow: 0 10px 30px rgba(46, 125, 79, 0.15);
+    }
+
+    .art-zikir {
+      background: #0f1a14;
+    }
+
+    .mock-ring {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 4px solid #1a2a1e;
+      border-top-color: #e8c96a;
+      border-right-color: #4cca80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .mock-ring-inner {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #1a2a1e;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Tool Body Updates */
+    .tool-card .card-body {
+      padding: 16px 20px 20px;
+      gap: 8px;
+      background: rgba(10, 15, 25, 0.8);
+    }
+
+    .tool-card .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .tool-vignette .card-title {
+      color: #e8c84a;
+    }
+
+    .tool-imsakiye .card-title {
+      color: #c9a84c;
+    }
+
+    .tool-zikir .card-title {
+      color: #4cca80;
+    }
+
+    .tool-card .card-tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+
+    .tool-vignette .card-tag {
+      color: #888890;
+    }
+
+    .tool-imsakiye .card-tag {
+      color: #7a8ba0;
+    }
+
+    .tool-zikir .card-tag {
+      color: #8ba898;
+    }
+
+    .tool-card .card-desc {
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .tool-card .card-cta {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    .tool-card:hover .card-cta {
+      border-color: transparent;
+    }
+
+    .tool-vignette:hover .card-cta {
+      background: #e8c84a;
+      color: #111;
+    }
+
+    .tool-imsakiye:hover .card-cta {
+      background: #c9a84c;
+      color: #0b0f1c;
+    }
+
+    .tool-zikir:hover .card-cta {
+      background: #4cca80;
+      color: #0f1a14;
+    }
+
+    .tool-card:hover .cta-arrow {
       transform: translateX(4px);
     }
 
@@ -804,7 +969,9 @@
     }
 
     @media (max-width: 480px) {
-      .game-card {
+
+      .game-card,
+      .tool-card {
         width: 100%;
         max-width: 340px;
       }
@@ -977,63 +1144,57 @@
       <div class="category-content">
         <div class="category-content-inner">
           <div class="cards-row">
+
             <a href="axyon_vignette-tool.html" target="_blank" rel="noopener noreferrer"
-              class="game-card card-vignette">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v1"></div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1">O</div>
-                  <div class="px-cell px-v2"></div>
-                  <div class="px-cell px-v1"></div>
+              class="tool-card tool-vignette">
+              <div class="tool-art art-vignette">
+                <div class="mock-dropzone">
+                  <div class="mock-icon-img"></div>
                 </div>
+                <div class="mock-slider"></div>
               </div>
               <div class="card-body">
-                <div class="card-tag">◈ Photo FX</div>
-                <div class="card-title">AXYON Vignette<br>Tool</div>
-                <div class="card-desc">Görsellerinize hızlı ve profesyonel vinyet (karartma) efektleri uygulayın.</div>
-                <div class="card-cta">Kullan <span class="cta-arrow">→</span></div>
+                <div class="card-tag">Fotoğraf & Grafik</div>
+                <div class="card-title">Vignette Tool</div>
+                <div class="card-desc">Görsellerinize profesyonel vinyet efektleri uygulayın ve arka plan indirin.</div>
+                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
               </div>
             </a>
 
-            <a href="axyon_imsakiye.html" target="_blank" rel="noopener noreferrer" class="game-card card-imsakiye">
-              <div class="card-art">
-                <div class="pixel-grid">
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i1"></div>
-                  <div class="px-cell px-i2"></div>
-                  <div class="px-cell px-i2"></div>
+            <a href="axyon_imsakiye.html" target="_blank" rel="noopener noreferrer" class="tool-card tool-imsakiye">
+              <div class="tool-art art-imsakiye">
+                <svg class="mock-moon-svg" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <div class="mock-time-grid">
+                  <div class="mock-time-box"></div>
+                  <div class="mock-time-box active"></div>
+                  <div class="mock-time-box"></div>
+                  <div class="mock-time-box"></div>
                 </div>
               </div>
               <div class="card-body">
-                <div class="card-tag">◈ Takvim</div>
-                <div class="card-title">AXYON İmsakiye</div>
-                <div class="card-desc">Ramazan ayına özel iftar ve sahur vakitleri için hazırlanan modern imsakiye.
-                </div>
-                <div class="card-cta">İncele <span class="cta-arrow">→</span></div>
+                <div class="card-tag">Dini Takvim</div>
+                <div class="card-title">İmsakiye 1447</div>
+                <div class="card-desc">Ramazan ayına özel detaylı iftar, sahur vakitleri ve geri sayım.</div>
+                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
               </div>
             </a>
+
+            <a href="axyon_zikirmatik.html" target="_blank" rel="noopener noreferrer" class="tool-card tool-zikir">
+              <div class="tool-art art-zikir">
+                <div class="mock-ring">
+                  <div class="mock-ring-inner">33</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-tag">Sayaç & Rehber</div>
+                <div class="card-title">Dijital Zikirmatik</div>
+                <div class="card-desc">Dokunsal geri bildirimli sayaç, esmaül hüsna ve özel zikir rehberi.</div>
+                <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
+              </div>
+            </a>
+
           </div>
         </div>
       </div>
