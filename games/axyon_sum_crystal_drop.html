@@ -1820,6 +1820,57 @@
         opacity: 0;
       }
     }
+  
+    /* ── POWER-UP SİSTEMİ ── */
+    #pu-bar {
+      display: flex; gap: 8px; align-items: center; justify-content: center;
+      padding: 6px 10px; margin-top: 6px;
+      background: rgba(7,12,26,0.5); border: 1px solid rgba(91,200,245,0.12);
+      border-radius: 12px; flex-wrap: wrap;
+    }
+    .pu-coin-display {
+      font-family: 'Orbitron', sans-serif; font-size: 11px;
+      color: #34d399; letter-spacing: .08em;
+    }
+    .pu-btn-new {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 6px 12px; border-radius: 10px;
+      background: rgba(91,200,245,0.07); border: 1.5px solid rgba(91,200,245,0.2);
+      font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all .15s;
+    }
+    .pu-btn-new:hover { background: rgba(91,200,245,0.14); border-color: rgba(91,200,245,0.5); transform: translateY(-2px); }
+    .pu-btn-new:active { transform: scale(.95); }
+    .pu-btn-new.pu-active { border-color: #fbbf24; background: rgba(251,191,36,0.12); box-shadow: 0 0 14px rgba(251,191,36,0.3); }
+    .pu-icon-lbl { font-size: 14px; }
+    .pu-name-lbl { font-size: 8px; letter-spacing: .1em; color: rgba(200,220,255,.55); }
+    .pu-cost-lbl { font-size: 9px; color: #34d399; font-weight: 700; }
+    @keyframes puFlash { 0%,100%{border-color:rgba(239,68,68,.3)} 50%{border-color:#ef4444;box-shadow:0 0 14px rgba(239,68,68,.5)} }
+    #wildcard-picker {
+      display: none; position: fixed; left: 50%; top: 50%;
+      transform: translate(-50%,-50%); z-index: 300;
+      background: rgba(7,12,26,.97); border: 1.5px solid rgba(192,132,252,.4);
+      border-radius: 16px; padding: 16px 20px; flex-direction: column; gap: 10px;
+      box-shadow: 0 0 40px rgba(192,132,252,.2);
+    }
+    #wildcard-picker .wc-title {
+      font-family: 'Orbitron', sans-serif; font-size: 12px;
+      color: #c084fc; letter-spacing: .12em; text-align: center;
+    }
+    #wildcard-picker .wc-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 6px;
+    }
+    #wildcard-picker .wc-val {
+      padding: 8px 4px; border-radius: 8px; border: 1.5px solid rgba(192,132,252,.3);
+      background: rgba(192,132,252,.1); color: #e9d5ff;
+      font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
+      cursor: pointer; text-align: center; transition: all .15s;
+    }
+    #wildcard-picker .wc-val:hover { background: rgba(192,132,252,.25); border-color: #c084fc; }
+    #wildcard-picker .wc-cancel {
+      font-family: 'Orbitron', sans-serif; font-size: 10px; color: rgba(200,210,255,.4);
+      cursor: pointer; text-align: center; letter-spacing: .1em;
+    }
+    #wildcard-picker .wc-cancel:hover { color: rgba(200,210,255,.8); }
   </style>
 </head>
 
@@ -2126,6 +2177,42 @@
     </div>
   </div>
 
+
+  <!-- POWER-UP BAR -->
+  <div id="pu-bar">
+    <div class="pu-coin-display">&#127522; <span id="pu-coins-val">0</span> coin</div>
+    <button class="pu-btn-new" id="pu-bomb" onclick="usePowerBomb()" title="Üstteki 3 bloğu sil">
+      <span class="pu-icon-lbl">&#128163;</span>
+      <span class="pu-name-lbl">BOMBA</span>
+      <span class="pu-cost-lbl">30&#127522;</span>
+    </button>
+    <button class="pu-btn-new" id="pu-wildcard" onclick="usePowerWildcard()" title="Sonraki bloğun değerini seç">
+      <span class="pu-icon-lbl">&#127183;</span>
+      <span class="pu-name-lbl">JOKER</span>
+      <span class="pu-cost-lbl">20&#127522;</span>
+    </button>
+    <button class="pu-btn-new" onclick="cancelPowerup()" title="İptal" style="padding:6px 8px;">
+      <span class="pu-icon-lbl" style="font-size:11px;">&#x2715;</span>
+      <span class="pu-name-lbl">İPTAL</span>
+    </button>
+  </div>
+
+  <!-- JOKER DEĞER SEÇİCİ -->
+  <div id="wildcard-picker">
+    <div class="wc-title">&#127183; JOKER — Değer Seç</div>
+    <div class="wc-grid">
+      <button class="wc-val" onclick="selectWildcardVal(2)">2</button>
+      <button class="wc-val" onclick="selectWildcardVal(4)">4</button>
+      <button class="wc-val" onclick="selectWildcardVal(8)">8</button>
+      <button class="wc-val" onclick="selectWildcardVal(16)">16</button>
+      <button class="wc-val" onclick="selectWildcardVal(32)">32</button>
+      <button class="wc-val" onclick="selectWildcardVal(64)">64</button>
+      <button class="wc-val" onclick="selectWildcardVal(128)">128</button>
+      <button class="wc-val" onclick="selectWildcardVal(256)">256</button>
+    </div>
+    <div class="wc-cancel" onclick="cancelPowerup()">✕ İptal</div>
+  </div>
+
   <!-- GOD MODE PANEL -->
   <div id="god-panel"
     style="display:none;position:fixed;inset:0;background:rgba(0,5,20,0.88);z-index:150;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
@@ -2199,6 +2286,9 @@
 
     // ======= AUDIO SYSTEM (Web Audio API — no files needed) =======
     let audioCtx = null;
+    // ═══════════════════════════════════════════════
+    // BÖLÜM 1: SES SİSTEMİ
+    // ═══════════════════════════════════════════════
     function getAudioCtx() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       return audioCtx;
@@ -2342,6 +2432,15 @@
     let score = 0;
     let best = parseInt(localStorage.getItem('2048best') || '0');
     let gems = parseInt(localStorage.getItem('2048gems') || '25');
+
+    // --- Sütun ısısı (Column Heat) sistemi ---
+    // Aynı sütuna art arda 3+ blok düşürülünce o sütun 'hot' olur → 2× merge puanı
+    // colHeat: her sütun için art arda düşürme sayacı (3+ → hot → 2× puan)
+    const colHeat = Array(COLS).fill(0);
+    const COL_HOT_THRESH = 3;
+    let puCoins = 0; // power-up için coin (merge'den kazanılır)
+    let activePowerup = null; // 'bomb' | 'wildcard' | null
+    let wildcardVal = null;   // wildcard modu için seçilen değer
     let nextVal = 2;
     let nextNextVal = 4;
     let nextX2 = false;
@@ -2404,10 +2503,20 @@
       };
     }
 
+    // ═══════════════════════════════════════════════
+    // BÖLÜM 2: GRID STATE
+    // ═══════════════════════════════════════════════
     function initGrid() {
       grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+      colHeat.fill(0);
+      puCoins = 0;
+      activePowerup = null;
+      wildcardVal = null;
     }
 
+    // ═══════════════════════════════════════════════
+    // BÖLÜM 3: DOM / RENDER
+    // ═══════════════════════════════════════════════
     function buildDOM() {
       // Grid cells
       const g = document.getElementById('grid');
@@ -2642,8 +2751,29 @@
     }
 
 
+    // Sütun ısısı görsel güncelleme: hot sütun turuncu parlama alır
+    function updateColHeatVisuals() {
+      for (let c = 0; c < COLS; c++) {
+        const btn = document.querySelector(`.col-btn[data-col="${c}"]`);
+        if (!btn) continue;
+        const heat = colHeat[c] || 0;
+        if (heat >= COL_HOT_THRESH) {
+          btn.style.borderColor = '#fb923c';
+          btn.style.boxShadow  = '0 0 10px rgba(251,146,60,0.6)';
+          btn.title = '🔥 HOT — merge puanı 2×!';
+        } else {
+          btn.style.borderColor = '';
+          btn.style.boxShadow  = '';
+          btn.title = '';
+        }
+      }
+    }
+
     function dropIntoCol(col) {
       if (godMode) return;
+      // Yeni power-up yönlendirme
+      if (activePowerup === 'bomb')     { executeBomb(col); return; }
+      if (activePowerup === 'wildcard') { applyWildcard(col); return; }
       if (dropLocked) return; // prevent rapid multi-drop
       if (activePower === 'smash' || activePower === 'bomb') return;
       if (activePower === 'swap') return;
@@ -2657,6 +2787,14 @@
 
       dropLocked = true;
       saveHistory();
+
+      // Sütun ısısı güncelle
+      colHeat[col] = (colHeat[col] || 0) + 1;
+      // Diğer sütunları biraz soğut
+      for (let c = 0; c < COLS; c++) {
+        if (c !== col && colHeat[c] > 0) colHeat[c]--;
+      }
+      updateColHeatVisuals();
 
       let val = nextX2 ? nextVal * 2 : nextVal;
       nextX2 = false;
@@ -2767,7 +2905,7 @@
         grid[keepR][keepC] = newVal;
         mergeBlockEl(keepR, keepC, newVal);
 
-        addScore(newVal);
+        addScoreWithFloat(newVal, keepR, keepC); // yüzen puan + hot bonus
         combo++;
         clearTimeout(comboTimer);
         comboTimer = setTimeout(() => { combo = 0; updateCombo(); }, 3000);
@@ -2796,6 +2934,9 @@
       });
     }
 
+    // ═══════════════════════════════════════════════
+    // BÖLÜM 4: OYUN MEKANİKLERİ
+    // ═══════════════════════════════════════════════
     function cascade() {
       function step() {
         // FIX: Sıra değiştirildi → ÖNCE merge kontrol et, SONRA gravity uygula.
@@ -2928,21 +3069,188 @@
       return false;
     }
 
-    function addScore(pts) {
+    function addScore(pts, col) {
       const mult = combo > 1 ? Math.min(combo, 5) : 1;
-      score += pts * mult;
+      // Sütun ısısı bonusu: hot sütunda 2× puan
+      const hotMult = (col !== undefined && (colHeat[col] || 0) >= COL_HOT_THRESH) ? 2 : 1;
+      const finalPts = pts * mult * hotMult;
+      score += finalPts;
       if (score > best) { best = score; localStorage.setItem('2048best', best); }
+      // Merge'den coin kazan (log2 tabanlı — büyük merge = çok coin)
+      const coinEarned = Math.max(1, Math.floor(Math.log2(pts) / 2));
+      puCoins += coinEarned;
+      updatePuCoinsDisplay();
       updateUI();
       const sv = document.getElementById('score-val');
       sv.classList.remove('pop');
       void sv.offsetWidth;
       sv.classList.add('pop');
+      if (hotMult > 1) spawnHotLabel(col);
+    }
+
+    // addScore'u keepR/keepC ile çağıran wrapper — spawnFloatScore'u da tetikler
+    function addScoreWithFloat(pts, row, col) {
+      const mult = combo > 1 ? Math.min(combo, 5) : 1;
+      const hotMult = (col !== undefined && (colHeat[col] || 0) >= COL_HOT_THRESH) ? 2 : 1;
+      const finalPts = pts * mult * hotMult;
+      spawnFloatScore(row, col, finalPts, hotMult > 1);
+      addScore(pts, col);
+    }
+
+    function updatePuCoinsDisplay() {
+      const el = document.getElementById('pu-coins-val');
+      if (el) el.textContent = puCoins;
+    }
+
+    // Merge anında yüzen puan metni
+    function spawnFloatScore(row, col, pts, isHot) {
+      const cellEl = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+      const gridEl = document.getElementById('grid');
+      const anchor = cellEl || gridEl;
+      if (!anchor) return;
+      const rect = anchor.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.className = 'float-score';
+      el.textContent = (isHot ? '🔥 ' : '') + '+' + pts.toLocaleString('tr');
+      el.style.left = (rect.left + rect.width / 2) + 'px';
+      el.style.top  = rect.top + 'px';
+      if (isHot) el.style.color = '#fb923c';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1050);
+    }
+
+    function spawnHotLabel(col) {
+      const cellEl = document.querySelector(`[data-col="${col}"]`);
+      if (!cellEl) return;
+      const rect = cellEl.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.textContent = '🔥 HOT 2×';
+      el.style.cssText = `position:fixed;left:${rect.left + rect.width/2}px;top:${rect.top - 10}px;
+        transform:translateX(-50%);font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;
+        color:#fb923c;pointer-events:none;z-index:999;animation:floatUp 1s ease forwards;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
     }
 
     function addGems(n) {
       gems += n;
       localStorage.setItem('2048gems', gems);
       document.getElementById('gems-count').textContent = gems;
+    }
+
+    // ═══════════════════════════════════════════════
+    // BÖLÜM 5: POWER-UP SİSTEMİ — Bomba ve Joker
+    // ═══════════════════════════════════════════════
+    const PU_COST = { bomb: 30, wildcard: 20 };
+
+    function usePowerBomb() {
+      if (puCoins < PU_COST.bomb) { flashPuBtn('pu-bomb'); return; }
+      if (activePowerup === 'bomb') { cancelPowerup(); return; }
+      cancelPowerup();
+      activePowerup = 'bomb';
+      document.getElementById('pu-bomb').classList.add('pu-active');
+      highlightColsForBomb();
+    }
+
+    function usePowerWildcard() {
+      if (puCoins < PU_COST.wildcard) { flashPuBtn('pu-wildcard'); return; }
+      if (activePowerup === 'wildcard') { cancelPowerup(); return; }
+      cancelPowerup();
+      activePowerup = 'wildcard';
+      document.getElementById('pu-wildcard').classList.add('pu-active');
+      showWildcardPicker();
+    }
+
+    function cancelPowerup() {
+      activePowerup = null;
+      wildcardVal = null;
+      ['pu-bomb','pu-wildcard'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('pu-active');
+      });
+      clearColHighlights();
+      const picker = document.getElementById('wildcard-picker');
+      if (picker) picker.style.display = 'none';
+    }
+
+    function highlightColsForBomb() {
+      for (let c = 0; c < COLS; c++) {
+        const btn = document.querySelector(`.col-btn[data-col="${c}"]`);
+        if (btn) {
+          btn.style.borderColor = '#ef4444';
+          btn.style.boxShadow  = '0 0 12px rgba(239,68,68,0.7)';
+        }
+      }
+    }
+
+    function clearColHighlights() {
+      updateColHeatVisuals(); // heat visuals zaten temizler hot olmayanları
+    }
+
+    function executeBomb(col) {
+      puCoins -= PU_COST.bomb;
+      updatePuCoinsDisplay();
+      // Üstten 3 bloğu sil
+      let removed = 0;
+      for (let r = 0; r < ROWS && removed < 3; r++) {
+        if (grid[r][col]) {
+          const el = document.querySelector(`[data-row="${r}"][data-col="${col}"]`);
+          if (el) {
+            el.style.transition = 'transform .25s ease, opacity .25s ease';
+            el.style.transform  = 'scale(1.4)';
+            el.style.opacity    = '0';
+            setTimeout(() => el.remove(), 270);
+          }
+          grid[r][col] = 0;
+          removed++;
+        }
+      }
+      playSound('smash');
+      cancelPowerup();
+      setTimeout(() => { cascade(); }, 300);
+    }
+
+    function showWildcardPicker() {
+      const picker = document.getElementById('wildcard-picker');
+      if (!picker) return;
+      picker.style.display = 'flex';
+    }
+
+    function selectWildcardVal(val) {
+      wildcardVal = val;
+      activePowerup = 'wildcard';
+      const picker = document.getElementById('wildcard-picker');
+      if (picker) picker.style.display = 'none';
+      // İşaret: bir sonraki düşen blok bu değere sahip olacak
+      const nextEl = document.getElementById('next-val-display');
+      if (nextEl) {
+        nextEl.style.outline = '2px solid #c084fc';
+        nextEl.title = `Joker: sonraki blok ${val} olacak`;
+      }
+    }
+
+    function applyWildcard(col) {
+      // wildcardVal değerini doğrudan kullan
+      const val = wildcardVal;
+      puCoins -= PU_COST.wildcard;
+      updatePuCoinsDisplay();
+      cancelPowerup();
+      // Geçici olarak nextVal'i değiştir ve geri al
+      const savedNext = nextVal;
+      nextVal = val;
+      dropIntoCol(col);
+      nextVal = savedNext;
+      const nextEl = document.getElementById('next-val-display');
+      if (nextEl) { nextEl.style.outline = ''; nextEl.title = ''; }
+    }
+
+    function flashPuBtn(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.animation = 'none';
+      el.getBoundingClientRect();
+      el.style.animation = 'puFlash .4s ease';
+      setTimeout(() => { el.style.animation = ''; }, 420);
     }
 
     function updateCombo() {
@@ -3970,7 +4278,13 @@
 
     var godSelectedRows = new Set();
 
+    const IS_DEV = window.location.hostname === 'localhost'
+               || window.location.hostname === '127.0.0.1';
     function godPasswordCheck() {
+      if (!IS_DEV) {
+        alert('⚡ God Mode sadece geliştirme ortamında kullanılabilir.');
+        return;
+      }
       const pw = prompt('⚡ God Mode şifresi:');
       if (pw === null) return;
       if (pw === '2023') {

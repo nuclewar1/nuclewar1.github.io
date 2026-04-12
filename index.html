@@ -10,8 +10,94 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── PROJE KARTLARI ──────────────────────────────── */
+        .proj-card {
+            position: relative;
+            width: clamp(200px, 26vw, 260px);
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 15, 28, 0.7);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .proj-card:hover { transform: translateY(-6px); }
+
+        .proj-art {
+            width: 100%;
+            height: clamp(100px, 18vw, 130px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(40px, 8vw, 64px);
+            position: relative;
+            overflow: hidden;
+        }
+        .proj-art::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 60%, var(--pc-glow) 0%, transparent 70%);
+        }
+
+        .proj-body {
+            padding: 14px 18px 18px;
+            display: flex; flex-direction: column; gap: 7px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            flex-grow: 1;
+        }
+        .proj-tag {
+            font-family: 'Orbitron', monospace; font-size: 9px;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--pc); opacity: 0.7;
+        }
+        .proj-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(13px, 2.5vw, 16px);
+            font-weight: 900; letter-spacing: 0.06em;
+            color: #fff;
+        }
+        .proj-count {
+            font-size: 12px; font-weight: 400;
+            color: rgba(220,230,255,0.45);
+        }
+        .proj-cta {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: auto; padding: 8px 16px; border-radius: 8px;
+            font-family: 'Orbitron', monospace; font-size: 9px;
+            font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            border: 1px solid; transition: all 0.25s ease;
+            width: fit-content; color: var(--pc);
+            border-color: rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+        }
+        .proj-card:hover .proj-cta {
+            border-color: var(--pc);
+            background: var(--pc-bg);
+            box-shadow: 0 0 12px var(--pc-glow);
+        }
+        .proj-card:hover .cta-arrow { transform: translateX(4px); }
+
+        /* Karakter renkleri */
+        .pc-kuromi   { --pc:#b44fff; --pc-glow:rgba(180,79,255,0.3);  --pc-bg:rgba(180,79,255,0.1);  }
+        .pc-kitty    { --pc:#ff4d8d; --pc-glow:rgba(255,77,141,0.3);  --pc-bg:rgba(255,77,141,0.1);  }
+        .pc-labubu   { --pc:#4cca80; --pc-glow:rgba(76,202,128,0.3);  --pc-bg:rgba(76,202,128,0.1);  }
+        .pc-spider   { --pc:#ff4444; --pc-glow:rgba(255,68,68,0.3);   --pc-bg:rgba(255,68,68,0.1);   }
+        .pc-mcqueen  { --pc:#f0b429; --pc-glow:rgba(240,180,41,0.3);  --pc-bg:rgba(240,180,41,0.1);  }
+        .pc-stitch   { --pc:#4d9fff; --pc-glow:rgba(77,159,255,0.3);  --pc-bg:rgba(77,159,255,0.1);  }
+
+        .pc-kuromi  .proj-art { background: rgba(180,79,255,0.06); }
+        .pc-kitty   .proj-art { background: rgba(255,77,141,0.06); }
+        .pc-labubu  .proj-art { background: rgba(76,202,128,0.06); }
+        .pc-spider  .proj-art { background: rgba(255,68,68,0.06); }
+        .pc-mcqueen .proj-art { background: rgba(240,180,41,0.06); }
+        .pc-stitch  .proj-art { background: rgba(77,159,255,0.06); }
+    </style>
 </head>
 
 <body>
@@ -39,7 +125,6 @@
                 <h2 class="category-title">◈ OYUNLAR ◈</h2>
                 <span class="toggle-icon">▼</span>
             </div>
-
             <div class="category-content">
                 <div class="category-content-inner">
                     <div class="cards-row">
@@ -68,8 +153,7 @@
                             <div class="card-body">
                                 <div class="card-tag">◈ Drop &amp; Merge</div>
                                 <div class="card-title">AXYON Sum<br>Crystal Drop</div>
-                                <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için
-                                    strateji kur.</div>
+                                <div class="card-desc">Kristalleri düşür, eşleştir ve birleştir. Yüksek skor için strateji kur.</div>
                                 <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -98,8 +182,7 @@
                             <div class="card-body">
                                 <div class="card-tag">◈ Slide &amp; Merge</div>
                                 <div class="card-title">AXYON Crystal<br>Merge</div>
-                                <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik
-                                    bulmaca.</div>
+                                <div class="card-desc">Kaydır, birleştir ve efsanevi kristale ulaş. Zihin açıcı klasik bulmaca.</div>
                                 <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -128,8 +211,7 @@
                             <div class="card-body">
                                 <div class="card-tag">◈ Block Puzzle</div>
                                 <div class="card-title">AXYON Tetris<br>Classic</div>
-                                <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon
-                                    modern hali.</div>
+                                <div class="card-desc">Blokları yerleştir, satırları temizle. Klasik deneyimin neon modern hali.</div>
                                 <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -158,8 +240,7 @@
                             <div class="card-body">
                                 <div class="card-tag">◈ Nail Bouncer</div>
                                 <div class="card-title">AXYON Pegrix</div>
-                                <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade
-                                    yap ve prestije ulaş!</div>
+                                <div class="card-desc">Topları bırak, neon engellerden sektir ve parayı katla. Upgrade yap ve prestije ulaş!</div>
                                 <div class="card-cta">Oyna <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -174,7 +255,6 @@
                 <h2 class="category-title">◈ ARAÇLAR ◈</h2>
                 <span class="toggle-icon">▼</span>
             </div>
-
             <div class="category-content">
                 <div class="category-content-inner">
                     <div class="cards-row">
@@ -190,8 +270,7 @@
                             <div class="card-body">
                                 <div class="card-tag">Fotoğraf & Grafik</div>
                                 <div class="card-title">Vignette Tool</div>
-                                <div class="card-desc">Görsellerinize profesyonel vinyet efektleri uygulayın ve arka
-                                    plan indirin.</div>
+                                <div class="card-desc">Görsellerinize profesyonel vinyet efektleri uygulayın ve arka plan indirin.</div>
                                 <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -212,8 +291,7 @@
                             <div class="card-body">
                                 <div class="card-tag">Dini Takvim</div>
                                 <div class="card-title">İmsakiye 1447</div>
-                                <div class="card-desc">Ramazan ayına özel detaylı iftar, sahur vakitleri ve geri sayım.
-                                </div>
+                                <div class="card-desc">Ramazan ayına özel detaylı iftar, sahur vakitleri ve geri sayım.</div>
                                 <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
@@ -228,9 +306,89 @@
                             <div class="card-body">
                                 <div class="card-tag">Sayaç & Rehber</div>
                                 <div class="card-title">Dijital Zikirmatik</div>
-                                <div class="card-desc">Dokunsal geri bildirimli sayaç, esmaül hüsna ve özel zikir
-                                    rehberi.</div>
+                                <div class="card-desc">Dokunsal geri bildirimli sayaç, esmaül hüsna ve özel zikir rehberi.</div>
                                 <div class="card-cta">Aracı Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ◈ PROJELER ◈ -->
+        <section class="category-container collapsed">
+            <div class="category-header">
+                <h2 class="category-title">◈ PROJELER ◈</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="category-content-inner">
+                    <div class="cards-row" style="flex-wrap:wrap;">
+
+                        <a href="projeler/kuromi.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-kuromi">
+                            <div class="proj-art">🦇</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">Kuromi</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="projeler/hello_kitty.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-kitty">
+                            <div class="proj-art">🎀</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">Hello Kitty</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="projeler/labubu.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-labubu">
+                            <div class="proj-art">🌙</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">Labubu</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="projeler/spiderman.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-spider">
+                            <div class="proj-art">🕷️</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">Spider-Man</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="projeler/mcqueen.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-mcqueen">
+                            <div class="proj-art">🏎️</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">McQueen</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
+                            </div>
+                        </a>
+
+                        <a href="projeler/stitch.html" target="_blank" rel="noopener noreferrer"
+                            class="proj-card pc-stitch">
+                            <div class="proj-art">🌺</div>
+                            <div class="proj-body">
+                                <div class="proj-tag">◈ Kompakt Aktivite Seti</div>
+                                <div class="proj-title">Stitch</div>
+                                <div class="proj-count">17 prompt · puzzle · sticker · boyama</div>
+                                <div class="proj-cta">Promptları Aç <span class="cta-arrow">→</span></div>
                             </div>
                         </a>
 

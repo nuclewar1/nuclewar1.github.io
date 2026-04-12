@@ -391,7 +391,11 @@
         padding-bottom: env(safe-area-inset-bottom, 16px);
       }
 
-      .h-mid { display: none; }
+      .h-mid { gap: 10px; }
+      .h-mid .h-stat:nth-child(2),
+      .h-mid .h-stat:nth-child(3) { display: none; }
+      .h-val { font-size: 11px; }
+      .h-lbl { font-size: 6px; }
       .h-title { font-size: 14px; letter-spacing: 2px; }
     }
 
@@ -541,7 +545,15 @@
   </div>
 
   <script>
-    const cv = document.getElementById('c'), cx = cv.getContext('2d'), W = cv.width, H = cv.height;
+    const cv = document.getElementById('c');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const W = 540, H = 620;
+    cv.width  = W * dpr;
+    cv.height = H * dpr;
+    cv.style.width  = W + 'px';
+    cv.style.height = H + 'px';
+    const cx = cv.getContext('2d');
+    cx.scale(dpr, dpr);
 
     /* CANVAS THEME COLORS */
     const CT = {
@@ -566,7 +578,7 @@
     const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
     /* BUCKET COLORS — sweet candy palette */
-    const BV = [.1, .25, 1, 2, 5, 2, 1, .25, .1];
+    const BV = [.5, .75, 1.5, 2.5, 5, 2.5, 1.5, .75, .5]; // daha dengeli: kenar/orta oranı 50x→10x
     const BCDK = ['#ff6eb4', '#ff9f6e', '#ffe066', '#a3f07a', '#3de8c0', '#a3f07a', '#ffe066', '#ff9f6e', '#ff6eb4'];
     const BCLT = ['#cc2277', '#cc6633', '#998800', '#336600', '#006655', '#336600', '#998800', '#cc6633', '#cc2277'];
     const BUCST = [15, 25, 60, 120, 400, 120, 60, 25, 15];
@@ -839,10 +851,10 @@
         if (!b.dead) {
           if (b.y - b.lastY < 1.0) {
             b.stuckFrames++;
-            if (b.stuckFrames > 45) {
+            if (b.stuckFrames > 20) {
               b.x = Math.max(b.r + 2, Math.min(W - b.r - 2, b.x));
-              b.vx = (Math.random() < 0.5 ? 1 : -1) * (2 + Math.random() * 2);
-              b.vy = Math.max(b.vy, 5.0);
+              b.vx = (Math.random() < 0.5 ? 1 : -1) * (2.5 + Math.random() * 2);
+              b.vy = Math.max(b.vy, 6.0);
               b.stuckFrames = 0;
             }
           } else {
@@ -1084,7 +1096,10 @@
     function prestige() {
       const pc = Math.pow(10, G.mult + 1); if (G.score < pc) return;
       G.mult++; G.score = 0; G.balls = [];
-      Object.values(G.upgrades).forEach(u => { u.lvl = Math.max(u.n === 'OTO-ATIŞ' ? 0 : 1, Math.floor(u.lvl * .35)); });
+      Object.values(G.upgrades).forEach(u => {
+        const isAuto = u.n === 'OTO-ATIŞ';
+        u.lvl = Math.max(isAuto ? 0 : 1, Math.ceil(u.lvl * 0.4));
+      });
       sfxPrestige(); saveProgress();
       for (let i = 0; i < 90; i++)setTimeout(() => sparks(Math.random() * W, Math.random() * H, ['#ff00ee', '#00eeff', '#ffcc00', '#00ee88'][Math.floor(Math.random() * 4)], 14), i * 32);
     }

@@ -335,7 +335,7 @@ body.smash-mode .block:hover{filter:brightness(1.5) saturate(1.5);outline:2px da
     </div>
   </div>
   <div style="text-align:center;flex-shrink:0;padding-bottom:3px;">
-    <a href="/cdn-cgi/l/email-protection#2849064f5d464d5b1d1d684f45494144064b4745" style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:rgba(180,210,255,0.28);text-decoration:none;letter-spacing:.08em;transition:color .2s;" onmouseover="this.style.color='rgba(180,210,255,0.7)'" onmouseout="this.style.color='rgba(180,210,255,0.28)'">Ahmet GÜNEŞ • 2026</a>
+    <span style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:rgba(180,210,255,0.28);letter-spacing:.08em;">Ahmet GÜNEŞ • 2026</span>
   </div>
 </div>
 
@@ -387,7 +387,7 @@ body.smash-mode .block:hover{filter:brightness(1.5) saturate(1.5);outline:2px da
     <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;color:#fbbf24;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">🎯 HEDEFE ULAŞILDI! 🎯</div>
     <div style="background:rgba(0,0,0,.4);border:1.5px solid rgba(251,191,36,.4);border-radius:10px;padding:10px 20px;margin-bottom:12px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,8vw,40px);color:#fff;text-shadow:0 0 20px rgba(251,191,36,.6);" id="lc-target">2048</div>
     <div style="font-size:11px;color:rgba(180,210,255,.5);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;">ÖDÜLÜNÜZ</div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;color:#34d399;margin-bottom:20px;">🪙 <span>+50</span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;color:#34d399;margin-bottom:20px;">🪙 <span id="lc-reward">+50</span></div>
     <button class="btn-green" id="btn-harika">HARİKA!</button>
   </div>
 </div>
@@ -517,7 +517,7 @@ body.smash-mode .block:hover{filter:brightness(1.5) saturate(1.5);outline:2px da
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ════════════════════════════════════════════════════════════════════
 // AXY CRYSTAL — Merge Edition v2.0
 // Yazar: Ahmet GÜNEŞ • 2026
@@ -1958,7 +1958,11 @@ function celebrateTarget(r, c, val) {
  * Épik fanfare sesi: Do-Mi-Sol-Do armonisi yükselir.
  */
 function showLC(val) {
-  coins += 50;
+  // Bölüm bazlı ölçeklenen ödül: B1→30, B5→90, B10→165 coin
+  const reward = 30 + targetIdx * 15;
+  coins += reward;
+  const rewardEl = document.getElementById('lc-reward');
+  if (rewardEl) rewardEl.textContent = '+' + reward;
   updateHUD();
 
   const isNew = saveBest(score);
@@ -2147,6 +2151,24 @@ function spawnStars() {
  */
 function checkGO() {
   if (!active) return;
+
+  // --- Kısmi tıkanma erken uyarısı ---
+  let filled = 0, mergeAvail = 0;
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++) {
+      if (!G[r][c]) continue;
+      filled++;
+      for (const [nr, nc] of nbrs(r, c))
+        if (G[nr][nc] === G[r][c]) { mergeAvail++; break; }
+    }
+  const fillRate = filled / (ROWS * COLS);
+  if (fillRate >= 0.85 && mergeAvail < 3 && !warnShownThisRound) {
+    const t = document.getElementById('rank-toast');
+    t.textContent = '⚠ Grid dolmak üzere — merge fırsatı azaldı!';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  // ------------------------------------
 
   for (let r = 0; r < ROWS; r++)
     for (let c = 0; c < COLS; c++)
@@ -2786,8 +2808,11 @@ document.getElementById('btn-reset-confirm').addEventListener('click', () => {
     });
   }
 
-  // 800ms içinde 5 kez tıklanırsa açılır
+  // 800ms içinde 5 kez tıklanırsa açılır — sadece local geliştirme ortamında
+  const IS_DEV = window.location.hostname === 'localhost'
+              || window.location.hostname === '127.0.0.1';
   document.getElementById('app-title').addEventListener('click', () => {
+    if (!IS_DEV) return;
     adminTaps++;
     clearTimeout(adminTimer);
     adminTimer = setTimeout(() => { adminTaps = 0; }, 800);
