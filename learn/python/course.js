@@ -1,8 +1,3 @@
-/**
- * AXYON LEARN — Kurs Tanımı
- * Bu dosyayı değiştirerek farklı kurs oluşturabilirsin.
- * Motor (index.html) hiç değişmez.
- */
 window.AXYON_COURSE = {
   meta: {
     storageKey:  "axyon-python-v1",
@@ -15,18 +10,13 @@ window.AXYON_COURSE = {
     themeColor:  "#f0a500",
     codeRunner:  "skulpt"
   },
-
-  /**
-   * Modül listesi — sıra önemli
-   * file: hangi JS dosyasını yükle
-   * varName: o dosyanın window'a atadığı değişken adı
-   * comingSoon: true ise kilitli görünür, yüklenmez
-   */
   modules: [
-    { id:"m0", file:"modules/m0.js", varName:"AXYON_M0" },
-    { id:"m1", file:"modules/m1.js", varName:"AXYON_M1" },
-    { id:"m2", file:"modules/m2.js", varName:"AXYON_M2" },
-    { id:"m3", file:"modules/m3.js", varName:"AXYON_M3" },
-    { id:"m4", file:"modules/m4.js", varName:"AXYON_M4" }
+    { id:"m0", file:"m0.js", varName:"AXYON_M0" },
+    { id:"m1", file:"m1.js", varName:"AXYON_M1" },
+    { id:"m2", file:"m2.js", varName:"AXYON_M2" },
+    { id:"m3", file:"m3.js", varName:"AXYON_M3" },
+    { id:"m4", file:"m4.js", varName:"AXYON_M4" },
+    { id:"m5", file:"m5.js", varName:"AXYON_M5" },
+    { id:"m6", file:"m6.js", varName:"AXYON_M6" }
   ]
 };

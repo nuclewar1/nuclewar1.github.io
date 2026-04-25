@@ -2,7 +2,7 @@
 <html lang="tr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Axyon.Dev PyLab — Türkçe Python öğrenme platformu. Neden ve nasıl öğren.">
 <title>Axyon.Dev PyLab</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>">
@@ -469,6 +469,15 @@ code{font-family:"JetBrains Mono",monospace;background:var(--s2);border:1px soli
 </style>
 </head>
 <body>
+<script src="m0.js"></script>
+<script src="m1.js"></script>
+<script src="m2.js"></script>
+<script src="m3.js"></script>
+<script src="m4.js"></script>
+<script src="m5.js"></script>
+<script src="m6.js"></script>
+<script>window._modulesReady = true;</script>
+<script src="course.js"></script>
 <div id="sk-loading">
   <div class="sk-logo">axyon.dev<span>/PyLab</span></div>
   <div class="sk-spin"></div>
@@ -783,7 +792,7 @@ let S={currentId:null,currentPhase:0,progress:{},totalXP:0,streak:0,lastVisit:''
 let cm=null;
 
 function getP(id){if(!S.progress[id])S.progress[id]={scores:[null,null,null,null,null],done:[false,false,false,false,false]};return S.progress[id];}
-function topicScore(id){const p=getP(id);const v=p.scores.filter(s=>s!==null);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/4):0;}
+function topicScore(id){const p=getP(id);const v=p.scores.filter(s=>s!==null);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/5):0;}
 function saveState(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}
   catch(e){if(e.name==='QuotaExceededError')showToast('⚠️','Depolama Dolu','Tarayıcı depolama alanı dolu.','var(--red)');}
@@ -902,7 +911,7 @@ function refreshHeader(){
   const rem=S.totalXP%100;
   document.getElementById('level-badge').textContent='LVL '+lvl;
   document.getElementById('xp-bar').style.width=rem+'%';
-  document.getElementById('xp-bar-outer'&&'xp-bar').style.width=rem+'%';
+  // xp-bar-outer satırı kaldırıldı (bug: 'xp-bar-outer'&&'xp-bar' her zaman 'xp-bar' döner)
   document.getElementById('xp-label').textContent=rem+'/100 XP';
   document.getElementById('streak-num').textContent=S.streak||0;
   const total=Object.values(S.progress).reduce((s,p)=>s+(p.scores.filter(x=>x!==null).reduce((a,b)=>a+b,0)/4||0),0);
@@ -1252,6 +1261,7 @@ function submitDrag(){}
 /* ═══ FILL ═══ */
 let fD={};
 function renderFills(L){
+  fD={};// BUG FIX: önceki dersin cevapları temizlendi
   const p=document.getElementById('panel-3');let h='';
   L.fills.forEach((f,fi)=>{
     h+=`<div class="fill-block" id="fblock${fi}">
@@ -1368,7 +1378,7 @@ function checkCode(){
   setScore(L.id,4,pct);
   r.ok?SFX.correct():SFX.wrong();
   const verdict=document.getElementById('task-verdict');
-  ok?effectSuccess(verdict):effectFail(verdict);
+  r.ok?effectSuccess(verdict):effectFail(verdict);
 }
 function finishLesson(){
   const L=LESSONS.find(l=>l.id===S.currentId);
