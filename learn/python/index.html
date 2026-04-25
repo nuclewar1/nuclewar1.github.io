@@ -94,7 +94,8 @@ body{background:var(--bg);color:var(--text);font-family:"Outfit",sans-serif;disp
 .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 
 /* ── LAYOUT ── */
-#app{display:flex;flex:1;overflow:hidden;position:relative}
+#app{display:flex;flex:1;overflow:hidden;position:relative;flex-direction:column}
+#app-inner{display:flex;flex:1;overflow:hidden;position:relative}
 
 /* ── SIDEBAR ── */
 #sidebar{width:238px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:100;transition:transform .28s cubic-bezier(.4,0,.2,1)}
@@ -466,6 +467,66 @@ code{font-family:"JetBrains Mono",monospace;background:var(--s2);border:1px soli
   .score-strip{grid-template-columns:repeat(2,1fr)}
   .ptab span:not(.ptab-score){display:none}
 }
+
+/* ── MENU BUTTON (settings) ── */
+.menu-btn{width:34px;height:34px;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;padding:0;color:var(--muted2);font-size:15px}
+.menu-btn:hover{border-color:var(--amber);color:var(--amber);transform:scale(1.06)}
+/* Desktop: gear icon via content */
+.menu-btn .mb-icon{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+/* Mobile: 3 çizgi (hamburger) */
+.menu-btn .mb-lines{display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;height:100%}
+.menu-btn .mb-lines span{width:17px;height:2px;background:var(--text);border-radius:1px;transition:all .22s;display:block}
+.menu-btn.sp-open .mb-lines span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.menu-btn.sp-open .mb-lines span:nth-child(2){opacity:0}
+.menu-btn.sp-open .mb-lines span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* ── ADMIN BADGE (header) ── */
+.admin-badge{display:none;align-items:center;gap:5px;background:rgba(242,95,92,.12);border:1px solid rgba(242,95,92,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--red);font-family:"JetBrains Mono",monospace;letter-spacing:.03em;cursor:pointer}
+.admin-badge.on{display:flex}
+.admin-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:adminPulse 1.4s ease-in-out infinite}
+@keyframes adminPulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── SETTINGS PANEL ── */
+#settings-panel{position:fixed;top:62px;right:14px;width:270px;background:var(--s1);border:1px solid var(--border2);border-radius:var(--rlg);box-shadow:var(--shadow);z-index:5000;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.97);transform-origin:top right;transition:opacity .18s,transform .18s}
+#settings-panel.open{opacity:1;pointer-events:auto;transform:none}
+.sp-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2);font-weight:700;padding:14px 16px 8px;border-bottom:1px solid var(--border)}
+.sp-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border)}
+.sp-row:last-child{border-bottom:none}
+.sp-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.sp-label{flex:1;font-size:13px;font-weight:500;color:var(--text)}
+.sp-sub{font-size:10px;color:var(--muted2);margin-top:1px}
+/* Toggle switch */
+.sp-toggle{width:38px;height:22px;border-radius:11px;background:var(--s3);border:1px solid var(--border2);cursor:pointer;position:relative;transition:background .2s,border-color .2s;flex-shrink:0}
+.sp-toggle.on{background:var(--green);border-color:var(--green)}
+.sp-toggle.admin-on{background:var(--red);border-color:var(--red)}
+.sp-thumb{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sp-toggle.on .sp-thumb,.sp-toggle.admin-on .sp-thumb{transform:translateX(16px)}
+/* Admin section */
+.sp-divider{height:1px;background:var(--border);margin:2px 0}
+.sp-admin-section{background:rgba(242,95,92,.04)}
+.sp-admin-info{padding:0 16px 12px;font-size:11px;color:var(--red);opacity:.8;display:none}
+.sp-admin-info.on{display:block}
+
+/* ── ADMIN MODE — sidebar & ders ── */
+body.admin-mode .topic-item.locked{opacity:.65;cursor:pointer;pointer-events:auto}
+body.admin-mode .topic-item.locked .topic-name{color:var(--red)!important}
+.topic-admin-id{font-size:9px;color:var(--muted);font-family:"JetBrains Mono",monospace;margin-top:1px;display:none}
+body.admin-mode .topic-admin-id{display:block}
+
+/* ── ADMIN BANNER (content area top) ── */
+#admin-banner{display:none;align-items:center;gap:8px;background:rgba(242,95,92,.06);border-bottom:1px solid rgba(242,95,92,.2);padding:6px 16px;font-size:11.5px;color:var(--red);flex-shrink:0}
+#admin-banner.on{display:flex}
+.ab-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:adminPulse 1.4s ease-in-out infinite;flex-shrink:0}
+.ab-close{margin-left:auto;cursor:pointer;opacity:.6;font-size:12px}
+.ab-close:hover{opacity:1}
+
+/* ── MOBILE tweaks ── */
+@media(max-width:768px){
+  .menu-btn .mb-icon{display:none}
+  .menu-btn .mb-lines{display:flex}
+  #settings-panel{right:10px;width:calc(100vw - 20px);max-width:320px}
+  .admin-badge{display:none!important} /* badge çok yer kaplar, banner yeterli */
+}
 </style>
 </head>
 <body>
@@ -515,14 +576,61 @@ code{font-family:"JetBrains Mono",monospace;background:var(--s2);border:1px soli
       <span class="score-num" id="total-score">0</span>
       <span style="color:var(--muted);font-size:10px">puan</span>
     </div>
-    <button class="icon-btn" id="sound-btn" onclick="toggleSound()" title="Ses" aria-label="Ses aç/kapat">🔊</button>
-    <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Tema" aria-label="Tema değiştir">🌙</button>
+    <div class="admin-badge" id="admin-badge" onclick="openSettings()" title="Admin modu aktif">
+      <span class="admin-badge-dot"></span>ADMIN
+    </div>
+    <button class="menu-btn" id="menu-btn" onclick="toggleSettings()" title="Ayarlar" aria-label="Ayarlar menüsü" aria-expanded="false">
+      <div class="mb-icon">⚙</div>
+      <div class="mb-lines"><span></span><span></span><span></span></div>
+    </button>
     <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menü" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
+<!-- ── SETTINGS PANEL ── -->
+<div id="settings-panel" role="dialog" aria-label="Ayarlar">
+  <div class="sp-head">Ayarlar</div>
+  <div class="sp-row">
+    <span class="sp-icon">🌙</span>
+    <div style="flex:1">
+      <div class="sp-label">Tema</div>
+      <div class="sp-sub" id="theme-sub">Karanlık mod</div>
+    </div>
+    <div class="sp-toggle" id="theme-toggle-sp" onclick="toggleTheme()" title="Temayı değiştir"></div>
+  </div>
+  <div class="sp-row">
+    <span class="sp-icon" id="sp-sound-icon">🔊</span>
+    <div style="flex:1">
+      <div class="sp-label">Ses Efektleri</div>
+      <div class="sp-sub" id="sound-sub">Açık</div>
+    </div>
+    <div class="sp-toggle" id="sound-toggle-sp" onclick="toggleSound()" title="Sesi aç/kapat"></div>
+  </div>
+  <div class="sp-divider"></div>
+  <div class="sp-row sp-admin-section">
+    <span class="sp-icon">🔐</span>
+    <div style="flex:1">
+      <div class="sp-label">Admin Modu</div>
+      <div class="sp-sub">Tüm dersler açık · ID görünür</div>
+    </div>
+    <div class="sp-toggle" id="admin-toggle-sp" onclick="toggleAdmin()" title="Admin modunu aç/kapat"></div>
+  </div>
+  <div class="sp-admin-info" id="sp-admin-info">
+    ⚠️ Kilitli dersler kırmızı gösterilir. İlerleme kaydedilmez.
+  </div>
+</div>
+<!-- ── SETTINGS OVERLAY ── -->
+<div id="settings-overlay" onclick="closeSettings()" style="display:none;position:fixed;inset:0;z-index:4999"></div>
+
 <div id="app">
+  <!-- ── ADMIN BANNER ── -->
+  <div id="admin-banner">
+    <div class="ab-dot"></div>
+    <span><strong>Admin Modu</strong> — Tüm dersler açık · Kilitli dersler kırmızıyla işaretli</span>
+    <span class="ab-close" onclick="toggleAdmin()">✕ Kapat</span>
+  </div>
+  <div id="app-inner" style="display:flex;flex:1;overflow:hidden;position:relative">
   <div id="sidebar-overlay" onclick="closeSidebar()"></div>
   <nav id="sidebar" aria-label="Müfredat">
     <div class="sidebar-top">
@@ -580,7 +688,8 @@ code{font-family:"JetBrains Mono",monospace;background:var(--s2);border:1px soli
       </div>
     </div>
   </main>
-</div>
+</div><!-- app-inner -->
+</div><!-- app -->
 <!-- Modüller ve course.js yukarıda statik olarak yüklendi -->
 <script>
 (function() {
@@ -685,9 +794,9 @@ function effectSuccess(el){if(!el)return;el.classList.remove('effect-success','e
 function effectFail(el){if(!el)return;el.classList.remove('effect-success','effect-fail');void el.offsetWidth;el.classList.add('effect-fail');setTimeout(()=>el.classList.remove('effect-fail'),500);}
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
-  document.getElementById('theme-btn').textContent=t==='dark'?'🌙':'☀️';
   if(cm){const el=document.querySelector('.CodeMirror');if(el)el.style.background='var(--s2)';}
   try{localStorage.setItem('axyon-pylab-theme',t);}catch(e){}
+  syncSettingsUI();
 }
 function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(c==='dark'?'light':'dark');}
 (function(){try{const t=localStorage.getItem('axyon-pylab-theme');if(t)applyTheme(t);}catch(e){}}());
@@ -716,8 +825,85 @@ const SFX={
 };
 function toggleSound(){
   SFX.init();S.soundOff=!S.soundOff;
-  document.getElementById('sound-btn').textContent=S.soundOff?'🔇':'🔊';
   saveState();if(!S.soundOff)SFX.click();
+  syncSettingsUI();
+}
+
+
+/* ═══ SETTINGS PANEL ═══ */
+var _settingsOpen = false;
+
+function toggleSettings(){
+  _settingsOpen = !_settingsOpen;
+  const panel = document.getElementById('settings-panel');
+  const overlay = document.getElementById('settings-overlay');
+  const btn = document.getElementById('menu-btn');
+  panel.classList.toggle('open', _settingsOpen);
+  btn.classList.toggle('sp-open', _settingsOpen);
+  btn.setAttribute('aria-expanded', _settingsOpen);
+  overlay.style.display = _settingsOpen ? 'block' : 'none';
+  if(_settingsOpen) syncSettingsUI();
+}
+function openSettings(){if(!_settingsOpen)toggleSettings();}
+function closeSettings(){if(_settingsOpen)toggleSettings();}
+
+function syncSettingsUI(){
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  const themeT = document.getElementById('theme-toggle-sp');
+  const soundT = document.getElementById('sound-toggle-sp');
+  const adminT = document.getElementById('admin-toggle-sp');
+
+  if(themeT){
+    themeT.classList.toggle('on', !isDark);
+    themeT.innerHTML = '<div class="sp-thumb"></div>';
+    const sub = document.getElementById('theme-sub');
+    if(sub) sub.textContent = isDark ? 'Karanlık mod' : 'Açık mod';
+  }
+  if(soundT){
+    soundT.classList.toggle('on', !S.soundOff);
+    soundT.innerHTML = '<div class="sp-thumb"></div>';
+    const icon = document.getElementById('sp-sound-icon');
+    if(icon) icon.textContent = S.soundOff ? '🔇' : '🔊';
+    const sub = document.getElementById('sound-sub');
+    if(sub) sub.textContent = S.soundOff ? 'Kapalı' : 'Açık';
+  }
+  if(adminT){
+    adminT.classList.toggle('admin-on', window._adminMode||false);
+    adminT.innerHTML = '<div class="sp-thumb"></div>';
+  }
+}
+
+/* ═══ ADMIN MODE ═══ */
+window._adminMode = false;
+(function(){
+  try{
+    var stored = localStorage.getItem('axyon-admin');
+    if(stored === 'true') window._adminMode = true;
+  }catch(e){}
+}());
+
+function toggleAdmin(){
+  window._adminMode = !window._adminMode;
+  try{localStorage.setItem('axyon-admin', window._adminMode);}catch(e){}
+  applyAdminMode();
+  syncSettingsUI();
+}
+
+function applyAdminMode(){
+  var on = window._adminMode;
+  // Body class → CSS ile locked dersleri serbest göster
+  document.body.classList.toggle('admin-mode', on);
+  // Admin badge (header)
+  var badge = document.getElementById('admin-badge');
+  if(badge) badge.classList.toggle('on', on);
+  // Admin banner (app içi)
+  var banner = document.getElementById('admin-banner');
+  if(banner) banner.classList.toggle('on', on);
+  // Admin info (panel)
+  var info = document.getElementById('sp-admin-info');
+  if(info) info.classList.toggle('on', on);
+  // Sidebar'ı yeniden oluştur (ID'ler gösterilsin/gizlensin)
+  buildSidebar();
 }
 
 /* ═══ MOBILE ═══ */
@@ -881,10 +1067,12 @@ function buildSidebar(query){
       any=true;
       const p=getP(l.id);const sc=topicScore(l.id);
       const pips=p.done.slice(0,4).map((d,i)=>`<span class="pip" style="${d?'background:var(--phase'+i+')':''}"></span>`).join('');
-      html+=`<div class="topic-item ${l.locked?'locked':''} ${S.currentId===l.id?'active':''}" onclick="loadLesson('${l.id}')" role="button" aria-label="${l.title}">
+      const isAdminUnlocked = l.locked && window._adminMode;
+      html+=`<div class="topic-item ${l.locked&&!window._adminMode?'locked':''} ${S.currentId===l.id?'active':''}" onclick="loadLesson('${l.id}')" role="button" aria-label="${l.title}">
         <div class="topic-icon">${l.icon}</div>
         <div class="topic-info">
-          <div class="topic-name">${l.title}</div>
+          <div class="topic-name">${l.title}${isAdminUnlocked?' 🔴':''}</div>
+          <div class="topic-admin-id">${l.id}</div>
           <div class="topic-sub"><div class="phase-pips">${pips}</div>${sc>0?`<span>${sc}%</span>`:''}</div>
         </div>
       </div>`;
@@ -975,7 +1163,8 @@ function renderWelcome(){
 
 /* ═══ LESSON ENGINE ═══ */
 function loadLesson(id){
-  const L=LESSONS.find(l=>l.id===id);if(!L||L.locked)return;
+  const L=LESSONS.find(l=>l.id===id);if(!L)return;
+  if(L.locked && !window._adminMode)return; // Admin modda kilitli dersler açılabilir
   S.currentId=id;closeSidebar();
   document.getElementById('welcome').style.display='none';
   document.getElementById('lesson-panels').style.display='block';
@@ -1397,6 +1586,10 @@ function init(){
   refreshHeader();
   buildSidebar();
   renderWelcome();
+  // Admin mode localStorage'dan yükle
+  if(window._adminMode) applyAdminMode();
+  // Settings panel UI sync
+  setTimeout(syncSettingsUI, 50);
 }
 
 
