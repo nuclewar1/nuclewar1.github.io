@@ -537,6 +537,8 @@ body.admin-mode .topic-admin-id{display:block}
 <script src="modules/m4.js"></script>
 <script src="modules/m5.js"></script>
 <script src="modules/m6.js"></script>
+<script src="modules/m7.js"></script>
+<script src="modules/m8.js"></script>
 <script>window._modulesReady = true;</script>
 <script src="course.js"></script>
 <div id="sk-loading">
@@ -715,6 +717,8 @@ body.admin-mode .topic-admin-id{display:block}
   }
 
   mods.forEach(function(mod) {
+    // Zaten statik olarak yüklendiyse tekrar yükleme
+    if (mod.varName && window[mod.varName]) { onLoad(); return; }
     var s = document.createElement('script');
     s.src = mod.file;
     s.onload = onLoad;
@@ -1681,7 +1685,7 @@ function loadState() {
   try { var r=localStorage.getItem(key); if(r) Object.assign(S, JSON.parse(r)); } catch(e) {}
   var themeKey = window._THEME_KEY || 'axyon-learn-theme';
   try { var t=localStorage.getItem(themeKey); if(t) applyTheme(t); } catch(e) {}
-  document.getElementById('sound-btn').textContent = S.soundOff ? '🔇' : '🔊';
+  var sb = document.getElementById('sound-btn'); if(sb) sb.textContent = S.soundOff ? '🔇' : '🔊';
   updateLocks();
 }
 

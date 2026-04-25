@@ -17,6 +17,8 @@ window.AXYON_COURSE = {
     { id:"m3", file:"modules/m3.js", varName:"AXYON_M3" },
     { id:"m4", file:"modules/m4.js", varName:"AXYON_M4" },
     { id:"m5", file:"modules/m5.js", varName:"AXYON_M5" },
-    { id:"m6", file:"modules/m6.js", varName:"AXYON_M6" }
+    { id:"m6", file:"modules/m6.js", varName:"AXYON_M6" },
+    { id:"m7", file:"modules/m7.js", varName:"AXYON_M7" },
+    { id:"m8", label:"İleri Python", icon:"🚀", color:"#7c3aed", file:"modules/m8.js", varName:"AXYON_M8" }
   ]
 };
