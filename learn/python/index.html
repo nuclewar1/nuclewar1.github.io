@@ -581,9 +581,7 @@ code{font-family:"JetBrains Mono",monospace;background:var(--s2);border:1px soli
     </div>
   </main>
 </div>
-<!-- AXYON LEARN: course.js ve modüller burada yüklenir -->
-<script src="course.js"></script>
-<!-- Modüller course.js'e göre dinamik eklenir -->
+<!-- Modüller ve course.js yukarıda statik olarak yüklendi -->
 <script>
 (function() {
   if (!window.AXYON_COURSE) {
@@ -793,15 +791,7 @@ let cm=null;
 
 function getP(id){if(!S.progress[id])S.progress[id]={scores:[null,null,null,null,null],done:[false,false,false,false,false]};return S.progress[id];}
 function topicScore(id){const p=getP(id);const v=p.scores.filter(s=>s!==null);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/5):0;}
-function saveState(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}
-  catch(e){if(e.name==='QuotaExceededError')showToast('⚠️','Depolama Dolu','Tarayıcı depolama alanı dolu.','var(--red)');}
-}
-function loadState(){
-  try{const r=localStorage.getItem(STORAGE_KEY);if(r)Object.assign(S,JSON.parse(r));}catch(e){}
-  document.getElementById('sound-btn').textContent=S.soundOff?'🔇':'🔊';
-  updateLocks();
-}
+// saveState ve loadState aşağıda _STORAGE_KEY destekli override olarak tanımlı
 function updateLocks(){
   LESSONS[0].locked=false;
   for(let i=1;i<LESSONS.length;i++){
@@ -1474,19 +1464,20 @@ function _startCourse() {
     init();
 
   } catch(e) {
-    var ov = document.getElementById('sk-loading');
-    if (ov) {
-      ov.style.pointerEvents = 'auto';
-      ov.innerHTML = '<span style="font-size:2rem">⚠️</span>'
-        + '<span style="color:#f25f5c;font-weight:700">Kurs yüklenemedi</span>'
-        + '<span style="font-size:13px;color:#888;text-align:center;max-width:300px">' + e.message + '</span>';
-    }
+    // sk-loading zaten Skulpt tarafından kapatılıyor olabilir
+    // Bunun yerine body'e kalıcı hata div'i ekle
+    var errDiv = document.getElementById('course-error') || document.createElement('div');
+    errDiv.id = 'course-error';
+    errDiv.style.cssText = 'position:fixed;inset:0;background:#0f1320;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:JetBrains Mono,monospace';
+    errDiv.innerHTML = '<span style="font-size:2rem">⚠️</span>'
+      + '<span style="color:#f25f5c;font-weight:700">Kurs yüklenemedi</span>'
+      + '<span style="font-size:13px;color:#888;text-align:center;max-width:300px">' + e.message + '</span>'
+      + '<button onclick="location.reload()" style="padding:10px 22px;background:#f0a500;color:#080b12;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700">Yenile</button>';
+    document.body.appendChild(errDiv);
   }
 }
 
 /* Override storage key functions to use course-specific keys */
-var _origSave = saveState;
-var _origLoad = loadState;
 function saveState() {
   var key = window._STORAGE_KEY || 'axyon-learn-v1';
   try { localStorage.setItem(key, JSON.stringify(S)); }
