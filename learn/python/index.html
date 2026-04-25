@@ -1284,6 +1284,64 @@ function renderWelcome(){
   `;
 }
 
+
+/* ═══ SHUFFLE UTILITY ═══ */
+function shuffle(arr){
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=a[i];a[i]=a[j];a[j]=t;
+  }
+  return a;
+}
+
+// Soru bankasından rastgele N soru seç (bank varsa)
+// Her ders için seçilen sorular oturum boyunca sabit kalır
+var _sessionQuizCache  = {};
+var _sessionFillCache  = {};
+var _sessionDragCache  = {};
+
+function getSessionQuiz(L){
+  if(!_sessionQuizCache[L.id]){
+    var bank = L.quizBank || L.quiz;
+    var picked = shuffle(bank).slice(0, Math.min(5, bank.length));
+    // Her sorunun seçeneklerini de karıştır (doğru cevap indexi güncellenir)
+    _sessionQuizCache[L.id] = picked.map(function(q){
+      var pairs = q.opts.map(function(o,i){ return {text:o, correct:(i===q.ans)}; });
+      var shuffled = shuffle(pairs);
+      return Object.assign({}, q, {
+        opts: shuffled.map(function(p){ return p.text; }),
+        ans:  shuffled.findIndex(function(p){ return p.correct; }),
+        _shuffled: true
+      });
+    });
+  }
+  return _sessionQuizCache[L.id];
+}
+
+function getSessionFills(L){
+  if(!_sessionFillCache[L.id]){
+    var bank = L.fillsBank || L.fills;
+    _sessionFillCache[L.id] = shuffle(bank).slice(0, Math.min(5, bank.length));
+  }
+  return _sessionFillCache[L.id];
+}
+
+function getSessionDrag(L){
+  if(!_sessionDragCache[L.id]){
+    var bank = L.dragBank || L.drag;
+    _sessionDragCache[L.id] = shuffle(bank).slice(0, Math.min(5, bank.length));
+  }
+  return _sessionDragCache[L.id];
+}
+
+// Yeni derse geçince cache temizle
+function clearSessionCache(id){
+  delete _sessionQuizCache[id];
+  delete _sessionFillCache[id];
+  delete _sessionDragCache[id];
+}
+
 /* ═══ LESSON ENGINE ═══ */
 function loadLesson(id){
   const L=LESSONS.find(l=>l.id===id);if(!L)return;
@@ -1294,6 +1352,7 @@ function loadLesson(id){
     document.getElementById('bypass-modal').classList.add('show');
     return;
   }
+  clearSessionCache(id); // Yeni derse geçince soruları yeniden karıştır
   S.currentId=id;closeSidebar();
   document.getElementById('welcome').style.display='none';
   document.getElementById('lesson-panels').style.display='block';
@@ -1369,10 +1428,14 @@ function runInline(code,outDiv,btn){
 let qA={},qS=false;
 function renderQuiz(L){
   const p=document.getElementById('panel-1');
-  let h=`<div class="quiz-progress">${L.quiz.map((_,i)=>`<div class="qp-dot" id="qpd${i}"></div>`).join('')}</div>`;
-  L.quiz.forEach((q,qi)=>{
+  const questions = getSessionQuiz(L); // Karışık, rastgele seçilmiş
+  L._activeQuiz = questions; // submitQuiz için referans
+  let h=`<div class="quiz-progress">${questions.map((_,i)=>`<div class="qp-dot" id="qpd${i}"></div>`).join('')}</div>`;
+  const bankSize = (L.quizBank||L.quiz).length;
+  if(bankSize > 5) h+=`<div style="font-size:10px;color:var(--muted);padding:4px 0 8px;text-align:right">${bankSize} sorudan 5 tanesi seçildi 🔀</div>`;
+  questions.forEach((q,qi)=>{
     h+=`<div class="quiz-card" id="qcard${qi}">
-      <div class="q-num">Soru ${qi+1} / ${L.quiz.length}</div>
+      <div class="q-num">Soru ${qi+1} / ${questions.length}</div>
       <div class="q-text">${q.q}</div>
       <div class="options">${q.opts.map((o,oi)=>`<div class="opt" id="opt${qi}_${oi}" onclick="pickOpt(${qi},${oi})" role="radio" aria-checked="false" tabindex="0"><span class="opt-key">${'ABCD'[oi]}</span>${o}</div>`).join('')}</div>
       <div class="q-feedback" id="qfb${qi}"></div>
@@ -1408,7 +1471,8 @@ function pickOpt(qi,oi){
 }
 function submitQuiz(){
   const L=LESSONS.find(l=>l.id===S.currentId);qS=true;let correct=0;
-  L.quiz.forEach((q,qi)=>{
+  const questions = L._activeQuiz || L.quiz;
+  questions.forEach((q,qi)=>{
     const ch=qA[qi];
     q.opts.forEach((_,oi)=>{
       const el=document.getElementById(`opt${qi}_${oi}`);el.classList.add('locked');
@@ -1423,7 +1487,7 @@ function submitQuiz(){
     const fb=document.getElementById(`qfb${qi}`);fb.className='q-feedback '+(ok?'ok':'fail')+' show';
     fb.textContent=(ok?'✓ Doğru! ':'✗ Yanlış. ')+q.exp;
   });
-  const pct=Math.round(correct/L.quiz.length*100);
+  const pct=Math.round(correct/questions.length*100);
   document.getElementById('quiz-res-score').textContent=pct+'%';
   document.getElementById('quiz-res-stars').textContent=pct>=80?'★★★':pct>=50?'★★☆':'★☆☆';
   document.getElementById('quiz-res-msg').textContent=pct>=80?'Mükemmel! 🎉':pct>=50?'İyi gidiyorsun.':'Dersi tekrar oku, derine in.';
@@ -1456,7 +1520,9 @@ function renderDrag(L){
     p.innerHTML='<p style="padding:20px;color:var(--muted2)">Bu konu için Seç fazı yakında geliyor.</p>';
     return;
   }
-  dqCur=0;dqScore=0;dqTotal=L.drag.length;dqLocked=false;
+  var dragItems = getSessionDrag(L); // Karışık, rastgele seçilmiş
+  L._activeDrag = dragItems;
+  dqCur=0;dqScore=0;dqTotal=dragItems.length;dqLocked=false;
   p.innerHTML='<div class="drag-progress" id="dq-prog"></div>'
     +'<div id="dq-wrap"></div>'
     +'<div class="drag-result" id="drag-result" style="display:none">'
@@ -1470,20 +1536,22 @@ function renderDrag(L){
 }
 
 function showDQ(L,qi){
-  if(qi>=L.drag.length){finishDrag(L);return;}
+  var dragItems = L._activeDrag || L.drag;
+  if(qi>=dragItems.length){finishDrag(L);return;}
   dqCur=qi;dqLocked=false;
-  var q=L.drag[qi];
+  var q=dragItems[qi];
   var sh=q.opts.slice().sort(function(){return Math.random()-.5;});
   dqShuffled=sh;
 
   // Progress bar
   var prog=document.getElementById('dq-prog');
   if(prog){
+    var dragItems = L._activeDrag || L.drag;
     var dots='';
-    for(var i=0;i<L.drag.length;i++){
+    for(var i=0;i<dragItems.length;i++){
       var cls='drag-dot'+(i<qi?' ok':i===qi?' cur':'');
       // keep previous correct/wrong state
-      if(i<qi&&L.drag[i]._ok!==undefined)cls='drag-dot '+(L.drag[i]._ok?'ok':'fail');
+      if(i<qi&&dragItems[i]._ok!==undefined)cls='drag-dot '+(dragItems[i]._ok?'ok':'fail');
       dots+='<div class="'+cls+'" id="dqdot'+i+'"></div>';
     }
     prog.innerHTML=dots;
@@ -1497,7 +1565,7 @@ function showDQ(L,qi){
 
   var wrap=document.getElementById('dq-wrap');
   wrap.innerHTML='<div class="drag-card" id="dcard">'
-    +'<div class="drag-q-num">Soru '+(qi+1)+' / '+L.drag.length+'</div>'
+    +'<div class="drag-q-num">Soru '+(qi+1)+' / '+dragItems.length+'</div>'
     +'<div class="drag-code-wrap">'+q.code+'</div>'
     +'<div class="drag-label">Do\u011fru cevab\u0131 se\u00e7:</div>'
     +'<div class="drag-chips" id="dchips">'+chipsHtml+'</div>'
@@ -1510,7 +1578,8 @@ function dragPick(oi){
   dqLocked=true;
   var L=LESSONS.find(function(l){return l.id===S.currentId;});
   if(!L)return;
-  var q=L.drag[dqCur];
+  var dragItems = L._activeDrag || L.drag;
+  var q=dragItems[dqCur];
   var chosen=dqShuffled[oi];
   var ok=(chosen===q.ans);
   q._ok=ok;
@@ -1550,6 +1619,7 @@ function dragPick(oi){
 }
 
 function finishDrag(L){
+  dqLocked=false; // FIX: bir sonraki ders için kilidi aç
   var pct=Math.round(dqScore/dqTotal*100);
   var res=document.getElementById('drag-result');
   document.getElementById('dq-wrap').style.opacity='.35';
@@ -1571,7 +1641,11 @@ let fD={};
 function renderFills(L){
   fD={};// BUG FIX: önceki dersin cevapları temizlendi
   const p=document.getElementById('panel-3');let h='';
-  L.fills.forEach((f,fi)=>{
+  const fills = getSessionFills(L); // Karışık, rastgele seçilmiş
+  L._activeFills = fills;
+  const bankSize = (L.fillsBank||L.fills).length;
+  if(bankSize > 5) h+=`<div style="font-size:10px;color:var(--muted);padding:0 0 8px;text-align:right">${bankSize} boşluktan 5 tanesi seçildi 🔀</div>`;
+  fills.forEach((f,fi)=>{
     h+=`<div class="fill-block" id="fblock${fi}">
       <div class="q-num">Boşluk ${fi+1} / ${L.fills.length}</div>
       <div class="fill-code">${f.code}</div>
@@ -1613,9 +1687,10 @@ function checkFill(fi){
 }
 function submitFills(){
   const L=LESSONS.find(l=>l.id===S.currentId);
-  L.fills.forEach((_,fi)=>checkFill(fi));
+  const fills = L._activeFills || L.fills;
+  fills.forEach((_,fi)=>checkFill(fi));
   const correct=Object.values(fD).filter(Boolean).length;
-  const pct=Math.round(correct/L.fills.length*100);
+  const pct=Math.round(correct/fills.length*100);
   document.getElementById('fill-res-score').textContent=pct+'%';
   document.getElementById('fill-res-stars').textContent=pct>=80?'★★★':pct>=50?'★★☆':'★☆☆';
   document.getElementById('fill-res-msg').textContent=pct>=80?'Hepsi doğru! 🎉':pct>=50?'Güzel gidiyorsun.':'İpuçlarına bak.';
@@ -1764,10 +1839,28 @@ function _startCourse() {
       (data.lessons || []).forEach(function(lesson) {
         if (lesson.code && lesson.code.checkFn) {
           (function(desc){
-            lesson.code.check = function(code) {
+            lesson.code.check = function(rawCode) {
               try {
+                // FIX: Yorum satırlarını temizle — # ile başlayan veya satır içi yorumlar
+                // Önce string literalleri koru, sonra yorumları sil
+                var cleanCode = rawCode
+                  .split('\n')
+                  .map(function(line) {
+                    // String içindeki # işaretlerine dokunma — basit yaklaşım:
+                    // Satırı tırnak dışındaki # noktasından kes
+                    var inStr = false; var strChar = ''; var result = '';
+                    for (var ci = 0; ci < line.length; ci++) {
+                      var ch = line[ci];
+                      if (!inStr && (ch === '"' || ch === "'")) { inStr = true; strChar = ch; result += ch; }
+                      else if (inStr && ch === strChar && line[ci-1] !== '\\') { inStr = false; result += ch; }
+                      else if (!inStr && ch === '#') { break; } // yorum başlangıcı
+                      else { result += ch; }
+                    }
+                    return result;
+                  })
+                  .join('\n');
                 var fn = new Function('code', 'return (' + desc.checkFn + ')(code)');
-                return fn(code);
+                return fn(cleanCode);
               } catch(e) {
                 return {pts:0, max:10, ok:false, msg:'Hata: ' + e.message};
               }
