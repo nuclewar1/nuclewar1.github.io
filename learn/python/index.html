@@ -850,11 +850,11 @@ function effectFail(el){if(!el)return;el.classList.remove('effect-success','effe
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
   if(cm){const el=document.querySelector('.CodeMirror');if(el)el.style.background='var(--s2)';}
-  try{localStorage.setItem('axyon-pylab-theme',t);}catch(e){}
+  try{localStorage.setItem(window._THEME_KEY||'axyon-pylab-theme',t);}catch(e){}
   syncSettingsUI();
 }
 function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(c==='dark'?'light':'dark');}
-(function(){try{const t=localStorage.getItem('axyon-pylab-theme');if(t)applyTheme(t);}catch(e){}}());
+(function(){try{const t=localStorage.getItem(window._THEME_KEY||'axyon-pylab-theme');if(t)applyTheme(t);}catch(e){}}());
 
 /* ═══ AUDIO ═══ */
 const SFX={
@@ -1257,7 +1257,7 @@ function renderWelcome(){
   const onboarding=isNew?`<div class="onboarding-banner">
     <div class="onb-icon">👋</div>
     <div class="onb-text"><strong>Hoş geldin!</strong> Her konu 5 aşamadan oluşuyor: Ders → Test → Seç → Boşluk → Kodla. Menüden bir konu seç veya hemen başla.</div>
-    <button class="onb-start" onclick="loadLesson('print')">🚀 Hemen Başla</button>
+    <button class="onb-start" onclick="loadLesson(LESSONS[0]?.id)">🚀 Hemen Başla</button>
   </div>`:'';
 
   el.innerHTML=`
@@ -1542,7 +1542,6 @@ function showDQ(L,qi){
   // Progress bar
   var prog=document.getElementById('dq-prog');
   if(prog){
-    var dragItems = L._activeDrag || L.drag;
     var dots='';
     for(var i=0;i<dragItems.length;i++){
       var cls='drag-dot'+(i<qi?' ok':i===qi?' cur':'');
@@ -1662,7 +1661,7 @@ function renderFills(L){
   p.innerHTML=h;
 }
 function checkFill(fi){
-  const L=LESSONS.find(l=>l.id===S.currentId);const f=L.fills[fi];
+  const L=LESSONS.find(l=>l.id===S.currentId);const f=(L._activeFills||L.fills)[fi];
   const block=document.getElementById(`fblock${fi}`);
   let ok=true;
   block.querySelectorAll('.blank').forEach(inp=>{
